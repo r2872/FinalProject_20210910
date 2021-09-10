@@ -1,19 +1,15 @@
 package com.r2872.finalproject_20210910
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import androidx.databinding.DataBindingUtil
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
-import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.r2872.finalproject_20210910.databinding.ActivityLoginBinding
 import org.json.JSONObject
-import java.security.MessageDigest
 
 
 class LoginActivity : BaseActivity() {
@@ -87,37 +83,34 @@ class LoginActivity : BaseActivity() {
         }
 
         binding.kakaoLoginBtn.setOnClickListener {
-            UserApiClient.instance.loginWithKakaoTalk(mContext) { token, error ->
+            UserApiClient.instance.loginWithKakaoAccount(mContext) { token, error ->
                 if (error != null) {
                     Log.e(TAG, "로그인 실패", error)
-                }
-                else if (token != null) {
+                } else if (token != null) {
                     Log.i(TAG, "로그인 성공 ${token.accessToken}")
+
+                    UserApiClient.instance.me { user, error ->
+                        if (error != null) {
+                            Log.e(TAG, "사용자 정보 요청 실패", error)
+                        } else if (user != null) {
+                            Log.i(
+                                TAG, "사용자 정보 요청 성공" +
+                                        "\n회원번호: ${user.id}" +
+                                        "\n이메일: ${user.kakaoAccount?.email}" +
+                                        "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
+                                        "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}"
+                            )
+                        }
+                    }
                 }
             }
         }
 
+        binding.signUpBtn.setOnClickListener {
+            val myIntent = Intent(mContext, SignUpActivity::class.java)
+            startActivity(myIntent)
+        }
 
-        // Callback registration
-//        binding.loginButton.registerCallback(
-//            callbackManager,
-//            object : FacebookCallback<LoginResult?> {
-//                override fun onSuccess(loginResult: LoginResult?) {
-//                    // App code
-//
-//                    Log.d("확인용", loginResult.toString())
-//                    val accessToken = AccessToken.getCurrentAccessToken()
-//                    Log.d("페북토큰", accessToken.token.toString())
-//                }
-//
-//                override fun onCancel() {
-//                    // App code
-//                }
-//
-//                override fun onError(exception: FacebookException) {
-//                    // App code
-//                }
-//            })
     }
 
     override fun setValues() {
