@@ -12,8 +12,5 @@ interface ServerAPIService {
         @Field("email") email: String,
         @Field("password") pw: String,
         @Field("nick_name") nickname: String
-    ) {
-
-
-    }
+    )
 }

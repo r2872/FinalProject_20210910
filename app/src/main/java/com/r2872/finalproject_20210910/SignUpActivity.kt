@@ -20,10 +20,14 @@ class SignUpActivity : BaseActivity() {
 
         binding.signUpBtn.setOnClickListener {
 
+            val inputId = binding.emailEdt.text.toString()
+
+            apiService.putRequestSignUp()
         }
     }
 
     override fun setValues() {
+
 
     }
 }
