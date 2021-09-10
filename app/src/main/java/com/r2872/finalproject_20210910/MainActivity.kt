@@ -1,12 +1,11 @@
 package com.r2872.finalproject_20210910
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
+
 import androidx.databinding.DataBindingUtil
 import com.r2872.finalproject_20210910.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -14,6 +13,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        binding.testTxt.text = "테스트"
+        setValues()
+        setupEvents()
+    }
+
+    override fun setupEvents() {
+
+    }
+
+    override fun setValues() {
+
     }
 }
