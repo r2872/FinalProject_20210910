@@ -78,8 +78,7 @@
             android:id="@+id/nickname_Edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="사용 할 닉네임 입력"
-            android:inputType="textPassword" />
+            android:hint="사용 할 닉네임 입력" />
 
         <Button
             android:id="@+id/signUp_Btn"

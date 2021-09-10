@@ -21,8 +21,10 @@ class SignUpActivity : BaseActivity() {
         binding.signUpBtn.setOnClickListener {
 
             val inputId = binding.emailEdt.text.toString()
+            val inputPassword = binding.passwordEdt.text.toString()
+            val inputNickname = binding.nicknameEdt.text.toString()
 
-            apiService.putRequestSignUp()
+            apiService.putRequestSignUp(inputId, inputPassword, inputNickname)
         }
     }
 
