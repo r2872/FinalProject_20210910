@@ -29,13 +29,13 @@ interface ServerAPIService {
         @Field("uid") uid: String,
         @Field("nick_name") nick_name: String
     ): Call<BasicResponse>
-//
-//    @FormUrlEncoded
-//    @PATCH("/user")
-//    @Header(ContextUtil.getToken())
-//    fun postRequestEditUser(
-//        @Field("current_password") current_password: String,
-//        @Field("new_password") new_password: String,
-//        @Field("nick_name") nick_name: String
-//    ): Call<BasicResponse>
+
+    @FormUrlEncoded
+    @PATCH("/user")
+    fun patchRequestEditUser(
+        @Header("X-Http-Token") token:String,
+        @Field("current_password") current_password: String,
+        @Field("new_password") new_password: String,
+        @Field("nick_name") nick_name: String
+    ): Call<BasicResponse>
 }

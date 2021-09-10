@@ -223,12 +223,13 @@ class LoginActivity : BaseActivity() {
 
                             val basicResponse = response.body()!!
 
-                            Toast.makeText(mContext, basicResponse.message, Toast.LENGTH_SHORT)
-                                .show()
+                            val userNickName = basicResponse.data.user.nick_name
 
                             ContextUtil.setToken(mContext, basicResponse.data.token)
                             Log.d("토큰값", basicResponse.data.token)
-                            Log.d("사용자 닉네임", basicResponse.data.user.nick_name)
+                            Log.d("사용자 닉네임", userNickName)
+                            Toast.makeText(mContext, "${userNickName} 님 환영합니다.", Toast.LENGTH_SHORT)
+                                .show()
 
                             val myIntent = Intent(mContext, MainActivity::class.java)
                             startActivity(myIntent)

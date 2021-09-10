@@ -27,6 +27,11 @@ class MainActivity : BaseActivity() {
             startActivity(myIntent)
             finish()
         }
+
+        binding.userInfoChangeBtn.setOnClickListener {
+            val myIntent = Intent(mContext, UserInfoEditActivity::class.java)
+            startActivity(myIntent)
+        }
     }
 
     override fun setValues() {
