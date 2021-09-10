@@ -3,14 +3,21 @@ package com.r2872.finalproject_20210910
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.kakao.sdk.user.UserApiClient
 import com.r2872.finalproject_20210910.databinding.ActivityLoginBinding
+import com.r2872.finalproject_20210910.datas.BasicResponse
+import com.r2872.finalproject_20210910.datas.DataResponse
+import com.r2872.finalproject_20210910.utils.ContextUtil
+import com.r2872.finalproject_20210910.web.ServerAPIService
 import org.json.JSONObject
-
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class LoginActivity : BaseActivity() {
 
@@ -26,6 +33,11 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+        binding.autoLoginCheckBox.setOnCheckedChangeListener { _, isChecked ->
+
+            ContextUtil.setAutoLogIn(mContext, isChecked)
+        }
 
         callbackManager = CallbackManager.Factory.create()
 
@@ -60,7 +72,50 @@ class LoginActivity : BaseActivity() {
 //                                    페이스북에서 사용자를 구별하는 고유번호. => 우리 서버에 같이 저장. 회원가입 or 로그인 근거자료로 활용
                                     Log.d("id값", id)
 
-                                    // TODO: 2021-09-10 페북이 알려준 이름 / id 값을, API 서버에 전달해서, 소셜로그인 처리 요청.
+                                    apiService.postRequestSocialSignIn("facebook", id, name)
+                                        .enqueue(object : Callback<BasicResponse> {
+                                            override fun onResponse(
+                                                call: Call<BasicResponse>,
+                                                response: Response<BasicResponse>
+                                            ) {
+                                                if (response.isSuccessful) {
+
+                                                    Log.d("성공", response.body()?.message.toString())
+                                                    Toast.makeText(
+                                                        mContext,
+                                                        response.body()?.message,
+                                                        Toast.LENGTH_SHORT
+                                                    )
+                                                        .show()
+
+                                                    val myIntent =
+                                                        Intent(mContext, MainActivity::class.java)
+                                                    startActivity(myIntent)
+                                                    finish()
+                                                } else {
+
+                                                    val errorBodyStr =
+                                                        response.errorBody()!!.string()
+                                                    val jsonObj = JSONObject(errorBodyStr)
+                                                    val message = jsonObj.getString("message")
+
+                                                    Log.d("실패", message)
+
+                                                    Toast.makeText(
+                                                        mContext,
+                                                        message,
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+
+                                            override fun onFailure(
+                                                call: Call<BasicResponse>,
+                                                t: Throwable
+                                            ) {
+
+                                            }
+                                        })
                                 }
                             })
 //                        위에서 정리한 내용을 들고, 내 정보를 실제로 요청.
@@ -100,10 +155,99 @@ class LoginActivity : BaseActivity() {
                                         "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
                                         "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}"
                             )
+                            val userId = user.id.toString()
+                            val userNickname = user.kakaoAccount?.profile?.nickname.toString()
+
+                            apiService.postRequestSocialSignIn("kakao", userId, userNickname)
+                                .enqueue(object : Callback<BasicResponse> {
+                                    override fun onResponse(
+                                        call: Call<BasicResponse>,
+                                        response: Response<BasicResponse>
+                                    ) {
+                                        if (response.isSuccessful) {
+
+                                            Log.d("성공", response.body()?.message.toString())
+                                            Toast.makeText(
+                                                mContext,
+                                                response.body()?.message,
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+
+                                            val myIntent =
+                                                Intent(mContext, MainActivity::class.java)
+                                            startActivity(myIntent)
+                                            finish()
+                                        } else {
+
+                                            val errorBodyStr =
+                                                response.errorBody()!!.string()
+                                            val jsonObj = JSONObject(errorBodyStr)
+                                            val message = jsonObj.getString("message")
+
+                                            Log.d("실패", message)
+
+                                            Toast.makeText(
+                                                mContext,
+                                                message,
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+
+                                    override fun onFailure(
+                                        call: Call<BasicResponse>,
+                                        t: Throwable
+                                    ) {
+
+                                    }
+                                })
                         }
                     }
                 }
             }
+        }
+
+        binding.signInBtn.setOnClickListener {
+
+            val inputId = binding.emailEdt.text.toString()
+            val inputPw = binding.pwEdt.text.toString()
+
+            apiService.postRequestSignIn(inputId, inputPw)
+                .enqueue(object : Callback<BasicResponse> {
+                    override fun onResponse(
+                        call: Call<BasicResponse>,
+                        response: Response<BasicResponse>
+                    ) {
+                        if (response.isSuccessful) {
+
+                            val basicResponse = response.body()!!
+
+                            Toast.makeText(mContext, basicResponse.message, Toast.LENGTH_SHORT)
+                                .show()
+
+                            ContextUtil.setToken(mContext, basicResponse.data.token)
+                            Log.d("토큰값", basicResponse.data.token)
+                            Log.d("사용자 닉네임", basicResponse.data.user.nick_name)
+
+                            val myIntent = Intent(mContext, MainActivity::class.java)
+                            startActivity(myIntent)
+                            finish()
+                        } else {
+
+                            Toast.makeText(
+                                mContext,
+                                JSONObject(response.errorBody()!!.string()).getString("message"),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+                    }
+                })
+
         }
 
         binding.signUpBtn.setOnClickListener {

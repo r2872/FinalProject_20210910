@@ -15,6 +15,12 @@
             android:layout_height="wrap_content"
             android:text="테스트 용" />
 
+        <Button
+            android:id="@+id/signOut_Btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="로그아웃" />
+
     </LinearLayout>
 
 </layout>
