@@ -13,6 +13,7 @@ import com.r2872.finalproject_20210910.databinding.ActivityLoginBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.DataResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
+import com.r2872.finalproject_20210910.utils.GlobalData
 import com.r2872.finalproject_20210910.web.ServerAPIService
 import org.json.JSONObject
 import retrofit2.Call
@@ -91,6 +92,7 @@ class LoginActivity : BaseActivity() {
                                                     val basicResponse = response.body()!!
 
                                                     ContextUtil.setToken(mContext, basicResponse.data.token)
+                                                    GlobalData.loginUser = basicResponse.data.user
 
                                                     val myIntent =
                                                         Intent(mContext, MainActivity::class.java)
@@ -181,6 +183,7 @@ class LoginActivity : BaseActivity() {
                                             val basicResponse = response.body()!!
 
                                             ContextUtil.setToken(mContext, basicResponse.data.token)
+                                            GlobalData.loginUser = basicResponse.data.user
 
                                             val myIntent =
                                                 Intent(mContext, MainActivity::class.java)
@@ -234,6 +237,7 @@ class LoginActivity : BaseActivity() {
                             val userNickName = basicResponse.data.user.nick_name
 
                             ContextUtil.setToken(mContext, basicResponse.data.token)
+                            GlobalData.loginUser = basicResponse.data.user
                             Log.d("토큰값", basicResponse.data.token)
                             Log.d("사용자 닉네임", userNickName)
                             Toast.makeText(mContext, "${userNickName} 님 환영합니다.", Toast.LENGTH_SHORT)
