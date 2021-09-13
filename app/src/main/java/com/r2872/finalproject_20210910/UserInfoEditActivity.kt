@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.r2872.finalproject_20210910.databinding.ActivityUserInfoEditBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
-import com.r2872.finalproject_20210910.utils.ContextUtil
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,7 +41,7 @@ class UserInfoEditActivity : BaseActivity() {
 
                             val basicResponse = response.body()!!
 
-                            val userNickName = basicResponse.data.user.nick_name
+                            val userNickName = basicResponse.data.user.nickName
 
                             Log.d("사용자 닉네임", userNickName)
                             Toast.makeText(mContext, "수정 완료", Toast.LENGTH_SHORT)

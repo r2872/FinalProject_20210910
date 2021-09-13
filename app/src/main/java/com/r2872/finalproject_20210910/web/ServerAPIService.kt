@@ -1,5 +1,6 @@
 package com.r2872.finalproject_20210910.web
 
+import com.r2872.finalproject_20210910.datas.AppointmentData
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -46,4 +47,8 @@ interface ServerAPIService {
         @Field("latitude") latitude: Double,
         @Field("longitude") longitude: Double
     ): Call<BasicResponse>
+
+    @GET("/appointment")
+    fun getRequestAppointment(): Call<BasicResponse>
+
 }

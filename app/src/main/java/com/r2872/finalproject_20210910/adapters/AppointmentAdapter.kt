@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.r2872.finalproject_20210910.R
 import com.r2872.finalproject_20210910.datas.AppointmentData
 
-class ScheduleAdapter(
+class AppointmentAdapter(
     private val mContext: Context,
     resId: Int,
     private val mList: List<AppointmentData>

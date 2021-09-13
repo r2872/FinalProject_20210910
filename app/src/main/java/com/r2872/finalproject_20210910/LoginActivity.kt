@@ -11,10 +11,8 @@ import com.facebook.login.LoginResult
 import com.kakao.sdk.user.UserApiClient
 import com.r2872.finalproject_20210910.databinding.ActivityLoginBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
-import com.r2872.finalproject_20210910.datas.DataResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
 import com.r2872.finalproject_20210910.utils.GlobalData
-import com.r2872.finalproject_20210910.web.ServerAPIService
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -234,7 +232,7 @@ class LoginActivity : BaseActivity() {
 
                             val basicResponse = response.body()!!
 
-                            val userNickName = basicResponse.data.user.nick_name
+                            val userNickName = basicResponse.data.user.nickName
 
                             ContextUtil.setToken(mContext, basicResponse.data.token)
                             GlobalData.loginUser = basicResponse.data.user
