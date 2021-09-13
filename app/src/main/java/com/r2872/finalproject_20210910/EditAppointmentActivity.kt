@@ -75,9 +75,7 @@ class EditAppointmentActivity : BaseActivity() {
                 ) {
                     if (response.isSuccessful) {
 
-                        val basicResponse = response.body()!!
-                        Toast.makeText(mContext, "성공", Toast.LENGTH_SHORT).show()
-
+                        Toast.makeText(mContext, "등록 완료", Toast.LENGTH_SHORT).show()
                         finish()
                     } else {
                         Toast.makeText(
@@ -93,6 +91,8 @@ class EditAppointmentActivity : BaseActivity() {
                 }
             })
 
+            finish()
+
         }
 
         binding.dateTxt.setOnClickListener {
@@ -107,9 +107,6 @@ class EditAppointmentActivity : BaseActivity() {
 
     override fun setValues() {
 
-//        카카오 지도 띄워보기
-        val mapView = MapView(mContext)
-        binding.mapView.addView(mapView)
     }
 
     private fun showDatePicker() {

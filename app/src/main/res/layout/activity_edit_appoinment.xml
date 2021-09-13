@@ -85,11 +85,11 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/map_view"
+        <fragment
+            android:id="@+id/naverMapView"
+            android:name="com.naver.maps.map.MapFragment"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:orientation="vertical" />
+            android:layout_height="250dp"/>
 
         <Button
             android:id="@+id/add_Btn"

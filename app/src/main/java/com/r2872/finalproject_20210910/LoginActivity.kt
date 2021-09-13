@@ -89,13 +89,13 @@ class LoginActivity : BaseActivity() {
 
                                                     val basicResponse = response.body()!!
 
-                                                    ContextUtil.setToken(mContext, basicResponse.data.token)
+                                                    ContextUtil.setToken(
+                                                        mContext,
+                                                        basicResponse.data.token
+                                                    )
                                                     GlobalData.loginUser = basicResponse.data.user
 
-                                                    val myIntent =
-                                                        Intent(mContext, MainActivity::class.java)
-                                                    startActivity(myIntent)
-                                                    finish()
+                                                    moveToMain()
                                                 } else {
 
                                                     val errorBodyStr =
@@ -183,10 +183,7 @@ class LoginActivity : BaseActivity() {
                                             ContextUtil.setToken(mContext, basicResponse.data.token)
                                             GlobalData.loginUser = basicResponse.data.user
 
-                                            val myIntent =
-                                                Intent(mContext, MainActivity::class.java)
-                                            startActivity(myIntent)
-                                            finish()
+                                            moveToMain()
                                         } else {
 
                                             val errorBodyStr =
@@ -232,18 +229,11 @@ class LoginActivity : BaseActivity() {
 
                             val basicResponse = response.body()!!
 
-                            val userNickName = basicResponse.data.user.nickName
-
                             ContextUtil.setToken(mContext, basicResponse.data.token)
                             GlobalData.loginUser = basicResponse.data.user
                             Log.d("토큰값", basicResponse.data.token)
-                            Log.d("사용자 닉네임", userNickName)
-                            Toast.makeText(mContext, "${userNickName} 님 환영합니다.", Toast.LENGTH_SHORT)
-                                .show()
 
-                            val myIntent = Intent(mContext, MainActivity::class.java)
-                            startActivity(myIntent)
-                            finish()
+                            moveToMain()
                         } else {
 
                             Toast.makeText(
@@ -278,6 +268,12 @@ class LoginActivity : BaseActivity() {
         callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
 
+    }
+
+    private fun moveToMain() {
+        val myIntent = Intent(mContext, MainActivity::class.java)
+        startActivity(myIntent)
+        finish()
     }
 
     companion object {

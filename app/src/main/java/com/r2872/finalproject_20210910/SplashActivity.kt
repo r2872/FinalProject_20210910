@@ -4,10 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.r2872.finalproject_20210910.databinding.ActivitySplashBinding
+import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
+import com.r2872.finalproject_20210910.utils.GlobalData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SplashActivity : BaseActivity() {
 
@@ -27,33 +33,49 @@ class SplashActivity : BaseActivity() {
 
     override fun setValues() {
 
-        val myHandler = Handler(Looper.getMainLooper())
-
         Glide.with(mContext)
             .load(R.raw.icon_16)
             .into(binding.splashImg)
 
+        apiService.getRequestMyInfo().enqueue(object : Callback<BasicResponse> {
+            override fun onResponse(
+                call: Call<BasicResponse>,
+                response: Response<BasicResponse>
+            ) {
+                if (response.isSuccessful) {
+
+                    val basicResponse = response.body()!!
+                    val user = basicResponse.data.user
+                    Log.d("유저정보테스트", user.toString())
+
+                    GlobalData.loginUser = user
+                } else {
+//                    GlobalData.loginUser = null
+                }
+            }
+
+            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+            }
+        })
+
+        val myHandler = Handler(Looper.getMainLooper())
         myHandler.postDelayed({
 
-//        1. 자동 로그인 여부 판단 -> 상황에 따라 다른 화면으로 넘어가게.
-//        다른 화면: Intent 의 목적지만 달라진다.
             val myIntent: Intent
 
-//        자동 로그인 여부: 사용자가 자동로그인 하겠다 + 저장 된 토큰이 유효(들어있다)하다.
-            if (ContextUtil.getAutoLogIn(mContext) && ContextUtil.getToken(mContext) != "") {
+            if (GlobalData.loginUser != null) {
 
-//            둘다 만족: 자동 로그인 O -> 메인화면으로 이동.
+                Log.d("유저정보", GlobalData.loginUser.toString())
+
                 myIntent = Intent(mContext, MainActivity::class.java)
 
-
             } else {
-//            하나라도 만족 안됨: 자동 로그인 실패 -> 로그인 화면으로 이동
-                myIntent = Intent(mContext, LoginActivity::class.java)
 
-//                내가 누구인지 받아오지 않겠다. (코드 작성 X)
+                myIntent = Intent(mContext, LoginActivity::class.java)
             }
             startActivity(myIntent)
             finish()
-        }, 2000)
+        }, 2500)
     }
 }

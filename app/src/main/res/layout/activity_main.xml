@@ -14,10 +14,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ListView
-                android:id="@+id/schedule_list"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent">
+
+                <ListView
+                    android:id="@+id/schedule_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
             <ImageView
                 android:id="@+id/addAppoinment_Btn"
@@ -25,6 +33,13 @@
                 android:layout_height="60dp"
                 android:layout_gravity="end|bottom"
                 android:src="@drawable/ic_baseline_add_circle_24" />
+
+            <Button
+                android:id="@+id/logout_Btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|bottom"
+                android:text="로그아웃" />
 
         </FrameLayout>
 

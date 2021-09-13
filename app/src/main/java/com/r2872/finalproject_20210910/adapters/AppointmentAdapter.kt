@@ -27,13 +27,13 @@ class AppointmentAdapter(
 
         val data = mList[position]
 
-        val scheduleTitle = row.findViewById<TextView>(R.id.title_Txt)
-        val scheduleDateTime = row.findViewById<TextView>(R.id.date_Txt)
-        val schedulePlace = row.findViewById<TextView>(R.id.place_Txt)
+        val title = row.findViewById<TextView>(R.id.title_Txt)
+        val dateTime = row.findViewById<TextView>(R.id.date_Txt)
+        val place = row.findViewById<TextView>(R.id.place_Txt)
 
-        scheduleTitle.text = data.title
-        scheduleDateTime.text = data.datetime
-        schedulePlace.text = data.place
+        title.text = data.title
+        dateTime.text = data.datetime
+        place.text = data.place
 
         return row
     }
