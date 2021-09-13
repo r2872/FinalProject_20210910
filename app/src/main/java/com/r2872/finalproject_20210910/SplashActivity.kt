@@ -4,12 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.databinding.DataBindingUtil
+import com.bumptech.glide.Glide
+import com.r2872.finalproject_20210910.databinding.ActivitySplashBinding
 import com.r2872.finalproject_20210910.utils.ContextUtil
 
 class SplashActivity : BaseActivity() {
+
+    private lateinit var binding: ActivitySplashBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
 
         setValues()
         setupEvents()
@@ -22,6 +28,10 @@ class SplashActivity : BaseActivity() {
     override fun setValues() {
 
         val myHandler = Handler(Looper.getMainLooper())
+
+        Glide.with(mContext)
+            .load(R.raw.icon_16)
+            .into(binding.splashImg)
 
         myHandler.postDelayed({
 
@@ -44,6 +54,6 @@ class SplashActivity : BaseActivity() {
             }
             startActivity(myIntent)
             finish()
-        }, 1000)
+        }, 2000)
     }
 }

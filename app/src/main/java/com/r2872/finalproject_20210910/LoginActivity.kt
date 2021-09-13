@@ -88,6 +88,10 @@ class LoginActivity : BaseActivity() {
                                                     )
                                                         .show()
 
+                                                    val basicResponse = response.body()!!
+
+                                                    ContextUtil.setToken(mContext, basicResponse.data.token)
+
                                                     val myIntent =
                                                         Intent(mContext, MainActivity::class.java)
                                                     startActivity(myIntent)
@@ -173,6 +177,10 @@ class LoginActivity : BaseActivity() {
                                                 Toast.LENGTH_SHORT
                                             )
                                                 .show()
+
+                                            val basicResponse = response.body()!!
+
+                                            ContextUtil.setToken(mContext, basicResponse.data.token)
 
                                             val myIntent =
                                                 Intent(mContext, MainActivity::class.java)
