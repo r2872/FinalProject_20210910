@@ -14,7 +14,7 @@
         android:theme="@style/Theme.FinalProject_20210910"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".EditAppoinmentActivity"
+            android:name=".EditAppointmentActivity"
             android:exported="true" />
         <activity
             android:name=".UserInfoEditActivity"

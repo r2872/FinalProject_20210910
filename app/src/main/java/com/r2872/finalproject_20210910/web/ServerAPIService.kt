@@ -33,9 +33,20 @@ interface ServerAPIService {
     @FormUrlEncoded
     @PATCH("/user")
     fun patchRequestEditUser(
-        @Header("X-Http-Token") token:String,
+        @Header("X-Http-Token") token: String,
         @Field("current_password") current_password: String,
         @Field("new_password") new_password: String,
         @Field("nick_name") nick_name: String
+    ): Call<BasicResponse>
+
+    @FormUrlEncoded
+    @POST("/appointment")
+    fun postRequestAppointment(
+        @Header("X-Http-Token") token: String,
+        @Field("title") title: String,
+        @Field("datetime") datetime: String,
+        @Field("place") place: String,
+        @Field("latitude") latitude: Double,
+        @Field("longitude") longitude: Double
     ): Call<BasicResponse>
 }

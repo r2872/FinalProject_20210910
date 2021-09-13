@@ -21,7 +21,7 @@ class MainActivity : BaseActivity() {
 
         binding.addAppoinmentBtn.setOnClickListener {
 
-            val myIntent = Intent(mContext, EditAppoinmentActivity::class.java)
+            val myIntent = Intent(mContext, EditAppointmentActivity::class.java)
             startActivity(myIntent)
         }
     }

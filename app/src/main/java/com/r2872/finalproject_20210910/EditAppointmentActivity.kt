@@ -7,11 +7,16 @@ import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
+import com.r2872.finalproject_20210910.datas.BasicResponse
+import com.r2872.finalproject_20210910.utils.ContextUtil
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
-import java.time.Year
 import java.util.*
 
-class EditAppoinmentActivity : BaseActivity() {
+class EditAppointmentActivity : BaseActivity() {
 
     private lateinit var binding: ActivityEditAppoinmentBinding
     private val mSelectedDateTime = Calendar.getInstance()
@@ -55,6 +60,39 @@ class EditAppoinmentActivity : BaseActivity() {
             val inputPlaceName = binding.placeSearchEdt.text.toString()
 
 //            - 장소 위도 / 경도 ?
+            val lat = 37.4972
+            val lng = 127.0271
+
+            apiService.postRequestAppointment(
+                ContextUtil.getToken(mContext),
+                inputTitle,
+                finalDateTime,
+                inputPlaceName,
+                lat, lng
+            ).enqueue(object : Callback<BasicResponse> {
+                override fun onResponse(
+                    call: Call<BasicResponse>,
+                    response: Response<BasicResponse>
+                ) {
+                    if (response.isSuccessful) {
+
+                        val basicResponse = response.body()!!
+                        Toast.makeText(mContext, "성공", Toast.LENGTH_SHORT).show()
+
+                        finish()
+                    } else {
+                        Toast.makeText(
+                            mContext,
+                            JSONObject(response.errorBody()!!.string()).getString("message"),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+                }
+            })
 
         }
 
