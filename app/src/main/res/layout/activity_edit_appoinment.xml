@@ -16,13 +16,14 @@
             android:text="제목" />
 
         <EditText
-            android:id="@+id/title_Txt"
+            android:id="@+id/title_Edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="약속 제목을 입력하세요."
             android:singleLine="true" />
 
         <TextView
+            android:id="@+id/selectedDate_Txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -39,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
-                android:text="약속 일자"
+                android:text="일자 설정"
                 android:textSize="16sp" />
 
             <TextView
@@ -47,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="15dp"
-                android:text="약속 시간"
+                android:text="시간 설정"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -69,6 +70,7 @@
             android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/placeSearch_Edt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -76,6 +78,7 @@
                 android:singleLine="true" />
 
             <Button
+                android:id="@+id/placeSearch_Btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="검색" />
@@ -89,6 +92,7 @@
             android:text="여기에 지도 배치. 검색 결과를 지도로 표현" />
 
         <Button
+            android:id="@+id/add_Btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="등록하기" />
