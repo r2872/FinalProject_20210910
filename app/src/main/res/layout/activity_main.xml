@@ -7,26 +7,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
-        <TextView
-            android:id="@+id/nickname_Txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="사용자 닉네임" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/signOut_Btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="로그아웃" />
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-        <Button
-            android:id="@+id/userInfoChange_Btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="정보 변경" />
+            <ImageView
+                android:id="@+id/addAppoinment_Btn"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="end|bottom"
+                android:src="@drawable/ic_baseline_add_circle_24" />
+
+        </FrameLayout>
+
 
     </LinearLayout>
 

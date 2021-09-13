@@ -14,6 +14,9 @@
         android:theme="@style/Theme.FinalProject_20210910"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".EditAppoinmentActivity"
+            android:exported="true" />
+        <activity
             android:name=".UserInfoEditActivity"
             android:exported="true" />
         <activity
@@ -30,7 +33,7 @@
             android:exported="true" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />
