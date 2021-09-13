@@ -64,7 +64,6 @@ class EditAppointmentActivity : BaseActivity() {
             val lng = 127.0271
 
             apiService.postRequestAppointment(
-                ContextUtil.getToken(mContext),
                 inputTitle,
                 finalDateTime,
                 inputPlaceName,

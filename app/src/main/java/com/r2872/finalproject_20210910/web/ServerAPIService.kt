@@ -1,7 +1,6 @@
 package com.r2872.finalproject_20210910.web
 
 import com.r2872.finalproject_20210910.datas.BasicResponse
-import com.r2872.finalproject_20210910.utils.ContextUtil
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -33,7 +32,6 @@ interface ServerAPIService {
     @FormUrlEncoded
     @PATCH("/user")
     fun patchRequestEditUser(
-        @Header("X-Http-Token") token: String,
         @Field("current_password") current_password: String,
         @Field("new_password") new_password: String,
         @Field("nick_name") nick_name: String
@@ -42,7 +40,6 @@ interface ServerAPIService {
     @FormUrlEncoded
     @POST("/appointment")
     fun postRequestAppointment(
-        @Header("X-Http-Token") token: String,
         @Field("title") title: String,
         @Field("datetime") datetime: String,
         @Field("place") place: String,

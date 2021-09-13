@@ -32,8 +32,7 @@ class UserInfoEditActivity : BaseActivity() {
             val inputNewPw = binding.newPwEdt.text.toString()
             val inputNickname = binding.nicknameEdtEdt.text.toString()
 
-            val token = ContextUtil.getToken(mContext)
-            apiService.patchRequestEditUser(token, inputCurrentPw, inputNewPw, inputNickname)
+            apiService.patchRequestEditUser( inputCurrentPw, inputNewPw, inputNickname)
                 .enqueue(object : Callback<BasicResponse> {
                     override fun onResponse(
                         call: Call<BasicResponse>,
