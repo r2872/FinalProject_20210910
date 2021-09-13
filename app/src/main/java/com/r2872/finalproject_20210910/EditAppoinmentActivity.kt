@@ -3,6 +3,8 @@ package com.r2872.finalproject_20210910
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import java.text.SimpleDateFormat
@@ -32,7 +34,21 @@ class EditAppoinmentActivity : BaseActivity() {
             val inputTitle = binding.titleEdt.text.toString()
 
 //            2. 약속 일시? -> "2021-09-13 11:11" String 변환까지.
-            val inputDate = binding.selectedDateTxt.text.toString()
+//            => 날짜 / 시간중 선택 안한게 있다면? 선택하라고 토스트, 함수 강제 종료. (validation)
+            if (binding.dateTxt.text == "일자 설정") {
+                Toast.makeText(mContext, "일자를 설정하지 않았습니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (binding.timeTxt.text == "시간 설정") {
+                Toast.makeText(mContext, "시간을 설정하지 않았습니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+//            여기 코드 실행된다 : 일자 / 시간 모두 설정했다.
+//            선택된 약속일시를 -> "yyyy-MM-dd HH:mm" 양식으로 가공. => 최종 서버에 파라미터로 첨부
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm")
+            val finalDateTime = sdf.format(mSelectedDateTime.time)
+            Log.d("서버에 보낼 약속일시", finalDateTime)
 
 //            3. 약속 장소?
 //            - 장소 이름
@@ -67,7 +83,7 @@ class EditAppoinmentActivity : BaseActivity() {
                 }
                 val sdf = SimpleDateFormat("yyyy-MM-dd (E)")
 
-                binding.selectedDateTxt.text = sdf.format(mSelectedDateTime.time).toString()
+                binding.dateTxt.text = sdf.format(mSelectedDateTime.time).toString()
             },
             mSelectedDateTime.get(Calendar.YEAR),
             mSelectedDateTime.get(Calendar.MONTH),
@@ -83,9 +99,9 @@ class EditAppoinmentActivity : BaseActivity() {
                     set(Calendar.HOUR_OF_DAY, h)
                     set(Calendar.MINUTE, m)
                 }
-                val sdf = SimpleDateFormat("yyyy-MM-dd (E) a h:mm")
+                val sdf = SimpleDateFormat("a h:mm")
 
-                binding.selectedDateTxt.text = sdf.format(mSelectedDateTime.time).toString()
+                binding.timeTxt.text = sdf.format(mSelectedDateTime.time).toString()
             },
             mSelectedDateTime.get(Calendar.HOUR_OF_DAY),
             mSelectedDateTime.get(Calendar.MINUTE),
