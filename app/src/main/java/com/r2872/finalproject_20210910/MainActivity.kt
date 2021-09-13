@@ -45,11 +45,19 @@ class MainActivity : BaseActivity() {
 
     private fun getAppointmentList() {
 
-        apiService.getRequestAppointment().enqueue(object: Callback<BasicResponse>{
+        apiService.getRequestAppointmentList().enqueue(object : Callback<BasicResponse> {
             override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
 
-                val basicResponse = response.body()!!
-                Log.d("리스트", basicResponse.toString())
+                if (response.isSuccessful) {
+                    val basicResponse = response.body()!!
+                    val appointmentArr = basicResponse.data.appoinments
+                    Log.d("약속리스트", appointmentArr.toString())
+
+                    for (i in appointmentArr.indices) {
+
+                    }
+                }
+
             }
 
             override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
