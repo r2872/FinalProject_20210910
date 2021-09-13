@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
-import com.r2872.finalproject_20210910.utils.ContextUtil
+import net.daum.mf.map.api.MapView
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -107,6 +107,9 @@ class EditAppointmentActivity : BaseActivity() {
 
     override fun setValues() {
 
+//        카카오 지도 띄워보기
+        val mapView = MapView(mContext)
+        binding.mapView.addView(mapView)
     }
 
     private fun showDatePicker() {
