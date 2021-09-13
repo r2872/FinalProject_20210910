@@ -50,13 +50,16 @@ class MainActivity : BaseActivity() {
 
                 if (response.isSuccessful) {
                     val basicResponse = response.body()!!
-                    val appointmentArr = basicResponse.data.appoinments
-                    Log.d("약속리스트", appointmentArr.toString())
 
-                    for (i in appointmentArr.indices) {
+//                    약속목록변수에 => 서버가 알려준 약속목록을 전부 추가.
+                    mScheduleList.addAll(basicResponse.data.appoinments)
 
-                    }
+//                    for (apData in basicResponse.data.appoinments) {
+//                        Log.d("약속리스트", apData.title)
+//                    }
                 }
+
+                mAdapter.notifyDataSetChanged()
 
             }
 
