@@ -1,6 +1,8 @@
 package com.r2872.finalproject_20210910
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
@@ -52,21 +54,25 @@ class ViewMapActivity : BaseActivity() {
             uiSettings.isScaleBarEnabled = false
             uiSettings.isLocationButtonEnabled = true
 
-            val selectedPointMaker = Marker()
-            selectedPointMaker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
+            val marker = Marker()
+            marker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
 
-            selectedPointMaker.position = currentAppointment
-            selectedPointMaker.map = naverMap
+            marker.position = currentAppointment
+            marker.map = naverMap
 
 //            기본 정보창 띄우기
 
             val infoWindow = InfoWindow()
-            infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(mContext) {
-                override fun getText(infoWindow: InfoWindow): CharSequence {
-                    return mAppointmentData.title
+            infoWindow.adapter = object : InfoWindow.DefaultViewAdapter(mContext) {
+                override fun getContentView(p0: InfoWindow): View {
+
+                    val myView =
+                        LayoutInflater.from(mContext).inflate(R.layout.my_custom_info_window, null)
+
+                    return myView
                 }
             }
-            infoWindow.open(selectedPointMaker)
+            infoWindow.open(marker)
         }
     }
 }
