@@ -11,6 +11,7 @@ import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.Marker
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import net.daum.mf.map.api.MapView
@@ -147,6 +148,9 @@ class EditAppointmentActivity : BaseActivity() {
             uiSettings.isScaleBarEnabled = false
             uiSettings.isLocationButtonEnabled = true
 
+//            선택된 위치를 보여줄 마커 하나만 생성.
+            val selectedPointMaker = Marker()
+
             naverMap.setOnMapClickListener { pointF, latLng ->
 
                 Toast.makeText(
@@ -156,6 +160,10 @@ class EditAppointmentActivity : BaseActivity() {
                 ).show()
                 mSelectedLat = latLng.latitude
                 mSelectedLng = latLng.longitude
+
+//                좌표를 받아서 -> 미리 만들어둔 마커의 좌표로 연결. 맵에 띄우자.
+                selectedPointMaker.position = LatLng(mSelectedLat, mSelectedLng)
+                selectedPointMaker.map = naverMap
             }
         }
     }
