@@ -126,7 +126,7 @@ class EditAppointmentActivity : BaseActivity() {
             showTimePicker()
         }
     }
-ㅁ
+
     override fun setValues() {
 
         titleTxt.text = "일정 생성"
