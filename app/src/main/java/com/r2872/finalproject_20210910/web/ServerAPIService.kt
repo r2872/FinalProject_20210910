@@ -33,9 +33,8 @@ interface ServerAPIService {
     @FormUrlEncoded
     @PATCH("/user")
     fun patchRequestEditUser(
-        @Field("current_password") current_password: String,
-        @Field("new_password") new_password: String,
-        @Field("nick_name") nick_name: String
+        @Field("field") field: String,
+        @Field("value") value: String,
     ): Call<BasicResponse>
 
     @FormUrlEncoded

@@ -25,43 +25,43 @@ class UserInfoEditActivity : BaseActivity() {
 
     override fun setupEvents() {
 
-        binding.saveBtn.setOnClickListener {
-
-            val inputCurrentPw = binding.currentPwEdt.text.toString()
-            val inputNewPw = binding.newPwEdt.text.toString()
-            val inputNickname = binding.nicknameEdtEdt.text.toString()
-
-            apiService.patchRequestEditUser(inputCurrentPw, inputNewPw, inputNickname)
-                .enqueue(object : Callback<BasicResponse> {
-                    override fun onResponse(
-                        call: Call<BasicResponse>,
-                        response: Response<BasicResponse>
-                    ) {
-                        if (response.isSuccessful) {
-
-                            val basicResponse = response.body()!!
-
-                            val userNickName = basicResponse.data.user.nickName
-
-                            Log.d("사용자 닉네임", userNickName)
-                            Toast.makeText(mContext, "수정 완료", Toast.LENGTH_SHORT)
-                                .show()
-                            finish()
-                        } else {
-
-                            Toast.makeText(
-                                mContext,
-                                JSONObject(response.errorBody()!!.string()).getString("message"),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
-                        Log.d("오류", t.toString())
-                    }
-                })
-        }
+//        binding.saveBtn.setOnClickListener {
+//
+//            val inputCurrentPw = binding.currentPwEdt.text.toString()
+//            val inputNewPw = binding.newPwEdt.text.toString()
+//            val inputNickname = binding.nicknameEdtEdt.text.toString()
+//
+//            apiService.patchRequestEditUser(inputCurrentPw, inputNewPw, inputNickname)
+//                .enqueue(object : Callback<BasicResponse> {
+//                    override fun onResponse(
+//                        call: Call<BasicResponse>,
+//                        response: Response<BasicResponse>
+//                    ) {
+//                        if (response.isSuccessful) {
+//
+//                            val basicResponse = response.body()!!
+//
+//                            val userNickName = basicResponse.data.user.nickName
+//
+//                            Log.d("사용자 닉네임", userNickName)
+//                            Toast.makeText(mContext, "수정 완료", Toast.LENGTH_SHORT)
+//                                .show()
+//                            finish()
+//                        } else {
+//
+//                            Toast.makeText(
+//                                mContext,
+//                                JSONObject(response.errorBody()!!.string()).getString("message"),
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        }
+//                    }
+//
+//                    override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+//                        Log.d("오류", t.toString())
+//                    }
+//                })
+//        }
     }
 
     override fun setValues() {
