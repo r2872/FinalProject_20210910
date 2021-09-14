@@ -60,6 +60,11 @@ class MainActivity : BaseActivity() {
             ContextUtil.setToken(mContext, "")
             finish()
         }
+
+        profileImg.setOnClickListener {
+            val myIntent = Intent(mContext, UserInfoActivity::class.java)
+            startActivity(myIntent)
+        }
     }
 
     override fun setValues() {

@@ -31,7 +31,7 @@ class UserInfoEditActivity : BaseActivity() {
             val inputNewPw = binding.newPwEdt.text.toString()
             val inputNickname = binding.nicknameEdtEdt.text.toString()
 
-            apiService.patchRequestEditUser( inputCurrentPw, inputNewPw, inputNickname)
+            apiService.patchRequestEditUser(inputCurrentPw, inputNewPw, inputNickname)
                 .enqueue(object : Callback<BasicResponse> {
                     override fun onResponse(
                         call: Call<BasicResponse>,
@@ -66,5 +66,6 @@ class UserInfoEditActivity : BaseActivity() {
 
     override fun setValues() {
 
+        titleTxt.text = "정보 수정"
     }
 }

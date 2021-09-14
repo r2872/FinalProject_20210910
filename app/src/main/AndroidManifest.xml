@@ -15,6 +15,9 @@
         android:theme="@style/Theme.FinalProject_20210910"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".UserInfoActivity"
+            android:exported="true" />
+        <activity
             android:name=".ViewMapActivity"
             android:exported="true" />
         <activity
