@@ -3,6 +3,7 @@ package com.r2872.finalproject_20210910
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
@@ -68,6 +69,12 @@ class ViewMapActivity : BaseActivity() {
 
                     val myView =
                         LayoutInflater.from(mContext).inflate(R.layout.my_custom_info_window, null)
+
+                    val placeName = myView.findViewById<TextView>(R.id.placeName_Txt)
+                    val arrivalTime = myView.findViewById<TextView>(R.id.arrivalTime_Txt)
+
+                    placeName.text = mAppointmentData.place
+                    arrivalTime.text = "??시간 ?분 소요예상"
 
                     return myView
                 }
