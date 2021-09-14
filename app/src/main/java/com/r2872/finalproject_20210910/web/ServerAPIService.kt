@@ -55,10 +55,12 @@ interface ServerAPIService {
     @FormUrlEncoded
     @POST("/user/place")
     fun postRequestMyPlaceList(
-        @Field("name ") name: String,
-        @Field("latitude ") latitude: Double,
-        @Field("longitude ") longitude: Double,
-        @Field("is_primary ") is_primary: Boolean
+        @Field("name") name: String,
+        @Field("latitude") latitude: Double,
+        @Field("longitude") longitude: Double,
+        @Field("is_primary") is_primary: Boolean
     ): Call<BasicResponse>
 
+    @GET("/user/place")
+    fun getRequestMyAppointmentList(): Call<BasicResponse>
 }

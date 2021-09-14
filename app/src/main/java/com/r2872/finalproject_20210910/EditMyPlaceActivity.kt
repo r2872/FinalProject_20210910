@@ -11,6 +11,8 @@ import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.r2872.finalproject_20210910.databinding.ActivityEditMyPlaceBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
+import com.r2872.finalproject_20210910.utils.ContextUtil
+import com.r2872.finalproject_20210910.utils.GlobalData
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -43,6 +45,7 @@ class EditMyPlaceActivity : BaseActivity() {
                 Toast.makeText(mContext, "장소를 지정해주세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            Log.d("입력값", ContextUtil.getToken(mContext))
             Log.d("입력값", inputTitle)
             Log.d("입력값", mSelectedLat.toString())
             Log.d("입력값", mSelectedLng.toString())
