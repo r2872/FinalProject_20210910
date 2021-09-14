@@ -24,7 +24,13 @@ import java.util.*
 class EditAppointmentActivity : BaseActivity() {
 
     private lateinit var binding: ActivityEditAppoinmentBinding
+
+    //    선택한 약속 일시를 저장할 변수.
     private val mSelectedDateTime = Calendar.getInstance()
+
+    //    선택한 약속장소를 저장할 변수.
+    private var mSelectedLat = 0.0 // Double 을 넣을것임.
+    private var mSelectedLng = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +48,10 @@ class EditAppointmentActivity : BaseActivity() {
 //            입력한 값들 받아오기
 //            1. 일정 제목
             val inputTitle = binding.titleEdt.text.toString()
+            if (inputTitle == "") {
+                Toast.makeText(mContext, "약속 제목을 적어주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
 //            2. 약속 일시? -> "2021-09-13 11:11" String 변환까지.
 //            => 날짜 / 시간중 선택 안한게 있다면? 선택하라고 토스트, 함수 강제 종료. (validation)
@@ -65,14 +75,19 @@ class EditAppointmentActivity : BaseActivity() {
             val inputPlaceName = binding.placeSearchEdt.text.toString()
 
 //            - 장소 위도 / 경도 ?
-            val lat = 37.4972
-            val lng = 127.0271
+//            val lat = 37.4972
+//            val lng = 127.0271
+
+            if (mSelectedLat == 0.0 && mSelectedLng == 0.0) {
+                Toast.makeText(mContext, "약속 장소를 지정해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             apiService.postRequestAppointment(
                 inputTitle,
                 finalDateTime,
                 inputPlaceName,
-                lat, lng
+                mSelectedLat, mSelectedLng
             ).enqueue(object : Callback<BasicResponse> {
                 override fun onResponse(
                     call: Call<BasicResponse>,
@@ -131,6 +146,17 @@ class EditAppointmentActivity : BaseActivity() {
             uiSettings.isCompassEnabled = true
             uiSettings.isScaleBarEnabled = false
             uiSettings.isLocationButtonEnabled = true
+
+            naverMap.setOnMapClickListener { pointF, latLng ->
+
+                Toast.makeText(
+                    mContext,
+                    "위도: ${latLng.latitude}, 경도: ${latLng.longitude}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                mSelectedLat = latLng.latitude
+                mSelectedLng = latLng.longitude
+            }
         }
     }
 
