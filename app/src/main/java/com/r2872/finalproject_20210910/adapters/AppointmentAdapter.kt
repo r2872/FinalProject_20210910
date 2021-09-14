@@ -1,12 +1,15 @@
 package com.r2872.finalproject_20210910.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import com.r2872.finalproject_20210910.R
+import com.r2872.finalproject_20210910.ViewMapActivity
 import com.r2872.finalproject_20210910.datas.AppointmentData
 
 class AppointmentAdapter(
@@ -30,10 +33,17 @@ class AppointmentAdapter(
         val title = row.findViewById<TextView>(R.id.title_Txt)
         val dateTime = row.findViewById<TextView>(R.id.date_Txt)
         val place = row.findViewById<TextView>(R.id.place_Txt)
+        val viewPlaceMap = row.findViewById<ImageView>(R.id.viewPlaceMap_Btn)
 
         title.text = data.title
         dateTime.text = data.datetime
         place.text = data.place
+
+        viewPlaceMap.setOnClickListener {
+            val myIntent = Intent(mContext, ViewMapActivity::class.java)
+            myIntent.putExtra("appointment", data)
+            mContext.startActivity(myIntent)
+        }
 
         return row
     }

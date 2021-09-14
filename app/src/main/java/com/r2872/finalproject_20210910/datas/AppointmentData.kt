@@ -1,6 +1,7 @@
 package com.r2872.finalproject_20210910.datas
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class AppointmentData(
     var id: Int,
@@ -14,5 +15,4 @@ data class AppointmentData(
     @SerializedName("created_at")
     var createdAt: String,
     var user: UserData
-
-)
+): Serializable

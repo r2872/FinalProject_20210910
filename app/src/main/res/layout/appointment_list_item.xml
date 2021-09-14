@@ -43,6 +43,14 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/viewPlaceMap_Btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="5dp"
+            android:padding="5dp"
+            android:src="@drawable/map_marker_red" />
+
 
     </LinearLayout>
 
