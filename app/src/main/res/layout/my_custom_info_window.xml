@@ -9,7 +9,7 @@
         android:id="@+id/placeName_Txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="약속장소명" />
+        android:text="@string/placeName" />
 
     <TextView
         android:layout_width="match_parent"

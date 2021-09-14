@@ -1,6 +1,7 @@
 package com.r2872.finalproject_20210910
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -11,6 +12,10 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import com.odsay.odsayandroidsdk.API
+import com.odsay.odsayandroidsdk.ODsayData
+import com.odsay.odsayandroidsdk.ODsayService
+import com.odsay.odsayandroidsdk.OnResultCallbackListener
 import com.r2872.finalproject_20210910.databinding.ActivityViewMapBinding
 import com.r2872.finalproject_20210910.datas.AppointmentData
 
@@ -74,12 +79,81 @@ class ViewMapActivity : BaseActivity() {
                     val arrivalTime = myView.findViewById<TextView>(R.id.arrivalTime_Txt)
 
                     placeName.text = mAppointmentData.place
-                    arrivalTime.text = "??시간 ?분 소요예상"
+//                    arrivalTime.text = "??시간 ?분 소요예상"
+
+                    val myOdsayService =
+                        ODsayService.init(mContext, "JdJCDd5mWQLx6RMfBFXCYV0S/Kw3CU0YMt4WrfwXhTg")
+                    myOdsayService.requestSearchPubTransPath(
+                        126.9075.toString(),
+                        37.5674.toString(),
+                        lng.toString(),
+                        lat.toString(),
+                        null,
+                        null,
+                        null,
+                        object : OnResultCallbackListener {
+                            override fun onSuccess(p0: ODsayData?, p1: API?) {
+
+                                val jsonObj = p0!!.json
+                                val resultObj = jsonObj.getJSONObject("result")
+                                val pathArr = resultObj.getJSONArray("path")
+
+//                                for (i in 0 until pathArr.length()) {
+//                                    val pathObj = pathArr.getJSONObject(i)
+//                                    Log.d("API 응답", pathObj.toString(4))
+//                                }
+                                val firstPath = pathArr.getJSONObject(0)
+                                val infoObj = firstPath.getJSONObject("info")
+                                val totalTime = infoObj.getInt("totalTime")
+//                                Log.d("총 소요시간", totalTime.toString())
+
+//                                시간 / 분 으로 분리. 92 => 1시간 32분
+//                                시간 : 전체 분 / 60
+//                                분 : 전체 분 % 60
+                                val hour = totalTime / 60
+                                val minute = totalTime % 60
+                                Log.d("예상시간", hour.toString())
+                                Log.d("예상분", minute.toString())
+                                arrivalTime.text =
+                                    if (hour == 0) {
+                                        "${minute}분 소요 예상"
+                                    } else {
+                                        "${hour}시간 ${minute}분 소요 예상"
+                                    }
+                            }
+
+                            override fun onError(p0: Int, p1: String?, p2: API?) {
+
+                                Log.d("예상시간실패", p1!!)
+                                arrivalTime.text = "예상시간 받아오기 실패"
+                            }
+                        }
+                    )
 
                     return myView
                 }
             }
             infoWindow.open(marker)
+
+//            지도의 아무데나 찍으면 열려있는 마커 닫아주기.
+            naverMap.setOnMapClickListener { _, _ ->
+
+                infoWindow.close()
+            }
+            marker.setOnClickListener {
+
+                val clickedMarker = it as Marker
+
+                if (clickedMarker.infoWindow == null) {
+
+//                    마커에 연결된 정보창 없을때 (닫혀있을때)
+                    infoWindow.open(clickedMarker)
+                } else {
+
+                    infoWindow.close()
+                }
+                return@setOnClickListener true
+            }
         }
     }
 }
