@@ -1,6 +1,7 @@
 package com.r2872.finalproject_20210910
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.EditText
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.r2872.finalproject_20210910.databinding.ActivityUserInfoBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
+import com.r2872.finalproject_20210910.utils.ContextUtil
 import com.r2872.finalproject_20210910.utils.GlobalData
 import retrofit2.Call
 import retrofit2.Callback
@@ -31,7 +33,7 @@ class UserInfoActivity : BaseActivity() {
         binding.readyTimeLayout.setOnClickListener {
 
             val customView =
-                LayoutInflater.from(mContext).inflate(R.layout.my_custom_alert_edt, null)
+                LayoutInflater.from(mContext).inflate(R.layout.my_custom_alert_edt_readytime, null)
 
             val myAlert = AlertDialog.Builder(mContext)
                 .setTitle("나의 외출 준비시간")
@@ -42,7 +44,7 @@ class UserInfoActivity : BaseActivity() {
                         val readyTimeEdt = customView.findViewById<EditText>(R.id.readyTime_Edt)
 
                         if (readyTimeEdt.text.toString() == "") {
-                            Toast.makeText(mContext, "값을 입력해주세요", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(mContext, "내용을 입력하세요", Toast.LENGTH_SHORT).show()
                             return
                         }
 
@@ -71,11 +73,78 @@ class UserInfoActivity : BaseActivity() {
 
                             }
                         })
-
-
                     }
                 })
-                .setNegativeButton("취소", null).show()
+                .setNegativeButton("취소", null)
+            myAlert.show()
+        }
+
+        binding.editNickNameBtn.setOnClickListener {
+
+            val customView =
+                LayoutInflater.from(mContext).inflate(R.layout.my_custom_alert_edt_nickname, null)
+
+            val myAlert = AlertDialog.Builder(mContext)
+                .setTitle("닉네임 변경")
+                .setView(customView)
+                .setPositiveButton("입력", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+
+                        val nicknameEdt = customView.findViewById<EditText>(R.id.nickname_Edt)
+
+                        if (nicknameEdt.text.toString() == "") {
+                            Toast.makeText(mContext, "내용을 입력하세요", Toast.LENGTH_SHORT).show()
+                            return
+                        }
+
+                        apiService.patchRequestEditUser(
+                            "nickname",
+                            nicknameEdt.text.toString()
+                        ).enqueue(object : Callback<BasicResponse> {
+                            override fun onResponse(
+                                call: Call<BasicResponse>,
+                                response: Response<BasicResponse>
+                            ) {
+                                if (response.isSuccessful) {
+
+//                                    내 수정된 정보 파싱. => 로그인한 사용자의 정보로 갱신.
+                                    val basicResponse = response.body()!!
+
+                                    GlobalData.loginUser = basicResponse.data.user
+
+                                    Toast.makeText(mContext, "변경 완료", Toast.LENGTH_SHORT).show()
+                                    setUserInfo()
+                                }
+
+                            }
+
+                            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+                            }
+                        })
+                    }
+                })
+                .setNegativeButton("취소", null)
+            myAlert.show()
+        }
+
+        binding.signOutBtn.setOnClickListener {
+
+            val alert = AlertDialog.Builder(mContext)
+                .setMessage("정말 로그아웃 하시겠습니까?")
+                .setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+
+                    ContextUtil.setToken(mContext, "")
+
+                    GlobalData.loginUser = null
+
+                    val myIntent = Intent(mContext, LoginActivity::class.java)
+                    myIntent.flags =
+                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(myIntent)
+                })
+                .setNegativeButton("취소", null)
+            alert.show()
         }
     }
 

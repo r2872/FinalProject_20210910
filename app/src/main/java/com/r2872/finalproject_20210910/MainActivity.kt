@@ -10,7 +10,6 @@ import com.r2872.finalproject_20210910.adapters.AppointmentAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityMainBinding
 import com.r2872.finalproject_20210910.datas.AppointmentData
 import com.r2872.finalproject_20210910.datas.BasicResponse
-import com.r2872.finalproject_20210910.utils.ContextUtil
 import com.r2872.finalproject_20210910.utils.GlobalData
 import retrofit2.Call
 import retrofit2.Callback
@@ -50,15 +49,6 @@ class MainActivity : BaseActivity() {
 
             val myIntent = Intent(mContext, EditAppointmentActivity::class.java)
             startActivity(myIntent)
-        }
-
-        binding.logoutBtn.setOnClickListener {
-            ContextUtil.setAutoLogIn(mContext, false)
-            GlobalData.loginUser = null
-            val myIntent = Intent(mContext, LoginActivity::class.java)
-            startActivity(myIntent)
-            ContextUtil.setToken(mContext, "")
-            finish()
         }
 
         profileImg.setOnClickListener {

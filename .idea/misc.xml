@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/drawable/black_rec.xml" value="0.26564102564102565" />
+        <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.26296296296296295" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/drawable/ic_baseline_login_24.xml" value="0.26564102564102565" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.26296296296296295" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/activity_edit_appoinment.xml" value="0.25364583333333335" />
@@ -18,6 +19,8 @@
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/appointment_list_item.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/my_custom_action_bar.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/my_custom_alert_edt.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/my_custom_alert_edt_nickname.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/my_custom_alert_edt_readytime.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/my_custom_info_window.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/schedule_list_item.xml" value="0.25364583333333335" />
       </map>
