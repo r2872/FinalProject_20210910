@@ -126,6 +126,11 @@ class EditAppointmentActivity : BaseActivity() {
             val myHome = LatLng(37.5674, 126.9075)
             val cameraUpdate = CameraUpdate.scrollTo(myHome)
             naverMap.moveCamera(cameraUpdate)
+
+            val uiSettings = naverMap.uiSettings
+            uiSettings.isCompassEnabled = true
+            uiSettings.isScaleBarEnabled = false
+            uiSettings.isLocationButtonEnabled = true
         }
     }
 
