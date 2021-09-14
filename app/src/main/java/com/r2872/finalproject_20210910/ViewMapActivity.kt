@@ -38,6 +38,8 @@ class ViewMapActivity : BaseActivity() {
 
     override fun setValues() {
 
+        titleTxt.text = "상세 장소"
+
         mAppointmentData = intent.getSerializableExtra("appointment") as AppointmentData
 
         val fm = supportFragmentManager

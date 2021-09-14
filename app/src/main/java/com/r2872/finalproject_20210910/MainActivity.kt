@@ -3,6 +3,7 @@ package com.r2872.finalproject_20210910
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.r2872.finalproject_20210910.adapters.AppointmentAdapter
@@ -62,6 +63,9 @@ class MainActivity : BaseActivity() {
     }
 
     override fun setValues() {
+
+        profileImg.visibility = View.VISIBLE
+        titleTxt.text = "메인화면"
 
         Toast.makeText(mContext, "${GlobalData.loginUser!!.nickName} 님 환영합니다.", Toast.LENGTH_SHORT)
             .show()
