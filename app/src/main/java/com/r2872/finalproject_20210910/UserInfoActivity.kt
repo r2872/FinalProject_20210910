@@ -4,10 +4,12 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
+import com.bumptech.glide.Glide
 import com.r2872.finalproject_20210910.databinding.ActivityUserInfoBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
@@ -146,9 +148,29 @@ class UserInfoActivity : BaseActivity() {
                 .setNegativeButton("취소", null)
             alert.show()
         }
+
+        binding.myPlaceLayout.setOnClickListener {
+
+            startActivity(Intent(mContext, ViewMyPlaceListActivity::class.java))
+        }
     }
 
     override fun setValues() {
+
+        when (GlobalData.loginUser!!.provider) {
+            "facebook" -> {
+                Glide.with(mContext)
+                    .load(R.drawable.facebook)
+                    .into(binding.providerTxt)
+                binding.pwEditBtn.visibility = View.GONE
+            }
+            "kakao" -> {
+                Glide.with(mContext)
+                    .load(R.drawable.kakao_icon)
+                    .into(binding.providerTxt)
+                binding.pwEditBtn.visibility = View.GONE
+            }
+        }
 
         titleTxt.text = "내 정보"
         setUserInfo()

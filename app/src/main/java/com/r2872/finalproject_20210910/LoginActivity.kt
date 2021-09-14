@@ -33,11 +33,6 @@ class LoginActivity : BaseActivity() {
 
     override fun setupEvents() {
 
-        binding.autoLoginCheckBox.setOnCheckedChangeListener { _, isChecked ->
-
-            ContextUtil.setAutoLogIn(mContext, isChecked)
-        }
-
         callbackManager = CallbackManager.Factory.create()
 
         binding.loginButton.setReadPermissions("email")
@@ -94,6 +89,7 @@ class LoginActivity : BaseActivity() {
                                                         basicResponse.data.token
                                                     )
                                                     GlobalData.loginUser = basicResponse.data.user
+                                                    clearContextUtilIdPw()
 
                                                     moveToMain()
                                                 } else {
@@ -182,6 +178,7 @@ class LoginActivity : BaseActivity() {
 
                                             ContextUtil.setToken(mContext, basicResponse.data.token)
                                             GlobalData.loginUser = basicResponse.data.user
+                                            clearContextUtilIdPw()
 
                                             moveToMain()
                                         } else {
@@ -218,6 +215,14 @@ class LoginActivity : BaseActivity() {
 
             val inputId = binding.emailEdt.text.toString()
             val inputPw = binding.pwEdt.text.toString()
+            val saveInfo = binding.autoLoginCheckBox.isChecked
+
+            if (saveInfo) {
+                ContextUtil.setUserId(mContext, inputId)
+                ContextUtil.setUserPw(mContext, inputPw)
+            } else {
+                clearContextUtilIdPw()
+            }
 
             apiService.postRequestSignIn(inputId, inputPw)
                 .enqueue(object : Callback<BasicResponse> {
@@ -262,6 +267,14 @@ class LoginActivity : BaseActivity() {
 
 //        var keyHash = Utility.getKeyHash(this)
 //        Log.d("해시코드", keyHash)
+        if (ContextUtil.getUserId(mContext) != "") {
+            binding.emailEdt.setText(ContextUtil.getUserId(mContext))
+            binding.pwEdt.setText(ContextUtil.getUserPw(mContext))
+            binding.autoLoginCheckBox.isChecked = true
+            Toast.makeText(mContext, "기존 로그인 정보를 불러옵니다.", Toast.LENGTH_SHORT).show()
+        } else {
+            binding.autoLoginCheckBox.isChecked = false
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -274,6 +287,11 @@ class LoginActivity : BaseActivity() {
         val myIntent = Intent(mContext, MainActivity::class.java)
         startActivity(myIntent)
         finish()
+    }
+
+    private fun clearContextUtilIdPw() {
+        ContextUtil.setUserId(mContext, "")
+        ContextUtil.setUserPw(mContext, "")
     }
 
     companion object {

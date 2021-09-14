@@ -1,6 +1,7 @@
 package com.r2872.finalproject_20210910.web
 
 import android.content.Context
+import android.util.Log
 import com.r2872.finalproject_20210910.utils.ContextUtil
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

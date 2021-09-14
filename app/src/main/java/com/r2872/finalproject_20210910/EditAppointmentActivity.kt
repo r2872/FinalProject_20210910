@@ -110,8 +110,6 @@ class EditAppointmentActivity : BaseActivity() {
                 }
             })
 
-            finish()
-
         }
 
         binding.dateTxt.setOnClickListener {

@@ -1,6 +1,5 @@
 package com.r2872.finalproject_20210910.web
 
-import com.r2872.finalproject_20210910.datas.AppointmentData
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -52,5 +51,14 @@ interface ServerAPIService {
 
     @GET("/user")
     fun getRequestMyInfo(): Call<BasicResponse>
+
+    @FormUrlEncoded
+    @POST("/user/place")
+    fun postRequestMyPlaceList(
+        @Field("name ") name: String,
+        @Field("latitude ") latitude: Double,
+        @Field("longitude ") longitude: Double,
+        @Field("is_primary ") is_primary: Boolean
+    ): Call<BasicResponse>
 
 }
