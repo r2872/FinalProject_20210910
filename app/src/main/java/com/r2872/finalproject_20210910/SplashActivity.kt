@@ -46,11 +46,11 @@ class SplashActivity : BaseActivity() {
 
                     val basicResponse = response.body()!!
                     val user = basicResponse.data.user
-                    Log.d("유저정보테스트", user.toString())
+                    Log.d("유저정보테스트성공", user.toString())
 
                     GlobalData.loginUser = user
                 } else {
-//                    GlobalData.loginUser = null
+                    Log.d("유저정보테스트실패", GlobalData.loginUser.toString())
                 }
             }
 

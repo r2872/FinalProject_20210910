@@ -6,6 +6,11 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.MapFragment
+import com.naver.maps.map.NaverMap
+import com.naver.maps.map.OnMapReadyCallback
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import net.daum.mf.map.api.MapView
@@ -107,6 +112,21 @@ class EditAppointmentActivity : BaseActivity() {
 
     override fun setValues() {
 
+        val fm = supportFragmentManager
+        val mapFragment = fm.findFragmentById(R.id.naverMapView) as MapFragment?
+            ?: MapFragment.newInstance().also {
+                fm.beginTransaction().add(R.id.naverMapView, it).commit()
+            }
+        mapFragment.getMapAsync { naverMap ->
+            Log.d("지도바로할일", naverMap.toString())
+//            집 좌표를 지도 시작점으로. (예제)
+//            it.mapType = NaverMap.MapType.Hybrid
+
+//            좌표를 다루는 변수 - LatLng 클래스 활용
+            val myHome = LatLng(37.5674, 126.9075)
+            val cameraUpdate = CameraUpdate.scrollTo(myHome)
+            naverMap.moveCamera(cameraUpdate)
+        }
     }
 
     private fun showDatePicker() {

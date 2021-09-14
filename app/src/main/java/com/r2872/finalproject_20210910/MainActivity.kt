@@ -53,6 +53,7 @@ class MainActivity : BaseActivity() {
 
         binding.logoutBtn.setOnClickListener {
             ContextUtil.setAutoLogIn(mContext, false)
+            GlobalData.loginUser = null
             val myIntent = Intent(mContext, LoginActivity::class.java)
             startActivity(myIntent)
             ContextUtil.setToken(mContext, "")
@@ -86,6 +87,10 @@ class MainActivity : BaseActivity() {
 //                    for (apData in basicResponse.data.appoinments) {
 //                        Log.d("약속리스트", apData.title)
 //                    }
+                } else {
+                    Toast.makeText(mContext, response.errorBody()!!.string(), Toast.LENGTH_SHORT)
+                        .show()
+
                 }
                 mAdapter.notifyDataSetChanged()
             }
