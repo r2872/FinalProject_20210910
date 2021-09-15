@@ -4,13 +4,17 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
+import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.overlay.PolylineOverlay
 import com.r2872.finalproject_20210910.adapters.StartPlaceSpinnerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
@@ -38,6 +42,9 @@ class EditAppointmentActivity : BaseActivity() {
     val mStartPlaceList = ArrayList<PlaceListData>()
     private lateinit var mSpinnerAdapter: StartPlaceSpinnerAdapter
 
+    //    선택된 출발지를 담아줄 변수
+    private lateinit var mSelectedStartPlace: PlaceListData
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_appoinment)
@@ -47,6 +54,26 @@ class EditAppointmentActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+//        스피너의 선택 이벤트.
+        binding.startPlaceSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    p0: AdapterView<*>?,
+                    p1: View?,
+                    position: Int,
+                    p3: Long
+                ) {
+
+//                    화면이 뜨면 자동으로 0번 아이템이 선택된다.
+                    Log.d("선택된위치", position.toString())
+
+//                    스피너의 위치에 맞는 장소를 선택된 출발지점으로 선정.
+                    mSelectedStartPlace = mStartPlaceList[position]
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
+            }
 
 //        확인 버튼이 눌리면?
         binding.addBtn.setOnClickListener {
@@ -181,19 +208,41 @@ class EditAppointmentActivity : BaseActivity() {
 
             naverMap.setOnMapClickListener { _, latLng ->
 
-                Toast.makeText(
-                    mContext,
-                    "위도: ${latLng.latitude}, 경도: ${latLng.longitude}",
-                    Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    mContext,
+//                    "위도: ${latLng.latitude}, 경도: ${latLng.longitude}",
+//                    Toast.LENGTH_SHORT
+//                ).show()
                 mSelectedLat = latLng.latitude
                 mSelectedLng = latLng.longitude
 
 //                좌표를 받아서 -> 미리 만들어둔 마커의 좌표로 연결. 맵에 띄우자.
                 selectedPointMaker.position = LatLng(mSelectedLat, mSelectedLng)
                 selectedPointMaker.map = naverMap
+
+                drawStartPlaceToDestination(naverMap)
             }
         }
+    }
+
+    private fun drawStartPlaceToDestination(naverMap: NaverMap) {
+
+//        시작지점의 위경도
+//        mSelectedStartPlace 위경도 활용.
+
+//        도착지점의 위경도
+//        mSelectedLat,Lng 변수 활용
+
+//        예제. 시작지점 -> 도착지점으로 연결 선 그어주기.
+
+//        좌표 목록을 ArrayList 로 담자.
+        val points = ArrayList<LatLng>()
+
+        points.add(LatLng(mSelectedStartPlace.latitude, mSelectedStartPlace.longitude)) // 시작점
+        points.add(LatLng(mSelectedLat, mSelectedLng)) // 도착점
+        val polyline = PolylineOverlay()
+        polyline.coords = points
+        polyline.map = naverMap
     }
 
     private fun showDatePicker() {

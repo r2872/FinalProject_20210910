@@ -12,4 +12,4 @@ data class PlaceListData(
     var longitude: Double,
     @SerializedName("is_primary")
     var isPrimary: Boolean
-)
+) : Serializable

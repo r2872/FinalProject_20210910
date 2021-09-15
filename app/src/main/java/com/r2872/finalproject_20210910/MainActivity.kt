@@ -62,7 +62,7 @@ class MainActivity : BaseActivity() {
     override fun setValues() {
 
         profileImg.visibility = View.VISIBLE
-        titleTxt.text = "메인화면"
+        titleTxt.text = "일정 목록"
 
         Toast.makeText(mContext, "${GlobalData.loginUser!!.nickName} 님 환영합니다.", Toast.LENGTH_SHORT)
             .show()

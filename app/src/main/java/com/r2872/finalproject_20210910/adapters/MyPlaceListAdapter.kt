@@ -1,6 +1,7 @@
 package com.r2872.finalproject_20210910.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.r2872.finalproject_20210910.R
+import com.r2872.finalproject_20210910.ViewMyPlaceMapActivity
 import com.r2872.finalproject_20210910.datas.PlaceListData
 
 class MyPlaceListAdapter(
@@ -46,7 +48,9 @@ class MyPlaceListAdapter(
                 isPrimary.visibility = View.VISIBLE
             }
             viewPlaceMapBtn.setOnClickListener {
-                Toast.makeText(mContext, "지도 버튼 클릭", Toast.LENGTH_SHORT).show()
+                val myIntent = Intent(mContext, ViewMyPlaceMapActivity::class.java)
+                myIntent.putExtra("myPlace", item)
+                mContext.startActivity(myIntent)
             }
             backgroundLayout.setOnClickListener {
                 Toast.makeText(mContext, item.name, Toast.LENGTH_SHORT).show()
