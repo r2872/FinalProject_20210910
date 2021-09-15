@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.r2872.finalproject_20210910.adapters.AppointmentAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityMainBinding
 import com.r2872.finalproject_20210910.datas.AppointmentData
@@ -67,6 +69,12 @@ class MainActivity : BaseActivity() {
 
         mAdapter = AppointmentAdapter(mContext, mAppointmentList)
         binding.scheduleList.adapter = mAdapter
+        binding.scheduleList.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                LinearLayoutManager.VERTICAL
+            )
+        )
     }
 
     private fun getAppointmentListFromServer() {

@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.r2872.finalproject_20210910.adapters.MyPlaceListAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityViewMyPlaceListBinding
@@ -52,6 +54,12 @@ class ViewMyPlaceListActivity : BaseActivity() {
 
         mAdapter = MyPlaceListAdapter(mContext, mList)
         binding.placeListRecyclerView.adapter = mAdapter
+        binding.placeListRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                this,
+                LinearLayoutManager.VERTICAL
+            )
+        )
     }
 
     private fun getMyPlaceListFromServer() {
