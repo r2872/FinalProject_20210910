@@ -7,11 +7,12 @@ import android.view.View
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.MapFragment
+import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.overlay.PathOverlay
+import com.naver.maps.map.util.FusedLocationSource
 import com.odsay.odsayandroidsdk.API
 import com.odsay.odsayandroidsdk.ODsayData
 import com.odsay.odsayandroidsdk.ODsayService
@@ -23,6 +24,16 @@ class ViewMapActivity : BaseActivity() {
 
     private lateinit var binding: ActivityViewMapBinding
     private lateinit var mAppointmentData: AppointmentData
+    private lateinit var mLocationSource: FusedLocationSource
+
+    //    선택된 출발지를 보여줄 마커
+    private val mStartPlaceMarker = Marker()
+
+    //        선택된 도착지를 보여줄 마커 하나만 생성.
+    private val selectedPointMaker = Marker()
+
+    //    네이버 지도를 멤버변수로 담자.
+    private lateinit var mNaverMap: NaverMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +60,11 @@ class ViewMapActivity : BaseActivity() {
             }
 
         mapFragment.getMapAsync { naverMap ->
+            mNaverMap = naverMap
+
+            mLocationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+
+            mNaverMap.locationSource = mLocationSource
 
             val lat = mAppointmentData.latitude
             val lng = mAppointmentData.longitude
@@ -62,11 +78,15 @@ class ViewMapActivity : BaseActivity() {
             uiSettings.isScaleBarEnabled = false
             uiSettings.isLocationButtonEnabled = true
 
-            val marker = Marker()
-            marker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
+            selectedPointMaker.icon = OverlayImage.fromResource(R.drawable.arrival_marker)
 
-            marker.position = currentAppointment
-            marker.map = naverMap
+            selectedPointMaker.position = currentAppointment
+            selectedPointMaker.map = naverMap
+
+            mStartPlaceMarker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
+            mStartPlaceMarker.position =
+                LatLng(mAppointmentData.startLatitude, mAppointmentData.startLongitude)
+            mStartPlaceMarker.map = naverMap
 
 //            기본 정보창 띄우기
 
@@ -75,8 +95,8 @@ class ViewMapActivity : BaseActivity() {
             val myOdsayService =
                 ODsayService.init(mContext, "JdJCDd5mWQLx6RMfBFXCYV0S/Kw3CU0YMt4WrfwXhTg")
             myOdsayService.requestSearchPubTransPath(
-                126.9075.toString(),
-                37.5674.toString(),
+                mAppointmentData.startLongitude.toString(),
+                mAppointmentData.startLatitude.toString(),
                 lng.toString(),
                 lat.toString(),
                 null,
@@ -88,13 +108,54 @@ class ViewMapActivity : BaseActivity() {
                         val jsonObj = p0!!.json
                         val resultObj = jsonObj.getJSONObject("result")
                         val pathArr = resultObj.getJSONArray("path")
+                        val firstPathObj = pathArr.getJSONObject(0)
 
-//                                for (i in 0 until pathArr.length()) {
-//                                    val pathObj = pathArr.getJSONObject(i)
-//                                    Log.d("API 응답", pathObj.toString(4))
-//                                }
-                        val firstPath = pathArr.getJSONObject(0)
-                        val infoObj = firstPath.getJSONObject("info")
+//                        출발점 ~ 경유지 목록 ~ 도착지를 이어주는 Path 객체를 추가.
+                        val points = ArrayList<LatLng>()
+
+                        points.add(
+                            LatLng(
+                                mAppointmentData.startLatitude,
+                                mAppointmentData.startLongitude
+                            )
+                        ) // 시작점
+
+                        val subPathArr = firstPathObj.getJSONArray("subPath")
+                        for (i in 0 until subPathArr.length()) {
+                            val subPathObj = subPathArr.getJSONObject(i)
+
+                            if (!subPathObj.isNull("passStopList")) {
+
+//                            정거장 목록을 불러내보자.
+                                val passStopListObj = subPathObj.getJSONObject("passStopList")
+                                val stationArr = passStopListObj.getJSONArray("stations")
+                                for (j in 0 until stationArr.length()) {
+
+                                    val stationObj = stationArr.getJSONObject(j)
+
+//                                    각 정거장의 GPS 좌표 추출 -> 네이버지도의 위치객체로 변환.
+                                    val latlng = LatLng(
+                                        stationObj.getString("y").toDouble(),
+                                        stationObj.getString("x").toDouble()
+                                    )
+//                                points ArrayList 에 경유지로 추가
+                                    points.add(latlng)
+                                }
+                            }
+                        }
+                        points.add(
+                            LatLng(
+                                mAppointmentData.latitude,
+                                mAppointmentData.longitude
+                            )
+                        )
+                        //    화면에 그려질 출발~도착지 연결 선
+                        val mPath = PathOverlay()
+
+                        mPath.coords = points
+                        mPath.map = naverMap
+
+                        val infoObj = firstPathObj.getJSONObject("info")
                         val totalTime = infoObj.getInt("totalTime")
 //                                Log.d("총 소요시간", totalTime.toString())
 
@@ -135,14 +196,14 @@ class ViewMapActivity : BaseActivity() {
                     }
                 })
 
-            infoWindow.open(marker)
+            infoWindow.open(selectedPointMaker)
 
 //            지도의 아무데나 찍으면 열려있는 마커 닫아주기.
             naverMap.setOnMapClickListener { _, _ ->
 
                 infoWindow.close()
             }
-            marker.setOnClickListener {
+            selectedPointMaker.setOnClickListener {
 
                 val clickedMarker = it as Marker
 
@@ -157,5 +218,29 @@ class ViewMapActivity : BaseActivity() {
                 return@setOnClickListener true
             }
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
+            return
+        }
+
+        if (mLocationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if (!mLocationSource.isActivated) {
+                mNaverMap.locationTrackingMode = LocationTrackingMode.None
+            }
+            return
+        }
+
+    }
+
+    companion object {
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 }

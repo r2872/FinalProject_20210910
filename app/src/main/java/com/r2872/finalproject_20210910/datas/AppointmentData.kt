@@ -11,6 +11,12 @@ data class AppointmentData(
     var userId: Int,
     var title: String,
     var datetime: Date, // 일단 String -> 파싱 기능 수정 => Date 형태로 받자. (Calendar 와 엮어서 사용)
+    @SerializedName("start_place")
+    var startPlace: String,
+    @SerializedName("start_latitude")
+    var startLatitude: Double,
+    @SerializedName("start_longitude")
+    var startLongitude: Double,
     var place: String,
     var latitude: Double,
     var longitude: Double,
@@ -18,6 +24,7 @@ data class AppointmentData(
     var createdAt: Date,
     var user: UserData
 ) : Serializable {
+
 
     //    함수 추가 => 현재 시간 ~ 약속시간 남은 시간에 따라 다른 문구를 리턴.
     fun getFormattedDateTime(): String {

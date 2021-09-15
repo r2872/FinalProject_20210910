@@ -241,7 +241,7 @@ class EditAppointmentActivity : BaseActivity() {
             uiSettings.isScaleBarEnabled = false
             uiSettings.isLocationButtonEnabled = true
 
-            selectedPointMaker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
+            selectedPointMaker.icon = OverlayImage.fromResource(R.drawable.arrival_marker)
 
             naverMap.setOnMapClickListener { _, latLng ->
 
@@ -271,6 +271,7 @@ class EditAppointmentActivity : BaseActivity() {
         mStartPlaceMarker.position =
             LatLng(mSelectedStartPlace.latitude, mSelectedStartPlace.longitude)
         mStartPlaceMarker.map = naverMap
+        mStartPlaceMarker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
 
 //        도착지점의 위경도
 //        mSelectedLat,Lng 변수 활용
@@ -319,8 +320,8 @@ class EditAppointmentActivity : BaseActivity() {
                     mInfoWindow.open(selectedPointMaker)
 
 //                  경유지들 좌표를 목록에 추가 (결과가 어떻게 되어있는지 분석, Parsing)
-                    val subPathArr = firstPathObj.getJSONArray("subPath")
 
+                    val subPathArr = firstPathObj.getJSONArray("subPath")
                     for (i in 0 until subPathArr.length()) {
                         val subPathObj = subPathArr.getJSONObject(i)
 
