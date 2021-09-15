@@ -11,14 +11,17 @@ import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import com.r2872.finalproject_20210910.adapters.StartPlaceSpinnerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
+import com.r2872.finalproject_20210910.datas.PlaceListData
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class EditAppointmentActivity : BaseActivity() {
 
@@ -30,6 +33,10 @@ class EditAppointmentActivity : BaseActivity() {
     //    선택한 약속장소를 저장할 변수.
     private var mSelectedLat = 0.0 // Double 을 넣을것임.
     private var mSelectedLng = 0.0
+
+    //    출발지 목록을 담아둘 리스트.
+    val mStartPlaceList = ArrayList<PlaceListData>()
+    private lateinit var mSpinnerAdapter: StartPlaceSpinnerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +130,28 @@ class EditAppointmentActivity : BaseActivity() {
     }
 
     override fun setValues() {
+
+        mSpinnerAdapter =
+            StartPlaceSpinnerAdapter(mContext, R.layout.my_place_list_item, mStartPlaceList)
+        binding.startPlaceSpinner.adapter = mSpinnerAdapter
+
+//        내 출발장소 목록 담아주기
+        apiService.getRequestMyAppointmentList().enqueue(object : Callback<BasicResponse> {
+            override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
+
+                if (response.isSuccessful) {
+                    mStartPlaceList.clear()
+
+                    val basicResponse = response.body()!!
+                    mStartPlaceList.addAll(basicResponse.data.places)
+                }
+                mSpinnerAdapter.notifyDataSetChanged()
+            }
+
+            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+            }
+        })
 
         titleTxt.text = "일정 생성"
 

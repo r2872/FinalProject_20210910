@@ -12,6 +12,7 @@ import com.r2872.finalproject_20210910.R
 import com.r2872.finalproject_20210910.ViewMapActivity
 import com.r2872.finalproject_20210910.datas.AppointmentData
 import java.text.SimpleDateFormat
+import java.util.*
 
 class AppointmentAdapter(
     private val mContext: Context,
@@ -39,14 +40,14 @@ class AppointmentAdapter(
         private val dateTxt = view.findViewById<TextView>(R.id.date_Txt)
         private val placeTxt = view.findViewById<TextView>(R.id.place_Txt)
         private val viewPlaceMapBtn = view.findViewById<ImageView>(R.id.viewPlaceMap_Btn)
-        private val dateTimeSdf = SimpleDateFormat("M/d a h:mm")
+
 
         fun bind(item: AppointmentData) {
 
             titleTxt.text = item.title
 
 //            약속일시 : Date 형태로 파싱됨. => String 으로 가공. SimpleDateFormat 사용.
-            dateTxt.text = dateTimeSdf.format(item.datetime)
+            dateTxt.text = item.getFormattedDateTime()
             placeTxt.text = item.place
 
             viewPlaceMapBtn.setOnClickListener {
