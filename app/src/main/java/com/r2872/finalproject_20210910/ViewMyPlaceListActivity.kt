@@ -18,6 +18,7 @@ class ViewMyPlaceListActivity : BaseActivity() {
 
     private lateinit var binding: ActivityViewMyPlaceListBinding
     private lateinit var mAdapter: MyPlaceListAdapter
+    private val mList = ArrayList<PlaceListData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +31,7 @@ class ViewMyPlaceListActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        getMyAppointmentListFromServer()
+        getMyPlaceListFromServer()
     }
 
     override fun setupEvents() {
@@ -48,9 +49,12 @@ class ViewMyPlaceListActivity : BaseActivity() {
             .load(R.drawable.ic_baseline_post_add_24)
             .into(profileImg)
         profileImg.visibility = View.VISIBLE
+
+        mAdapter = MyPlaceListAdapter(mContext, mList)
+        binding.placeListRecyclerView.adapter = mAdapter
     }
 
-    private fun getMyAppointmentListFromServer() {
+    private fun getMyPlaceListFromServer() {
 
         apiService.getRequestMyAppointmentList().enqueue(object : Callback<BasicResponse> {
             override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
@@ -59,10 +63,9 @@ class ViewMyPlaceListActivity : BaseActivity() {
 
                     val basicResponse = response.body()!!
 
+                    mList.clear()
+                    mList.addAll(basicResponse.data.places)
                     Log.d("서버응답", basicResponse.toString())
-                    mAdapter = MyPlaceListAdapter(mContext)
-                    mAdapter.datas = basicResponse.data.places as MutableList<PlaceListData>
-                    binding.placeListRecyclerView.adapter = mAdapter
                 }
 
                 mAdapter.notifyDataSetChanged()
