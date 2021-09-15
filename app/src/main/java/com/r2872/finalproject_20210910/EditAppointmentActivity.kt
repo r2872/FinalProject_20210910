@@ -1,5 +1,6 @@
 package com.r2872.finalproject_20210910
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
@@ -73,6 +74,7 @@ class EditAppointmentActivity : BaseActivity() {
         setupEvents()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun setupEvents() {
 
 //        스피너의 선택 이벤트.
@@ -178,6 +180,14 @@ class EditAppointmentActivity : BaseActivity() {
         binding.timeTxt.setOnClickListener {
 
             showTimePicker()
+        }
+
+//        지도 영역에 손을 대면 => 스크롤뷰를 정지.
+        binding.scrollStop.setOnTouchListener { _, _ ->
+
+            binding.mainScrollView.requestDisallowInterceptTouchEvent(true)
+
+            return@setOnTouchListener false
         }
     }
 

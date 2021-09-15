@@ -110,8 +110,7 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/mapViewLayout"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -122,12 +121,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="250dp" />
 
-                    <Button
-                        android:id="@+id/add_Btn"
+                    <TextView
+                        android:id="@+id/scrollStop"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="등록하기" />
-                </LinearLayout>
+                        android:layout_height="match_parent" />
+
+                </FrameLayout>
+
+                <Button
+                    android:id="@+id/add_Btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="등록하기" />
 
             </LinearLayout>
         </ScrollView>
