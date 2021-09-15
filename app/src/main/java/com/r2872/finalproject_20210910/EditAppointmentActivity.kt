@@ -45,6 +45,9 @@ class EditAppointmentActivity : BaseActivity() {
     //    선택된 출발지를 담아줄 변수
     private lateinit var mSelectedStartPlace: PlaceListData
 
+    //    화면에 그려질 출발~도착지 연결 선
+    private val mPolyLine = PolylineOverlay()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_appoinment)
@@ -240,9 +243,12 @@ class EditAppointmentActivity : BaseActivity() {
 
         points.add(LatLng(mSelectedStartPlace.latitude, mSelectedStartPlace.longitude)) // 시작점
         points.add(LatLng(mSelectedLat, mSelectedLng)) // 도착점
-        val polyline = PolylineOverlay()
-        polyline.coords = points
-        polyline.map = naverMap
+
+//        매번 새로 PolyLine 을 그리면, 선이 하나씩 계속 추가됨.
+//        멤버 변수로 선을 하나 지정해두고, 위치값만 변경하면서 사용.
+//        val polyline = PolylineOverlay()
+        mPolyLine.coords = points
+        mPolyLine.map = naverMap
     }
 
     private fun showDatePicker() {
