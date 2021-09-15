@@ -12,6 +12,7 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
@@ -54,6 +55,12 @@ class EditAppointmentActivity : BaseActivity() {
 
     //    화면에 그려질 출발~도착지 연결 선
     private val mPath = PathOverlay()
+
+    //        선택된 도착지를 보여줄 마커 하나만 생성.
+    private val selectedPointMaker = Marker()
+
+    //    도착지에 보여줄 정보창
+    private val mInfoWindow = InfoWindow()
 
     //    네이버 지도를 멤버변수로 담자.
     private var mNaverMap: NaverMap? = null
@@ -221,8 +228,6 @@ class EditAppointmentActivity : BaseActivity() {
             uiSettings.isScaleBarEnabled = false
             uiSettings.isLocationButtonEnabled = true
 
-//            선택된 위치를 보여줄 마커 하나만 생성.
-            val selectedPointMaker = Marker()
             selectedPointMaker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
 
             naverMap.setOnMapClickListener { _, latLng ->
@@ -274,16 +279,50 @@ class EditAppointmentActivity : BaseActivity() {
             null, null, null, object : OnResultCallbackListener {
                 override fun onSuccess(p0: ODsayData?, p1: API?) {
 
-//                    경유지들 좌표를 목록에 추가 (결과가 어떻게 되어있는지 분석, Parsing)
                     val jsonObject = p0!!.json
                     val resultObj = jsonObject.getJSONObject("result")
                     val pathArr = resultObj.getJSONArray("path")
                     val firstPathObj = pathArr.getJSONObject(0)
+
+//                    총 소요시간이 얼마나 걸리나?'
+                    val infoObj = firstPathObj.getJSONObject("info")
+                    val totalTime = infoObj.getInt("totalTime")
+
+                    Log.d("총 소요시간", totalTime.toString())
+
+//                    멤버변수로 만들어둔 정보창의 내용 설정, 열어주기
+                    mInfoWindow.adapter = object : InfoWindow.DefaultTextAdapter(mContext) {
+                        override fun getText(p0: InfoWindow): CharSequence {
+
+                            return "${totalTime}분 소요 예상"
+                        }
+                    }
+                    mInfoWindow.open(selectedPointMaker)
+
+//                  경유지들 좌표를 목록에 추가 (결과가 어떻게 되어있는지 분석, Parsing)
                     val subPathArr = firstPathObj.getJSONArray("subPath")
 
                     for (i in 0 until subPathArr.length()) {
                         val subPathObj = subPathArr.getJSONObject(i)
-                        Log.d("길찾기 응답", subPathObj.toString())
+
+                        if (!subPathObj.isNull("passStopList")) {
+
+//                            정거장 목록을 불러내보자.
+                            val passStopListObj = subPathObj.getJSONObject("passStopList")
+                            val stationArr = passStopListObj.getJSONArray("stations")
+                            for (j in 0 until stationArr.length()) {
+
+                                val stationObj = stationArr.getJSONObject(j)
+                                Log.d("길찾기 응답", stationObj.toString())
+
+                                val latlng = LatLng(
+                                    stationObj.getString("y").toDouble(),
+                                    stationObj.getString("x").toDouble()
+                                )
+//                                points ArrayList 에 경유지로 추가
+                                points.add(latlng)
+                            }
+                        }
                     }
 
 //                    최종 목적지 좌표도 추가

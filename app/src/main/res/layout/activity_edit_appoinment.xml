@@ -10,10 +10,12 @@
         tools:context=".EditAppointmentActivity">
 
         <ScrollView
+            android:id="@+id/mainScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/mainLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -108,17 +110,24 @@
 
                 </LinearLayout>
 
-                <fragment
-                    android:id="@+id/naverMapView"
-                    android:name="com.naver.maps.map.MapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp" />
-
-                <Button
-                    android:id="@+id/add_Btn"
+                <LinearLayout
+                    android:id="@+id/mapViewLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="등록하기" />
+                    android:orientation="vertical">
+
+                    <fragment
+                        android:id="@+id/naverMapView"
+                        android:name="com.naver.maps.map.MapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp" />
+
+                    <Button
+                        android:id="@+id/add_Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="등록하기" />
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>
