@@ -15,6 +15,10 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
+import com.odsay.odsayandroidsdk.API
+import com.odsay.odsayandroidsdk.ODsayData
+import com.odsay.odsayandroidsdk.ODsayService
+import com.odsay.odsayandroidsdk.OnResultCallbackListener
 import com.r2872.finalproject_20210910.adapters.StartPlaceSpinnerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
@@ -259,13 +263,31 @@ class EditAppointmentActivity : BaseActivity() {
         val points = ArrayList<LatLng>()
 
         points.add(LatLng(mSelectedStartPlace.latitude, mSelectedStartPlace.longitude)) // 시작점
-        points.add(LatLng(mSelectedLat, mSelectedLng)) // 도착점
+
+//        대중교통 길찾기 API => 들리는 좌표들을 제공 => 목록을 담아주자.
+        val odsay = ODsayService.init(mContext, "JdJCDd5mWQLx6RMfBFXCYV0S/Kw3CU0YMt4WrfwXhTg")
+        odsay.requestSearchPubTransPath(
+            mSelectedStartPlace.longitude.toString(),
+            mSelectedStartPlace.latitude.toString(),
+            mSelectedLng.toString(),
+            mSelectedLat.toString(),
+            null, null, null, object : OnResultCallbackListener {
+                override fun onSuccess(p0: ODsayData?, p1: API?) {
+
+//                    경유지들 좌표를 목록에 추가
+
+//                    최종 목적지 좌표도 추가
+                    points.add(LatLng(mSelectedLat, mSelectedLng)) // 도착점
 
 //        매번 새로 PolyLine 을 그리면, 선이 하나씩 계속 추가됨.
 //        멤버 변수로 선을 하나 지정해두고, 위치값만 변경하면서 사용.
 //        val polyline = PolylineOverlay()
-        mPath.coords = points
-        mPath.map = naverMap
+                    mPath.coords = points
+                    mPath.map = naverMap
+                }
+
+                override fun onError(p0: Int, p1: String?, p2: API?) {}
+            })
     }
 
     private fun showDatePicker() {
