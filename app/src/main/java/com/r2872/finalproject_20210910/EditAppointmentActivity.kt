@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+@SuppressLint("ClickableViewAccessibility", "SimpleDateFormat")
 class EditAppointmentActivity : BaseActivity() {
 
     private lateinit var binding: ActivityEditAppoinmentBinding
@@ -52,7 +53,7 @@ class EditAppointmentActivity : BaseActivity() {
     private lateinit var mSelectedStartPlace: PlaceListData
 
     //    선택된 출발지를 보여줄 마커
-    val mStartPlaceMarker = Marker()
+    private val mStartPlaceMarker = Marker()
 
     //    화면에 그려질 출발~도착지 연결 선
     private val mPath = PathOverlay()
@@ -74,7 +75,6 @@ class EditAppointmentActivity : BaseActivity() {
         setupEvents()
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun setupEvents() {
 
 //        스피너의 선택 이벤트.
@@ -146,6 +146,9 @@ class EditAppointmentActivity : BaseActivity() {
             apiService.postRequestAppointment(
                 inputTitle,
                 finalDateTime,
+                mSelectedStartPlace.name,
+                mSelectedStartPlace.latitude,
+                mSelectedStartPlace.longitude,
                 inputPlaceName,
                 mSelectedLat, mSelectedLng
             ).enqueue(object : Callback<BasicResponse> {
@@ -297,6 +300,8 @@ class EditAppointmentActivity : BaseActivity() {
 //                    총 소요시간이 얼마나 걸리나?'
                     val infoObj = firstPathObj.getJSONObject("info")
                     val totalTime = infoObj.getInt("totalTime")
+                    val hour = totalTime / 60
+                    val minute = totalTime % 60
 
                     Log.d("총 소요시간", totalTime.toString())
 
@@ -304,7 +309,11 @@ class EditAppointmentActivity : BaseActivity() {
                     mInfoWindow.adapter = object : InfoWindow.DefaultTextAdapter(mContext) {
                         override fun getText(p0: InfoWindow): CharSequence {
 
-                            return "${totalTime}분 소요 예상"
+                            return if (hour == 0) {
+                                "${minute}분 소요 예상"
+                            } else {
+                                "${hour}시간 ${minute}분 소요 예상"
+                            }
                         }
                     }
                     mInfoWindow.open(selectedPointMaker)
