@@ -48,6 +48,9 @@ class EditAppointmentActivity : BaseActivity() {
     //    화면에 그려질 출발~도착지 연결 선
     private val mPolyLine = PolylineOverlay()
 
+    //    네이버 지도를 멤버변수로 담자.
+    private var mNaverMap: NaverMap? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_appoinment)
@@ -73,6 +76,11 @@ class EditAppointmentActivity : BaseActivity() {
 
 //                    스피너의 위치에 맞는 장소를 선택된 출발지점으로 선정.
                     mSelectedStartPlace = mStartPlaceList[position]
+
+                    mNaverMap?.let {
+                        drawStartPlaceToDestination(it)
+                    }
+
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -191,6 +199,7 @@ class EditAppointmentActivity : BaseActivity() {
                 fm.beginTransaction().add(R.id.naverMapView, it).commit()
             }
         mapFragment.getMapAsync { naverMap ->
+            mNaverMap = naverMap
             Log.d("지도바로할일", naverMap.toString())
 //            집 좌표를 지도 시작점으로. (예제)
 //            it.mapType = NaverMap.MapType.Hybrid
