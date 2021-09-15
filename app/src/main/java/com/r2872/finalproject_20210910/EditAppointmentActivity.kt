@@ -45,6 +45,9 @@ class EditAppointmentActivity : BaseActivity() {
     //    선택된 출발지를 담아줄 변수
     private lateinit var mSelectedStartPlace: PlaceListData
 
+    //    선택된 출발지를 보여줄 마커
+    val mStartPlaceMarker = Marker()
+
     //    화면에 그려질 출발~도착지 연결 선
     private val mPath = PathOverlay()
 
@@ -241,6 +244,11 @@ class EditAppointmentActivity : BaseActivity() {
 
 //        시작지점의 위경도
 //        mSelectedStartPlace 위경도 활용.
+
+//        시작지점에 좌표 마커 찍어주기.
+        mStartPlaceMarker.position =
+            LatLng(mSelectedStartPlace.latitude, mSelectedStartPlace.longitude)
+        mStartPlaceMarker.map = naverMap
 
 //        도착지점의 위경도
 //        mSelectedLat,Lng 변수 활용
