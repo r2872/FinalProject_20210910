@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/backgroundLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="15dp">
@@ -15,8 +16,6 @@
         android:textSize="17sp" />
 
     <TextView
-        android:visibility="gone"
-        tools:visibility="visible"
         android:id="@+id/isPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +24,9 @@
         android:padding="3dp"
         android:text="기본"
         android:textColor="@color/white"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <TextView
         android:layout_width="0dp"

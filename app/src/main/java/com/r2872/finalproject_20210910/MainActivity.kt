@@ -65,7 +65,7 @@ class MainActivity : BaseActivity() {
         Toast.makeText(mContext, "${GlobalData.loginUser!!.nickName} 님 환영합니다.", Toast.LENGTH_SHORT)
             .show()
 
-        mAdapter = AppointmentAdapter(mContext, R.layout.appointment_list_item, mAppointmentList)
+        mAdapter = AppointmentAdapter(mContext, mAppointmentList)
         binding.scheduleList.adapter = mAdapter
     }
 

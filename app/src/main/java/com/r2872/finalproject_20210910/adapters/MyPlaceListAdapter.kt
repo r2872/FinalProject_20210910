@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +37,7 @@ class MyPlaceListAdapter(
         private val placeNameTxt = itemView.findViewById<TextView>(R.id.placeName_Txt)
         private val isPrimary = itemView.findViewById<TextView>(R.id.isPrimary)
         private val viewPlaceMapBtn = itemView.findViewById<ImageView>(R.id.viewPlaceMap_Btn)
+        private val backgroundLayout = itemView.findViewById<LinearLayout>(R.id.backgroundLayout)
 
         fun bind(item: PlaceListData) {
 
@@ -44,6 +46,9 @@ class MyPlaceListAdapter(
                 isPrimary.visibility = View.VISIBLE
             }
             viewPlaceMapBtn.setOnClickListener {
+                Toast.makeText(mContext, "지도 버튼 클릭", Toast.LENGTH_SHORT).show()
+            }
+            backgroundLayout.setOnClickListener {
                 Toast.makeText(mContext, item.name, Toast.LENGTH_SHORT).show()
             }
         }

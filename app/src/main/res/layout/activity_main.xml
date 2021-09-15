@@ -19,13 +19,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ListView
+                <androidx.recyclerview.widget.RecyclerView
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:id="@+id/schedule_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
             <ImageView
                 android:id="@+id/addAppoinment_Btn"
