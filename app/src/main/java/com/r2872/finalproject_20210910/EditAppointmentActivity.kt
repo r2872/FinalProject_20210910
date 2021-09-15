@@ -14,7 +14,7 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
-import com.naver.maps.map.overlay.PolylineOverlay
+import com.naver.maps.map.overlay.PathOverlay
 import com.r2872.finalproject_20210910.adapters.StartPlaceSpinnerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
@@ -46,7 +46,7 @@ class EditAppointmentActivity : BaseActivity() {
     private lateinit var mSelectedStartPlace: PlaceListData
 
     //    화면에 그려질 출발~도착지 연결 선
-    private val mPolyLine = PolylineOverlay()
+    private val mPath = PathOverlay()
 
     //    네이버 지도를 멤버변수로 담자.
     private var mNaverMap: NaverMap? = null
@@ -256,8 +256,8 @@ class EditAppointmentActivity : BaseActivity() {
 //        매번 새로 PolyLine 을 그리면, 선이 하나씩 계속 추가됨.
 //        멤버 변수로 선을 하나 지정해두고, 위치값만 변경하면서 사용.
 //        val polyline = PolylineOverlay()
-        mPolyLine.coords = points
-        mPolyLine.map = naverMap
+        mPath.coords = points
+        mPath.map = naverMap
     }
 
     private fun showDatePicker() {
