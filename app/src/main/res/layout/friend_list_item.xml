@@ -25,6 +25,7 @@
         android:textSize="17sp" />
 
     <ImageView
+        android:id="@+id/socialLogin_Img"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginStart="10dp"
