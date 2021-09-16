@@ -31,4 +31,18 @@
         android:layout_marginStart="10dp"
         android:src="@drawable/kakao_icon" />
 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:id="@+id/addFriend_Btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_baseline_person_add_alt_1_24"
+        android:text="친구추가"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </LinearLayout>

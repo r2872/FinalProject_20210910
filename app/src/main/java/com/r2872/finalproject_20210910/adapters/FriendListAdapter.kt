@@ -26,7 +26,7 @@ class FriendListAdapter(
         fun bind(context: Context, data: UserData) {
             friendNicknameTxt.text = data.nickName
 
-            Glide.with(mContext)
+            Glide.with(context)
                 .load(data.profileImg)
                 .into(friendProfileImg)
 

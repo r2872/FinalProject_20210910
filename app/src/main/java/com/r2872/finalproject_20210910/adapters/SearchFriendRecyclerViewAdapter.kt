@@ -1,11 +1,13 @@
 package com.r2872.finalproject_20210910.adapters
 
 import android.content.Context
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.r2872.finalproject_20210910.R
@@ -17,8 +19,7 @@ class SearchFriendRecyclerViewAdapter(
 ) : RecyclerView.Adapter<SearchFriendRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view =
-            LayoutInflater.from(mContext).inflate(R.layout.friend_list_item, parent, false)
+        val view = LayoutInflater.from(mContext).inflate(R.layout.friend_list_item, parent, false)
 
         return ViewHolder(view)
     }
@@ -34,11 +35,13 @@ class SearchFriendRecyclerViewAdapter(
         private val friendProfileImg = view.findViewById<ImageView>(R.id.friendProfile_Img)
         private val friendNicknameTxt = view.findViewById<TextView>(R.id.friendNickname_Txt)
         private val socialLoginImg = view.findViewById<ImageView>(R.id.socialLogin_Img)
+        private val addFriendBtn = view.findViewById<ImageView>(R.id.addFriend_Btn)
 
         fun bind(context: Context, data: UserData) {
             friendNicknameTxt.text = data.nickName
+            addFriendBtn.visibility = View.VISIBLE
 
-            Glide.with(mContext)
+            Glide.with(context)
                 .load(data.profileImg)
                 .into(friendProfileImg)
 
@@ -49,6 +52,18 @@ class SearchFriendRecyclerViewAdapter(
                 "kakao" -> {
                     socialLoginImg.setImageResource(R.drawable.kakao_icon)
                 }
+            }
+//            친구추가 버튼 눌림 이벤트 처리
+            addFriendBtn.setOnClickListener {
+
+//                ~~ 님에게 친구 요청을 보내시겠습니까?
+                val alert = AlertDialog.Builder(context)
+                    .setTitle("${data.nickName}님에게 친구 요청을 보내시겠습니까?")
+                    .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, i ->
+
+                    })
+                    .setNegativeButton("취소", null)
+                alert.show()
             }
 
         }
