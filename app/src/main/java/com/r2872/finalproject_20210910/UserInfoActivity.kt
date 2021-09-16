@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
@@ -17,6 +18,7 @@ import com.r2872.finalproject_20210910.databinding.ActivityUserInfoBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
 import com.r2872.finalproject_20210910.utils.GlobalData
+import com.r2872.finalproject_20210910.utils.Request
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -47,6 +49,13 @@ class UserInfoActivity : BaseActivity() {
 
 //                    권한이 OK 일때.
 //                    갤러리로 사진을 가지러 이동. (추가 작업)
+                    val myIntent = Intent()
+                    myIntent.action = Intent.ACTION_GET_CONTENT
+                    myIntent.type = "image/*"
+                    startActivityForResult(
+                        Intent.createChooser(myIntent, "프사 선택하기"),
+                        Request.READ_STORAGE_PERMISSION_REQUEST_CODE
+                    )
                 }
 
                 override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
@@ -227,6 +236,31 @@ class UserInfoActivity : BaseActivity() {
         } else {
 
             binding.readyTimeTxt.text = "${loginUser.readyMinute}분"
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+//        갤러리에서 사진 가져온 경우?
+        if (requestCode == Request.READ_STORAGE_PERMISSION_REQUEST_CODE) {
+
+//            실제로 이미지를 선택한건지?
+            if (resultCode == RESULT_OK) {
+
+//              어떤 사진을 골랐는지? 파악해보자
+//                임시: 고른 사진을 profileImg 에 바로 적용만. (서버 전송 X)
+
+//              data? => 이전 화면이 넘겨준 Intent
+//              data?.data => 선택한 사진이 들어있는 경로 정보 (Uri)
+                val dataUri = data?.data
+
+//                Uri -> 이미지뷰의 사진으로. (Glide)
+//                Glide.with(mContext).load(dataUri).into(binding.profileImg)
+
+//                API 서버에 사진을 전송. => PUT - /user/image 로 API 활용.
+//                파일을 같이 첨부해야한다. => Multipart 형식의 데이터 첨부 활용. (기존 FormData 와는 다르다)
+            }
         }
     }
 }

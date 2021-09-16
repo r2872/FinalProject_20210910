@@ -6,13 +6,16 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
+import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
+import com.naver.maps.map.util.FusedLocationSource
 import com.r2872.finalproject_20210910.databinding.ActivityEditMyPlaceBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
-import com.r2872.finalproject_20210910.utils.GlobalData
+import com.r2872.finalproject_20210910.utils.Request
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,6 +26,8 @@ class EditMyPlaceActivity : BaseActivity() {
     private lateinit var binding: ActivityEditMyPlaceBinding
     private var mSelectedLat = 0.0
     private var mSelectedLng = 0.0
+    private lateinit var mLocationSource: FusedLocationSource
+    private lateinit var mNaverMap: NaverMap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,11 +92,17 @@ class EditMyPlaceActivity : BaseActivity() {
             }
         mapFragment.getMapAsync { naverMap ->
 
+            mNaverMap = naverMap
+
+            mLocationSource = FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
+
+            mNaverMap.locationSource = mLocationSource
+
             val myHome = LatLng(37.5674, 126.9075)
             val cameraUpdate = CameraUpdate.scrollTo(myHome)
-            naverMap.moveCamera(cameraUpdate)
+            mNaverMap.moveCamera(cameraUpdate)
 
-            val uiSettings = naverMap.uiSettings
+            val uiSettings = mNaverMap.uiSettings
             uiSettings.isCompassEnabled = true
             uiSettings.isScaleBarEnabled = false
             uiSettings.isLocationButtonEnabled = true
@@ -99,7 +110,7 @@ class EditMyPlaceActivity : BaseActivity() {
             val selectedPointMaker = Marker()
             selectedPointMaker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
 
-            naverMap.setOnMapClickListener { _, latLng ->
+            mNaverMap.setOnMapClickListener { _, latLng ->
 
                 mSelectedLat = latLng.latitude
                 mSelectedLng = latLng.longitude
@@ -111,8 +122,28 @@ class EditMyPlaceActivity : BaseActivity() {
                 ).show()
 
                 selectedPointMaker.position = LatLng(mSelectedLat, mSelectedLng)
-                selectedPointMaker.map = naverMap
+                selectedPointMaker.map = mNaverMap
             }
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode != Request.LOCATION_PERMISSION_REQUEST_CODE) {
+            return
+        }
+
+        if (mLocationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if (!mLocationSource.isActivated) {
+                mNaverMap.locationTrackingMode = LocationTrackingMode.None
+            }
+            return
+        }
+
     }
 }
