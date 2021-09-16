@@ -81,4 +81,9 @@ interface ServerAPIService {
     fun getRequestFriendList(
         @Query("type") type: String
     ): Call<BasicResponse>
+
+    @GET("/search/user")
+    fun getRequestUserSearch(
+        @Query("nickname") nickname: String
+    ): Call<BasicResponse>
 }

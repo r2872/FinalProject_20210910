@@ -47,9 +47,7 @@ class ViewMyPlaceListActivity : BaseActivity() {
     override fun setValues() {
 
         titleTxt.text = "내가 자주 쓰는 출발장소들"
-        Glide.with(mContext)
-            .load(R.drawable.ic_baseline_post_add_24)
-            .into(profileImg)
+        profileImg.setImageResource(R.drawable.ic_baseline_post_add_24)
         profileImg.visibility = View.VISIBLE
 
         mAdapter = MyPlaceListAdapter(mContext, mList)
