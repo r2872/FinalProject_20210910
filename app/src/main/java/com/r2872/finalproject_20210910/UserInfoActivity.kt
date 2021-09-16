@@ -211,15 +211,11 @@ class UserInfoActivity : BaseActivity() {
 
         when (GlobalData.loginUser!!.provider) {
             "facebook" -> {
-                Glide.with(mContext)
-                    .load(R.drawable.facebook)
-                    .into(binding.providerTxt)
+                binding.providerTxt.setImageResource(R.drawable.facebook)
                 binding.pwEditBtn.visibility = View.GONE
             }
             "kakao" -> {
-                Glide.with(mContext)
-                    .load(R.drawable.kakao_icon)
-                    .into(binding.providerTxt)
+                binding.providerTxt.setImageResource(R.drawable.kakao_icon)
                 binding.pwEditBtn.visibility = View.GONE
             }
         }

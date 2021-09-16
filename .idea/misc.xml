@@ -8,6 +8,7 @@
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/drawable/ic_baseline_login_24.xml" value="0.26564102564102565" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.26296296296296295" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/drawable/ic_baseline_post_add_24.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/activity_add_friend.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/activity_edit_appoinment.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/activity_edit_my_place.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/activity_friend_request_fragment.xml" value="0.25364583333333335" />
@@ -25,7 +26,7 @@
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/appointment_list_item.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/fragment_friend_request.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/fragment_my_friend_list.xml" value="0.25364583333333335" />
-        <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/friend_list_item.xml" value="0.2" />
+        <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/friend_list_item.xml" value="0.4" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/my_custom_action_bar.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/my_custom_alert_edt.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/my_custom_alert_edt_nickname.xml" value="0.25364583333333335" />

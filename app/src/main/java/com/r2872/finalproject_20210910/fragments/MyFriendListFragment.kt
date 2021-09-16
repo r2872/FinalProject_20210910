@@ -5,13 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.r2872.finalproject_20210910.R
 import com.r2872.finalproject_20210910.adapters.FriendListAdapter
 import com.r2872.finalproject_20210910.databinding.FragmentMyFriendListBinding
+import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.UserData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MyFriendListFragment : BaseFragment() {
 
@@ -50,5 +53,30 @@ class MyFriendListFragment : BaseFragment() {
                 LinearLayoutManager.VERTICAL
             )
         )
+
+        getFriendListFromServer()
+    }
+
+    private fun getFriendListFromServer() {
+
+        apiService.getRequestFriendList("my").enqueue(object : Callback<BasicResponse> {
+            override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
+
+                if (response.isSuccessful) {
+                    mList.clear()
+
+                    val basicResponse = response.body()!!
+                    val friendsArr = basicResponse.data.friends
+
+                    mList.addAll(friendsArr)
+                }
+
+                mAdapter.notifyDataSetChanged()
+            }
+
+            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+            }
+        })
     }
 }

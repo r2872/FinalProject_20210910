@@ -32,14 +32,10 @@ class FriendListAdapter(
 
             when (data.provider) {
                 "facebook" -> {
-                    Glide.with(mContext)
-                        .load(R.drawable.facebook)
-                        .into(socialLoginImg)
+                    socialLoginImg.setImageResource(R.drawable.facebook)
                 }
                 "kakao" -> {
-                    Glide.with(mContext)
-                        .load(R.drawable.kakao_icon)
-                        .into(socialLoginImg)
+                    socialLoginImg.setImageResource(R.drawable.kakao_icon)
                 }
             }
 

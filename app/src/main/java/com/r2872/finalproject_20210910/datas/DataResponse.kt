@@ -6,5 +6,6 @@ data class DataResponse(
     var token: String,
 //    이 밑으로는 약속 목록 파싱용 변수.
     var appointments: List<AppointmentData>,
-    var places: List<PlaceListData>
+    var places: List<PlaceListData>,
+    var friends: List<UserData>
 )
