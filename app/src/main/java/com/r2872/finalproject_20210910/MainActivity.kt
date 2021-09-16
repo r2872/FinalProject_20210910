@@ -71,7 +71,7 @@ class MainActivity : BaseActivity() {
         binding.scheduleList.adapter = mAdapter
         binding.scheduleList.addItemDecoration(
             DividerItemDecoration(
-                this,
+                mContext,
                 LinearLayoutManager.VERTICAL
             )
         )

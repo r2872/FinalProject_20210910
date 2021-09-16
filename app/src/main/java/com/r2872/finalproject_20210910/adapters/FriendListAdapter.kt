@@ -7,22 +7,41 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.r2872.finalproject_20210910.R
 import com.r2872.finalproject_20210910.datas.UserData
+import com.r2872.finalproject_20210910.utils.GlobalData
 
 class FriendListAdapter(
     val mContext: Context,
-    val mList: List<UserData>
+    private val mList: List<UserData>
 ) : RecyclerView.Adapter<FriendListAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val friendProfileImg = view.findViewById<ImageView>(R.id.friendProfile_Img)
-        val friendNicknameTxt = view.findViewById<TextView>(R.id.friendNickname_Txt)
-        val socialLoginImg = view.findViewById<ImageView>(R.id.socialLogin_Img)
+        private val friendProfileImg = view.findViewById<ImageView>(R.id.friendProfile_Img)
+        private val friendNicknameTxt = view.findViewById<TextView>(R.id.friendNickname_Txt)
+        private val socialLoginImg = view.findViewById<ImageView>(R.id.socialLogin_Img)
 
         fun bind(context: Context, data: UserData) {
             friendNicknameTxt.text = data.nickName
+
+            Glide.with(mContext)
+                .load(data.profileImg)
+                .into(friendProfileImg)
+
+            when (data.provider) {
+                "facebook" -> {
+                    Glide.with(mContext)
+                        .load(R.drawable.facebook)
+                        .into(socialLoginImg)
+                }
+                "kakao" -> {
+                    Glide.with(mContext)
+                        .load(R.drawable.kakao_icon)
+                        .into(socialLoginImg)
+                }
+            }
 
         }
     }
@@ -35,6 +54,7 @@ class FriendListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
+        holder.bind(mContext, mList[position])
     }
 
     override fun getItemCount() = mList.size
