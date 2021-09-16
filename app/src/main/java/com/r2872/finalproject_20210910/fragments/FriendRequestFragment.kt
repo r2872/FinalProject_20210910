@@ -10,13 +10,18 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.r2872.finalproject_20210910.R
 import com.r2872.finalproject_20210910.adapters.FriendListAdapter
+import com.r2872.finalproject_20210910.adapters.FriendRequestListAdapter
 import com.r2872.finalproject_20210910.databinding.FragmentFriendRequestBinding
+import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.UserData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FriendRequestFragment : BaseFragment() {
 
     private lateinit var binding: FragmentFriendRequestBinding
-    private lateinit var mAdapter: FriendListAdapter
+    private lateinit var mAdapter: FriendRequestListAdapter
     private val mList = ArrayList<UserData>()
 
     override fun onCreateView(
@@ -42,7 +47,7 @@ class FriendRequestFragment : BaseFragment() {
 
     override fun setValues() {
 
-        mAdapter = FriendListAdapter(mContext, mList)
+        mAdapter = FriendRequestListAdapter(mContext, mList)
         binding.myFriendsRecyclerView.adapter = mAdapter
         binding.myFriendsRecyclerView.addItemDecoration(
             DividerItemDecoration(
@@ -50,5 +55,26 @@ class FriendRequestFragment : BaseFragment() {
                 LinearLayoutManager.VERTICAL
             )
         )
+
+        getRequestedFriendFromUser()
+    }
+
+    private fun getRequestedFriendFromUser() {
+
+        apiService.getRequestFriendList("requested").enqueue(object : Callback<BasicResponse> {
+            override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
+                if (response.isSuccessful) {
+                    mList.clear()
+
+                    val basicResponse = response.body()!!
+                    val friendRequestArr = basicResponse.data.friends
+
+                    mList.addAll(friendRequestArr)
+                }
+                mAdapter.notifyDataSetChanged()
+            }
+
+            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {}
+        })
     }
 }

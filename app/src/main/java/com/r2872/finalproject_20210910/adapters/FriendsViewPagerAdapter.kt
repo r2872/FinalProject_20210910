@@ -11,7 +11,7 @@ class FriendsViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     override fun getPageTitle(position: Int): CharSequence {
         return when (position) {
             0 -> "내 친구"
-            else -> "친구 요청"
+            else -> "받은 친구 요청"
         }
     }
 
