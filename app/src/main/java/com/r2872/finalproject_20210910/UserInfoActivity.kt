@@ -19,9 +19,14 @@ import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
 import com.r2872.finalproject_20210910.utils.GlobalData
 import com.r2872.finalproject_20210910.utils.Request
+import com.r2872.finalproject_20210910.utils.URIPathHelper
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 
 class UserInfoActivity : BaseActivity() {
 
@@ -260,6 +265,30 @@ class UserInfoActivity : BaseActivity() {
 
 //                API 서버에 사진을 전송. => PUT - /user/image 로 API 활용.
 //                파일을 같이 첨부해야한다. => Multipart 형식의 데이터 첨부 활용. (기존 FormData 와는 다르다)
+
+//                Uri -> File 형태로 변환. -> 그 파일의 실제 경로? 얻어낼 필요가 있다.
+
+                val file = File(URIPathHelper().getPath(mContext, dataUri!!))
+
+//                파일을 Retrofit 에 첨부할 수 있는 => RequestBody => MultipartBody 형태로 변환.
+                val fileRequestBody = RequestBody.create(MediaType.get("image/*"), file)
+                val body = MultipartBody.Part.createFormData(
+                    "profile_image",
+                    "myFile.jpg",
+                    fileRequestBody
+                )
+                apiService.putRequestProfileImage(body).enqueue(object: Callback<BasicResponse> {
+                    override fun onResponse(
+                        call: Call<BasicResponse>,
+                        response: Response<BasicResponse>
+                    ) {
+
+                    }
+
+                    override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+                    }
+                })
             }
         }
     }
