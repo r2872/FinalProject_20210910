@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.r2872.finalproject_20210910.R
 import com.r2872.finalproject_20210910.databinding.FragmentMyFriendListBinding
 
-class MyFriendListFragment : Fragment() {
+class MyFriendListFragment : BaseFragment() {
 
     private lateinit var binding: FragmentMyFriendListBinding
 
@@ -26,6 +26,15 @@ class MyFriendListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        setupEvents()
+        setValues()
+    }
+
+    override fun setupEvents() {
+
+    }
+
+    override fun setValues() {
 
     }
 }
