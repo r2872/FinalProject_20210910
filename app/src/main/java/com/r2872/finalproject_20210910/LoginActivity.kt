@@ -3,6 +3,8 @@ package com.r2872.finalproject_20210910
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.facebook.*
@@ -264,6 +266,9 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun setValues() {
+
+        titleTxt.visibility = View.GONE
+        logoImg.visibility = View.VISIBLE
 
 //        var keyHash = Utility.getKeyHash(this)
 //        Log.d("해시코드", keyHash)

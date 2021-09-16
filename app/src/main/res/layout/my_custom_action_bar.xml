@@ -14,6 +14,14 @@
         android:textColor="@color/black" />
 
     <ImageView
+        android:id="@+id/logo_Img"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:src="@drawable/persona_logo"
+        android:visibility="gone" />
+
+    <ImageView
         android:id="@+id/profile_Img"
         android:layout_width="40dp"
         android:layout_height="40dp"

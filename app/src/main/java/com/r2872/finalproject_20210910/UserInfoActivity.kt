@@ -178,14 +178,13 @@ class UserInfoActivity : BaseActivity() {
             myAlert.show()
         }
 
-        binding.signOutBtn.setOnClickListener {
+        binding.logoutLayout.setOnClickListener {
 
             val alert = AlertDialog.Builder(mContext)
                 .setMessage("정말 로그아웃 하시겠습니까?")
                 .setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
 
                     ContextUtil.setToken(mContext, "")
-
                     GlobalData.loginUser = null
 
                     val myIntent = Intent(mContext, LoginActivity::class.java)
@@ -222,16 +221,16 @@ class UserInfoActivity : BaseActivity() {
 
         titleTxt.text = "내 정보"
         setUserInfo()
-
-        Glide.with(mContext)
-            .load(GlobalData.loginUser!!.profileImg)
-            .into(binding.profileImg)
     }
 
     private fun setUserInfo() {
         val loginUser = GlobalData.loginUser!!
 
         binding.nicknameTxt.text = loginUser.nickName
+
+        Glide.with(mContext)
+            .load(GlobalData.loginUser!!.profileImg)
+            .into(binding.profileImg)
 
         if (loginUser.readyMinute >= 60) {
             val hour = loginUser.readyMinute / 60
@@ -277,11 +276,20 @@ class UserInfoActivity : BaseActivity() {
                     "myFile.jpg",
                     fileRequestBody
                 )
-                apiService.putRequestProfileImage(body).enqueue(object: Callback<BasicResponse> {
+                apiService.putRequestProfileImage(body).enqueue(object : Callback<BasicResponse> {
                     override fun onResponse(
                         call: Call<BasicResponse>,
                         response: Response<BasicResponse>
                     ) {
+                        if (response.isSuccessful) {
+
+                            val basicResponse = response.body()!!
+
+                            GlobalData.loginUser = basicResponse.data.user
+
+                            Toast.makeText(mContext, "변경 완료", Toast.LENGTH_SHORT).show()
+                            setUserInfo()
+                        }
 
                     }
 

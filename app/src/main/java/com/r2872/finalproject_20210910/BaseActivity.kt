@@ -23,6 +23,7 @@ abstract class BaseActivity : AppCompatActivity() {
     //    액션바에 있는 UI 요소들을 상속시켜주자.
     lateinit var profileImg: ImageView
     lateinit var titleTxt: TextView
+    lateinit var logoImg: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,5 +52,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
         profileImg = defActionBar.customView.findViewById(R.id.profile_Img)
         titleTxt = defActionBar.customView.findViewById(R.id.title_Txt)
+        logoImg = defActionBar.customView.findViewById(R.id.logo_Img)
     }
 }
