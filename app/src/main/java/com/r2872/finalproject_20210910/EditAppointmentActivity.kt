@@ -11,12 +11,14 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
+import com.naver.maps.map.util.FusedLocationSource
 import com.odsay.odsayandroidsdk.API
 import com.odsay.odsayandroidsdk.ODsayData
 import com.odsay.odsayandroidsdk.ODsayService
@@ -25,6 +27,7 @@ import com.r2872.finalproject_20210910.adapters.StartPlaceSpinnerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.PlaceListData
+import com.r2872.finalproject_20210910.utils.Request
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -66,6 +69,8 @@ class EditAppointmentActivity : BaseActivity() {
 
     //    네이버 지도를 멤버변수로 담자.
     private var mNaverMap: NaverMap? = null
+
+    private lateinit var mLocationSource: FusedLocationSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -226,7 +231,12 @@ class EditAppointmentActivity : BaseActivity() {
                 fm.beginTransaction().add(R.id.naverMapView, it).commit()
             }
         mapFragment.getMapAsync { naverMap ->
+
             mNaverMap = naverMap
+
+            mLocationSource = FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
+
+            mNaverMap!!.locationSource = mLocationSource
             Log.d("지도바로할일", naverMap.toString())
 //            집 좌표를 지도 시작점으로. (예제)
 //            it.mapType = NaverMap.MapType.Hybrid
@@ -394,6 +404,26 @@ class EditAppointmentActivity : BaseActivity() {
             mSelectedDateTime.get(Calendar.MINUTE),
             false
         ).show()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode != Request.LOCATION_PERMISSION_REQUEST_CODE) {
+            return
+        }
+
+        if (mLocationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if (!mLocationSource.isActivated) {
+                mNaverMap!!.locationTrackingMode = LocationTrackingMode.None
+            }
+            return
+        }
+
     }
 
 

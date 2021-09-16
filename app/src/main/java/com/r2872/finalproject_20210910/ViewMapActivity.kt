@@ -19,6 +19,7 @@ import com.odsay.odsayandroidsdk.ODsayService
 import com.odsay.odsayandroidsdk.OnResultCallbackListener
 import com.r2872.finalproject_20210910.databinding.ActivityViewMapBinding
 import com.r2872.finalproject_20210910.datas.AppointmentData
+import com.r2872.finalproject_20210910.utils.Request
 
 class ViewMapActivity : BaseActivity() {
 
@@ -62,7 +63,7 @@ class ViewMapActivity : BaseActivity() {
         mapFragment.getMapAsync { naverMap ->
             mNaverMap = naverMap
 
-            mLocationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+            mLocationSource = FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
 
             mNaverMap.locationSource = mLocationSource
 
@@ -227,7 +228,7 @@ class ViewMapActivity : BaseActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
+        if (requestCode != Request.LOCATION_PERMISSION_REQUEST_CODE) {
             return
         }
 
@@ -240,7 +241,4 @@ class ViewMapActivity : BaseActivity() {
 
     }
 
-    companion object {
-        const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-    }
 }

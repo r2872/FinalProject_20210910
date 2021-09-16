@@ -174,6 +174,10 @@ class UserInfoActivity : BaseActivity() {
 
         titleTxt.text = "내 정보"
         setUserInfo()
+
+        Glide.with(mContext)
+            .load(GlobalData.loginUser!!.profileImg)
+            .into(binding.profileImg)
     }
 
     private fun setUserInfo() {

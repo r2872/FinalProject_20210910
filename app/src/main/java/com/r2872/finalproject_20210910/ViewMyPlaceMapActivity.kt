@@ -49,9 +49,7 @@ class ViewMyPlaceMapActivity : BaseActivity() {
             naverMap.moveCamera(cameraUpdate)
 
             val uiSettings = naverMap.uiSettings
-            uiSettings.isCompassEnabled = true
             uiSettings.isScaleBarEnabled = false
-            uiSettings.isLocationButtonEnabled = true
 
             val marker = Marker()
             marker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
