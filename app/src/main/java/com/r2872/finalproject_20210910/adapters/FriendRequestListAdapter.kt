@@ -12,6 +12,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.r2872.finalproject_20210910.R
+import com.r2872.finalproject_20210910.UserInfoActivity
+import com.r2872.finalproject_20210910.VIewMyFriendsListActivity
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.UserData
 import com.r2872.finalproject_20210910.fragments.FriendRequestFragment
@@ -33,25 +35,23 @@ class FriendRequestListAdapter(
 
         fun bind(context: Context, data: UserData) {
             friendNicknameTxt.text = data.nickName
-            addFriendBtn.apply {
-                setImageResource(R.drawable.ic_baseline_check_24)
-                visibility = View.VISIBLE
-                setOnClickListener {
+            addFriendBtn.setImageResource(R.drawable.ic_baseline_check_24)
+            addFriendBtn.visibility = View.VISIBLE
+            addFriendBtn.setOnClickListener {
 
-                    val alert = AlertDialog.Builder(context)
-                        .setTitle("${data.nickName}님의 친구요청을 수락하시겠습니까?")
-                        .setPositiveButton(
-                            "확인",
-                            DialogInterface.OnClickListener { _, _ ->
-                                putRequestAddFriend(context, data, "수락")
-                            })
-                        .setNegativeButton(
-                            "취소",
-                            DialogInterface.OnClickListener { _, _ ->
-                                putRequestAddFriend(context, data, "거절")
-                            })
-                    alert.show()
-                }
+                val alert = AlertDialog.Builder(context)
+                    .setTitle("${data.nickName}님의 친구요청을 수락하시겠습니까?")
+                    .setPositiveButton(
+                        "확인", DialogInterface.OnClickListener { dialogInterface, i ->
+                            putRequestAddFriend(context, data, "수락")
+                        }
+                    )
+                    .setNegativeButton(
+                        "취소", DialogInterface.OnClickListener { dialogInterface, i ->
+                            putRequestAddFriend(context, data, "거절")
+                        }
+                    )
+                alert.show()
             }
 
             Glide.with(context)
@@ -71,18 +71,18 @@ class FriendRequestListAdapter(
         }
 
         private fun putRequestAddFriend(context: Context, data: UserData, type: String) {
-            (context as FriendRequestFragment).apiService.putRequestAddFriend(data.id, type)
+            (context as VIewMyFriendsListActivity).apiService.putRequestAddFriend(data.id, type)
                 .enqueue(object : Callback<BasicResponse> {
                     override fun onResponse(
                         call: Call<BasicResponse>,
                         response: Response<BasicResponse>
                     ) {
                         if (response.isSuccessful) {
-                            val basicResponse = response.body()!!
+                            val basicResponse = response.body()
 
                             Toast.makeText(
                                 context,
-                                "${data.nickName}님의 요청을 ${type}하셨습니다.",
+                                "${data.nickName}님의 친구 요청을 ${type}하셨습니다.",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }

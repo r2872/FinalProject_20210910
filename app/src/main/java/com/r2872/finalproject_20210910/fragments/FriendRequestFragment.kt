@@ -5,11 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.r2872.finalproject_20210910.R
-import com.r2872.finalproject_20210910.adapters.FriendListAdapter
 import com.r2872.finalproject_20210910.adapters.FriendRequestListAdapter
 import com.r2872.finalproject_20210910.databinding.FragmentFriendRequestBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
