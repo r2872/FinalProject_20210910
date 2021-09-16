@@ -32,6 +32,14 @@ class UserInfoActivity : BaseActivity() {
 
     override fun setupEvents() {
 
+//        프로필사진 누르면 => 프사 변경의 의미로 활용. => 갤러리로 프사 선택하러 진입.
+//        안드로이드가 제공하는 갤러리 화면 활용. Intent (4) 추가 항목
+//        어떤사진? 결과를 얻기 위해 화면을 이동. Intent (3) 활용.
+        binding.profileImg.setOnClickListener {
+
+
+        }
+
         binding.readyTimeLayout.setOnClickListener {
 
             val customView =
