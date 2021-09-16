@@ -93,4 +93,11 @@ interface ServerAPIService {
     fun postRequestAddFriend(
         @Field("user_id") userId: Int
     ): Call<BasicResponse>
+
+    @FormUrlEncoded
+    @PUT("/user/friend")
+    fun putRequestAddFriend(
+        @Field("user_id") userId: Int,
+        @Field("type") type: String
+    ): Call<BasicResponse>
 }

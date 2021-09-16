@@ -60,12 +60,10 @@ class UserInfoActivity : BaseActivity() {
 //                    권한이 OK 일때.
 //                    갤러리로 사진을 가지러 이동. (추가 작업)
                     val myIntent = Intent()
-                    myIntent.action = Intent.ACTION_GET_CONTENT
+                    myIntent.action = Intent.ACTION_PICK
                     myIntent.type = "image/*"
-                    startActivityForResult(
-                        Intent.createChooser(myIntent, "프사 선택하기"),
-                        Request.READ_STORAGE_PERMISSION_REQUEST_CODE
-                    )
+                    myIntent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
+                    startActivityForResult(myIntent, Request.READ_STORAGE_PERMISSION_REQUEST_CODE)
                 }
 
                 override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {

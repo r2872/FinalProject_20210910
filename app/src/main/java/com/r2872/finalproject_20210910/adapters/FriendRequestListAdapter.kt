@@ -1,16 +1,23 @@
 package com.r2872.finalproject_20210910.adapters
 
 import android.content.Context
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.r2872.finalproject_20210910.R
+import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.UserData
+import com.r2872.finalproject_20210910.fragments.FriendRequestFragment
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FriendRequestListAdapter(
     val mContext: Context,
@@ -33,8 +40,16 @@ class FriendRequestListAdapter(
 
                     val alert = AlertDialog.Builder(context)
                         .setTitle("${data.nickName}님의 친구요청을 수락하시겠습니까?")
-                        .setPositiveButton("확인", null)
-                        .setNegativeButton("취소", null)
+                        .setPositiveButton(
+                            "확인",
+                            DialogInterface.OnClickListener { _, _ ->
+                                putRequestAddFriend(context, data, "수락")
+                            })
+                        .setNegativeButton(
+                            "취소",
+                            DialogInterface.OnClickListener { _, _ ->
+                                putRequestAddFriend(context, data, "거절")
+                            })
                     alert.show()
                 }
             }
@@ -50,9 +65,36 @@ class FriendRequestListAdapter(
                 "kakao" -> {
                     socialLoginImg.setImageResource(R.drawable.kakao_icon)
                 }
+                else -> socialLoginImg.setImageResource(R.drawable.ic_baseline_person_24)
             }
 
         }
+
+        private fun putRequestAddFriend(context: Context, data: UserData, type: String) {
+            (context as FriendRequestFragment).apiService.putRequestAddFriend(data.id, type)
+                .enqueue(object : Callback<BasicResponse> {
+                    override fun onResponse(
+                        call: Call<BasicResponse>,
+                        response: Response<BasicResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            val basicResponse = response.body()!!
+
+                            Toast.makeText(
+                                context,
+                                "${data.nickName}님의 요청을 ${type}하셨습니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+                    }
+                })
+        }
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
