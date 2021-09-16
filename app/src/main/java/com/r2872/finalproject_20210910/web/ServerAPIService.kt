@@ -84,6 +84,6 @@ interface ServerAPIService {
 
     @GET("/search/user")
     fun getRequestUserSearch(
-        @Query("nickname") nickname: String
+        @Query("nickname") keyword: String
     ): Call<BasicResponse>
 }

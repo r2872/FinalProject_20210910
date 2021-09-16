@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.r2872.finalproject_20210910.adapters.SearchFriendRecyclerViewAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityAddFriendBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
@@ -45,7 +47,15 @@ class AddFriendActivity : BaseActivity() {
 
         titleTxt.text = "친구 찾기"
         mAdapter = SearchFriendRecyclerViewAdapter(mContext, mList)
-        binding.searchUserRecyclerView.adapter = mAdapter
+        binding.searchUserRecyclerView.apply {
+            adapter = mAdapter
+            addItemDecoration(
+                DividerItemDecoration(
+                    mContext,
+                    LinearLayoutManager.VERTICAL
+                )
+            )
+        }
     }
 
     private fun getSearchFriendFromServer(inputKeyword: String) {
@@ -61,7 +71,6 @@ class AddFriendActivity : BaseActivity() {
 
                     if (usersArr.isEmpty()) {
                         Toast.makeText(mContext, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
-                        closeKeyboard()
                     } else {
                         mList.clear()
                         mList.addAll(usersArr)
