@@ -1,5 +1,6 @@
 package com.r2872.finalproject_20210910
 
+import android.Manifest
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import com.r2872.finalproject_20210910.databinding.ActivityUserInfoBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
@@ -37,7 +40,30 @@ class UserInfoActivity : BaseActivity() {
 //        어떤사진? 결과를 얻기 위해 화면을 이동. Intent (3) 활용.
         binding.profileImg.setOnClickListener {
 
+//            갤러리를 개발자가 이용: 허락 받아야 볼 수 있다. => 권한 세팅 필요.
+//            TedPermission 라이브러리
+            val permissionListener = object : PermissionListener {
+                override fun onPermissionGranted() {
 
+//                    권한이 OK 일때.
+//                    갤러리로 사진을 가지러 이동. (추가 작업)
+                }
+
+                override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+
+//                    권한이 거절되었을떄. => 토스트로 안내만.
+                    Toast.makeText(mContext, "권한이 거부되어 갤러리 접근이 불가능합니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+//            실제로 권한 체크.
+//            1) Manifest 에 권한 등록
+//            2) 실제로 라이브러리로 질문.
+            TedPermission.create()
+                .setPermissionListener(permissionListener)
+                .setDeniedMessage("이 기능을 사용하기 위해서는 권한 승인이 필요합니다.")
+                .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .check()
         }
 
         binding.readyTimeLayout.setOnClickListener {
