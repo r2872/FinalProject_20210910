@@ -7,11 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.r2872.finalproject_20210910.AddFriendActivity
 import com.r2872.finalproject_20210910.R
+import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.UserData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SearchFriendRecyclerViewAdapter(
     val mContext: Context,
@@ -61,6 +67,27 @@ class SearchFriendRecyclerViewAdapter(
                     .setTitle("${data.nickName}님에게 친구 요청을 보내시겠습니까?")
                     .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, i ->
 
+                        (context as AddFriendActivity).apiService.postRequestAddFriend(data.id)
+                            .enqueue(object : Callback<BasicResponse> {
+                                override fun onResponse(
+                                    call: Call<BasicResponse>,
+                                    response: Response<BasicResponse>
+                                ) {
+                                    if (response.isSuccessful) {
+                                        val basicResponse = response.body()!!
+
+                                        Toast.makeText(
+                                            context,
+                                            "${data.nickName}님에게 친구 추가 요청을 보냈습니다.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+
+                                override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+                                }
+                            })
                     })
                     .setNegativeButton("취소", null)
                 alert.show()

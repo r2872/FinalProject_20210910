@@ -82,8 +82,15 @@ interface ServerAPIService {
         @Query("type") type: String
     ): Call<BasicResponse>
 
+    //    닉네임으로 사용자 검색하기
     @GET("/search/user")
     fun getRequestUserSearch(
         @Query("nickname") keyword: String
+    ): Call<BasicResponse>
+
+    @FormUrlEncoded
+    @POST("/user/friend")
+    fun postRequestAddFriend(
+        @Field("user_id") userId: Int
     ): Call<BasicResponse>
 }

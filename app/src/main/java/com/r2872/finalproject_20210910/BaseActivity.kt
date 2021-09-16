@@ -40,7 +40,7 @@ abstract class BaseActivity : AppCompatActivity() {
     abstract fun setupEvents()
     abstract fun setValues()
 
-    fun setCustomActionBar() {
+    private fun setCustomActionBar() {
 
         val defActionBar = supportActionBar!!
 
