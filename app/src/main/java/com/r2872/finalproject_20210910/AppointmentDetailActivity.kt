@@ -1,24 +1,29 @@
 package com.r2872.finalproject_20210910
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
-import com.naver.maps.map.util.FusedLocationSource
 import com.odsay.odsayandroidsdk.API
 import com.odsay.odsayandroidsdk.ODsayData
 import com.odsay.odsayandroidsdk.ODsayService
@@ -26,10 +31,7 @@ import com.odsay.odsayandroidsdk.OnResultCallbackListener
 import com.r2872.finalproject_20210910.databinding.ActivityAppointmentDetailBinding
 import com.r2872.finalproject_20210910.datas.AppointmentData
 import com.r2872.finalproject_20210910.datas.UserData
-import com.r2872.finalproject_20210910.utils.Request
 import okhttp3.*
-import org.json.JSONObject
-import java.io.IOException
 import java.text.SimpleDateFormat
 
 class AppointmentDetailActivity : BaseActivity() {
@@ -40,7 +42,9 @@ class AppointmentDetailActivity : BaseActivity() {
     private lateinit var mNaverMap: NaverMap
     private val mMarker = Marker()
     private val startMarker = Marker()
-    private lateinit var mLocationSource: FusedLocationSource
+
+    //    버튼이 눌리면 => API 전송해달라고 표시 flag
+    var needLocationSendServer = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +63,71 @@ class AppointmentDetailActivity : BaseActivity() {
 
             return@setOnTouchListener false
         }
+
+        binding.arrivalBtn.setOnClickListener {
+
+//            서버에 위치를 보내야한다고 flag 값을 true
+            needLocationSendServer = true
+
+//           내 위치 파악. (현재위치 위도 / 경도 추출)
+
+            val pl = object : PermissionListener {
+                override fun onPermissionGranted() {
+
+//                   실제 위치 물어보기 (안드로이드 폰에게)
+
+//                    위치 관리자부터 가져오자.
+                    val locationManger = getSystemService(LOCATION_SERVICE) as LocationManager
+
+                    locationManger.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER,
+                        0L, 0f, object : LocationListener {
+                            override fun onLocationChanged(p0: Location) {
+
+                                if (needLocationSendServer) {
+
+//                                    서버에 위경도 값 보내주기.
+                                    Log.d("위도", p0.latitude.toString())
+                                    Log.d("경도", p0.longitude.toString())
+
+//                                    응답이 성공적으로 돌아오면 => 서버에 안보내기.
+                                    needLocationSendServer = false
+                                }
+                            }
+
+                            override fun onStatusChanged(
+                                provider: String?,
+                                status: Int,
+                                extras: Bundle?
+                            ) {
+
+                            }
+
+                            override fun onProviderEnabled(provider: String) {
+
+                            }
+
+                            override fun onProviderDisabled(provider: String) {
+
+                            }
+
+
+                        })
+                }
+
+                override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
+
+                    Toast.makeText(mContext, "현재 위치 정볼르 파악해야 약속 도착 시간을", Toast.LENGTH_SHORT).show()
+                }
+            }
+            TedPermission.create()
+                .setPermissionListener(pl)
+                .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
+                .check()
+        }
+
     }
+
 
     override fun setValues() {
 
@@ -123,14 +191,10 @@ class AppointmentDetailActivity : BaseActivity() {
         mapFragment.getMapAsync { naverMap ->
             mNaverMap = naverMap
 
-            mLocationSource = FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
+            val endLat = mAppointmentData.latitude
+            val endLng = mAppointmentData.longitude
 
-            mNaverMap.locationSource = mLocationSource
-
-            val startLat = mAppointmentData.latitude
-            val startLng = mAppointmentData.longitude
-
-            val currentAppointment = LatLng(startLat, startLng)
+            val currentAppointment = LatLng(endLat, endLng)
 //            val cameraUpdate = CameraUpdate.scrollTo(currentAppointment)
 //            naverMap.moveCamera(cameraUpdate)
 
@@ -144,19 +208,19 @@ class AppointmentDetailActivity : BaseActivity() {
             mMarker.position = currentAppointment
             mMarker.map = naverMap
 
-            val endLat = mAppointmentData.startLatitude
-            val endLng = mAppointmentData.startLongitude
+            val startLat = mAppointmentData.startLatitude
+            val startLng = mAppointmentData.startLongitude
 
             val startLatLng =
-                LatLng(endLat, endLng)
+                LatLng(startLat, startLng)
             startMarker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
             startMarker.position = startLatLng
             startMarker.map = naverMap
 
 //            시작점, 도착점 중간으로 카메라 이동?
             val centerOfStartAndDest = LatLng(
-                (startLat + endLat) / 2,
-                (startLng + endLng) / 2
+                (startLat + startLat) / 2,
+                (startLng + startLng) / 2
             )
 
             val cameraUpdate = CameraUpdate.scrollTo(centerOfStartAndDest)
@@ -170,10 +234,114 @@ class AppointmentDetailActivity : BaseActivity() {
 
             val infoWindow = InfoWindow()
 
+            val myOdsayService =
+                ODsayService.init(mContext, "JdJCDd5mWQLx6RMfBFXCYV0S/Kw3CU0YMt4WrfwXhTg")
+            myOdsayService.requestSearchPubTransPath(
+                mAppointmentData.startLongitude.toString(),
+                mAppointmentData.startLatitude.toString(),
+                endLng.toString(),
+                endLat.toString(),
+                null,
+                null,
+                null,
+                object : OnResultCallbackListener {
+                    override fun onSuccess(p0: ODsayData?, p1: API?) {
+
+                        val jsonObj = p0!!.json
+                        val resultObj = jsonObj.getJSONObject("result")
+                        val pathArr = resultObj.getJSONArray("path")
+                        val firstPathObj = pathArr.getJSONObject(0)
+
+//                        출발점 ~ 경유지 목록 ~ 도착지를 이어주는 Path 객체를 추가.
+                        val points = ArrayList<LatLng>()
+
+                        points.add(
+                            LatLng(
+                                mAppointmentData.startLatitude,
+                                mAppointmentData.startLongitude
+                            )
+                        ) // 시작점
+
+                        val subPathArr = firstPathObj.getJSONArray("subPath")
+                        for (i in 0 until subPathArr.length()) {
+                            val subPathObj = subPathArr.getJSONObject(i)
+
+                            if (!subPathObj.isNull("passStopList")) {
+
+//                            정거장 목록을 불러내보자.
+                                val passStopListObj = subPathObj.getJSONObject("passStopList")
+                                val stationArr = passStopListObj.getJSONArray("stations")
+                                for (j in 0 until stationArr.length()) {
+
+                                    val stationObj = stationArr.getJSONObject(j)
+
+//                                    각 정거장의 GPS 좌표 추출 -> 네이버지도의 위치객체로 변환.
+                                    val latlng = LatLng(
+                                        stationObj.getString("y").toDouble(),
+                                        stationObj.getString("x").toDouble()
+                                    )
+//                                points ArrayList 에 경유지로 추가
+                                    points.add(latlng)
+                                }
+                            }
+                        }
+                        points.add(
+                            LatLng(
+                                mAppointmentData.latitude,
+                                mAppointmentData.longitude
+                            )
+                        )
+                        //    화면에 그려질 출발~도착지 연결 선
+                        val mPath = PathOverlay()
+
+                        mPath.coords = points
+                        mPath.map = naverMap
+
+                        val infoObj = firstPathObj.getJSONObject("info")
+                        val totalTime = infoObj.getInt("totalTime")
+//                                Log.d("총 소요시간", totalTime.toString())
+
+//                                시간 / 분 으로 분리. 92 => 1시간 32분
+//                                시간 : 전체 분 / 60
+//                                분 : 전체 분 % 60
+                        val hour = totalTime / 60
+                        val minute = totalTime % 60
+                        Log.d("예상시간", hour.toString())
+                        Log.d("예상분", minute.toString())
+
+                        infoWindow.adapter = object : InfoWindow.DefaultViewAdapter(mContext) {
+                            override fun getContentView(p0: InfoWindow): View {
+                                val myView =
+                                    LayoutInflater.from(mContext)
+                                        .inflate(R.layout.my_custom_info_window, null)
+
+                                val placeName = myView.findViewById<TextView>(R.id.placeName_Txt)
+                                val arrivalTime =
+                                    myView.findViewById<TextView>(R.id.arrivalTime_Txt)
+
+                                placeName.text = mAppointmentData.place
+                                arrivalTime.text =
+                                    if (hour == 0) {
+                                        "${minute}분 소요 예상"
+                                    } else {
+                                        "${hour}시간 ${minute}분 소요 예상"
+                                    }
+
+                                return myView
+                            }
+                        }
+                    }
+
+                    override fun onError(p0: Int, p1: String?, p2: API?) {
+
+                        Log.d("예상시간실패", p1!!)
+                    }
+                })
+
             infoWindow.open(mMarker)
 
 //            지도의 아무데나 찍으면 열려있는 마커 닫아주기.
-            mNaverMap.setOnMapClickListener { _, _ ->
+            naverMap.setOnMapClickListener { _, _ ->
 
                 infoWindow.close()
             }
@@ -191,59 +359,8 @@ class AppointmentDetailActivity : BaseActivity() {
                 }
                 return@setOnClickListener true
             }
-
-            val url =
-                HttpUrl.parse("https://api.odsay.com/v1/api/searchPubTransPath")!!.newBuilder()
-            url.addEncodedQueryParameter("apikey", "JdJCDd5mWQLx6RMfBFXCYV0S/Kw3CU0YMt4WrfwXhTg")
-            url.addEncodedQueryParameter("SX", startLng.toString())
-            url.addEncodedQueryParameter("SY", startLat.toString())
-            url.addEncodedQueryParameter("EX", endLng.toString())
-            url.addEncodedQueryParameter("EY", endLat.toString())
-
-            val request = Request.Builder()
-
-            val client = OkHttpClient()
-
-            client.newCall(request).enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-
-                    val bodyString = response.body()!!
-                    val jsonObj = JSONObject(bodyString)
-                }
-            })
-
-            //        5) 응용 2 - 출발지 좌표도 지도에 설정.
-//         - 마커 찍기.
-//         - 출발지 / 도착지 일직선 PathOverlay 그어주기
-//         - 대중교통 API 활용 => 1. 도착 예상시간 표시 (infoWindow), 2. 실제 경유지로 PathOverlay 그어주기.
-            val myOdsayService =
-                ODsayService.init(mContext, "JdJCDd5mWQLx6RMfBFXCYV0S/Kw3CU0YMt4WrfwXhTg")
-
         }
 
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode != Request.LOCATION_PERMISSION_REQUEST_CODE) {
-            return
-        }
-
-        if (mLocationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
-            if (!mLocationSource.isActivated) {
-                mNaverMap.locationTrackingMode = LocationTrackingMode.None
-            }
-            return
-        }
-
-    }
 }

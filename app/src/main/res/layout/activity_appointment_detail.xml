@@ -128,6 +128,12 @@
 
                     </LinearLayout>
 
+                    <Button
+                        android:id="@+id/arrival_Btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="도착 인증하기" />
+
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
