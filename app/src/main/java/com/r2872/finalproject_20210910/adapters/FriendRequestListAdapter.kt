@@ -52,6 +52,7 @@ class FriendRequestListAdapter(
                         }
                     )
                 alert.show()
+
             }
 
             Glide.with(context)
@@ -85,6 +86,14 @@ class FriendRequestListAdapter(
                                 "${data.nickName}님의 친구 요청을 ${type}하셨습니다.",
                                 Toast.LENGTH_SHORT
                             ).show()
+
+//                            프래그먼트의 요청목록 새로 가져오기 함수를 실행?
+//                            어댑터 -> 액비티티 기능 : context 변수 활용.
+
+//                            어댑터 -> 액티비티 -> ViewPager 어댑터 -> 1번쨰 Fragment -> 요청목록 Frag 로 변신 -> 기능활용
+                            (context.friendsViewPagerAdapter.getItem(
+                                1
+                            ) as FriendRequestFragment).getRequestedFriendFromUser()
                         }
                     }
 

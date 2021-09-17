@@ -13,7 +13,7 @@ import com.r2872.finalproject_20210910.fragments.MyFriendListFragment
 class VIewMyFriendsListActivity : BaseActivity() {
 
     private lateinit var binding: ActivityViewMyFriendsListBinding
-    private lateinit var friendsViewPagerAdapter: FriendsViewPagerAdapter
+    lateinit var friendsViewPagerAdapter: FriendsViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,5 +63,9 @@ class VIewMyFriendsListActivity : BaseActivity() {
         friendsViewPagerAdapter = FriendsViewPagerAdapter(supportFragmentManager)
         binding.friendsViewPager.adapter = friendsViewPagerAdapter
         binding.friendsTabLayout.setupWithViewPager(binding.friendsViewPager)
+    }
+
+    fun das() {
+
     }
 }

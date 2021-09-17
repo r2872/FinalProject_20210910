@@ -18,6 +18,17 @@ import retrofit2.Response
 
 class MyFriendListFragment : BaseFragment() {
 
+    companion object {
+
+        private var frag: MyFriendListFragment? = null
+        fun getFrag(): MyFriendListFragment {
+            if (frag == null) {
+                frag = MyFriendListFragment()
+            }
+            return frag!!
+        }
+    }
+
     private lateinit var binding: FragmentMyFriendListBinding
     private lateinit var mAdapter: FriendListAdapter
     private val mList = ArrayList<UserData>()
