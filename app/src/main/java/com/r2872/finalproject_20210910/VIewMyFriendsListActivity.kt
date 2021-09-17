@@ -4,8 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
+import androidx.viewpager.widget.ViewPager
 import com.r2872.finalproject_20210910.adapters.FriendsViewPagerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityViewMyFriendsListBinding
+import com.r2872.finalproject_20210910.fragments.FriendRequestFragment
+import com.r2872.finalproject_20210910.fragments.MyFriendListFragment
 
 class VIewMyFriendsListActivity : BaseActivity() {
 
@@ -21,6 +24,29 @@ class VIewMyFriendsListActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+        binding.friendsViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+
+//                각 페이지에 맞는 프래그먼트의 새로고침 실행.
+                when (position) {
+                    0 -> (friendsViewPagerAdapter.getItem(position) as MyFriendListFragment).getFriendListFromServer()
+                    else -> (friendsViewPagerAdapter.getItem(position) as FriendRequestFragment).getRequestedFriendFromUser()
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+        })
 
         profileImg.setOnClickListener {
 

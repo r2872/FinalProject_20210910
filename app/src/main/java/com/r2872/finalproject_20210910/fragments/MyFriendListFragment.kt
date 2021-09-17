@@ -57,7 +57,7 @@ class MyFriendListFragment : BaseFragment() {
         getFriendListFromServer()
     }
 
-    private fun getFriendListFromServer() {
+    fun getFriendListFromServer() {
 
         apiService.getRequestFriendList("my").enqueue(object : Callback<BasicResponse> {
             override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {

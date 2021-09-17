@@ -18,6 +18,17 @@ import retrofit2.Response
 
 class FriendRequestFragment : BaseFragment() {
 
+    companion object {
+
+        private var frag: FriendRequestFragment? = null
+        fun getFrag(): FriendRequestFragment {
+            if (frag == null) {
+                frag = FriendRequestFragment()
+            }
+            return frag!!
+        }
+    }
+
     private lateinit var binding: FragmentFriendRequestBinding
     private lateinit var mAdapter: FriendRequestListAdapter
     private val mList = ArrayList<UserData>()
@@ -53,11 +64,14 @@ class FriendRequestFragment : BaseFragment() {
                 LinearLayoutManager.VERTICAL
             )
         )
+    }
 
+    override fun onResume() {
+        super.onResume()
         getRequestedFriendFromUser()
     }
 
-    private fun getRequestedFriendFromUser() {
+    fun getRequestedFriendFromUser() {
 
         apiService.getRequestFriendList("requested").enqueue(object : Callback<BasicResponse> {
             override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
