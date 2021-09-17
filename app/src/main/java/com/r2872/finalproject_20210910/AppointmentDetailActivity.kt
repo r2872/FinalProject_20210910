@@ -11,12 +11,14 @@ import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
+import com.naver.maps.map.util.FusedLocationSource
 import com.odsay.odsayandroidsdk.API
 import com.odsay.odsayandroidsdk.ODsayData
 import com.odsay.odsayandroidsdk.ODsayService
@@ -24,6 +26,10 @@ import com.odsay.odsayandroidsdk.OnResultCallbackListener
 import com.r2872.finalproject_20210910.databinding.ActivityAppointmentDetailBinding
 import com.r2872.finalproject_20210910.datas.AppointmentData
 import com.r2872.finalproject_20210910.datas.UserData
+import com.r2872.finalproject_20210910.utils.Request
+import okhttp3.*
+import org.json.JSONObject
+import java.io.IOException
 import java.text.SimpleDateFormat
 
 class AppointmentDetailActivity : BaseActivity() {
@@ -34,6 +40,7 @@ class AppointmentDetailActivity : BaseActivity() {
     private lateinit var mNaverMap: NaverMap
     private val mMarker = Marker()
     private val startMarker = Marker()
+    private lateinit var mLocationSource: FusedLocationSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,12 +123,16 @@ class AppointmentDetailActivity : BaseActivity() {
         mapFragment.getMapAsync { naverMap ->
             mNaverMap = naverMap
 
-            val lat = mAppointmentData.latitude
-            val lng = mAppointmentData.longitude
+            mLocationSource = FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
 
-            val currentAppointment = LatLng(lat, lng)
-            val cameraUpdate = CameraUpdate.scrollTo(currentAppointment)
-            naverMap.moveCamera(cameraUpdate)
+            mNaverMap.locationSource = mLocationSource
+
+            val startLat = mAppointmentData.latitude
+            val startLng = mAppointmentData.longitude
+
+            val currentAppointment = LatLng(startLat, startLng)
+//            val cameraUpdate = CameraUpdate.scrollTo(currentAppointment)
+//            naverMap.moveCamera(cameraUpdate)
 
             val uiSettings = naverMap.uiSettings
             uiSettings.isCompassEnabled = true
@@ -133,11 +144,27 @@ class AppointmentDetailActivity : BaseActivity() {
             mMarker.position = currentAppointment
             mMarker.map = naverMap
 
+            val endLat = mAppointmentData.startLatitude
+            val endLng = mAppointmentData.startLongitude
+
             val startLatLng =
-                LatLng(mAppointmentData.startLatitude, mAppointmentData.startLongitude)
+                LatLng(endLat, endLng)
             startMarker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
             startMarker.position = startLatLng
             startMarker.map = naverMap
+
+//            시작점, 도착점 중간으로 카메라 이동?
+            val centerOfStartAndDest = LatLng(
+                (startLat + endLat) / 2,
+                (startLng + endLng) / 2
+            )
+
+            val cameraUpdate = CameraUpdate.scrollTo(centerOfStartAndDest)
+            naverMap.moveCamera(cameraUpdate)
+
+//            거리에 따른 줌 레벨 변경 (도전과제)
+            val zoomLevel = 11.0  // 두 좌표의 직선거리에 따라 어느 줌 레벨이 적당한지 계산해줘야함.
+            mNaverMap.moveCamera(CameraUpdate.zoomTo(zoomLevel))
 
 //            기본 정보창 띄우기
 
@@ -165,6 +192,30 @@ class AppointmentDetailActivity : BaseActivity() {
                 return@setOnClickListener true
             }
 
+            val url =
+                HttpUrl.parse("https://api.odsay.com/v1/api/searchPubTransPath")!!.newBuilder()
+            url.addEncodedQueryParameter("apikey", "JdJCDd5mWQLx6RMfBFXCYV0S/Kw3CU0YMt4WrfwXhTg")
+            url.addEncodedQueryParameter("SX", startLng.toString())
+            url.addEncodedQueryParameter("SY", startLat.toString())
+            url.addEncodedQueryParameter("EX", endLng.toString())
+            url.addEncodedQueryParameter("EY", endLat.toString())
+
+            val request = Request.Builder()
+
+            val client = OkHttpClient()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+
+                    val bodyString = response.body()!!
+                    val jsonObj = JSONObject(bodyString)
+                }
+            })
+
             //        5) 응용 2 - 출발지 좌표도 지도에 설정.
 //         - 마커 찍기.
 //         - 출발지 / 도착지 일직선 PathOverlay 그어주기
@@ -172,105 +223,26 @@ class AppointmentDetailActivity : BaseActivity() {
             val myOdsayService =
                 ODsayService.init(mContext, "JdJCDd5mWQLx6RMfBFXCYV0S/Kw3CU0YMt4WrfwXhTg")
 
-            myOdsayService.requestSearchPubTransPath(
-                mAppointmentData.startLongitude.toString(),
-                mAppointmentData.startLatitude.toString(),
-                lng.toString(),
-                lat.toString(),
-                null,
-                null,
-                null,
-                object : OnResultCallbackListener {
-                    override fun onSuccess(p0: ODsayData?, p1: API?) {
+        }
 
-                        val jsonObj = p0!!.json
-                        val resultObj = jsonObj.getJSONObject("result")
-                        val pathArr = resultObj.getJSONArray("path")
-                        val firstPathObj = pathArr.getJSONObject(0)
+    }
 
-//                        출발점 ~ 경유지 목록 ~ 도착지를 이어주는 Path 객체를 추가.
-                        val points = ArrayList<LatLng>()
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-                        points.add(
-                            LatLng(
-                                mAppointmentData.startLatitude,
-                                mAppointmentData.startLongitude
-                            )
-                        )
-                        val subPathArr = firstPathObj.getJSONArray("subPath")
-                        for (i in 0 until subPathArr.length()) {
-                            val subPathObj = subPathArr.getJSONObject(i)
+        if (requestCode != Request.LOCATION_PERMISSION_REQUEST_CODE) {
+            return
+        }
 
-                            if (!subPathObj.isNull("passStopList")) {
-
-//                            정거장 목록을 불러내보자.
-                                val passStopListObj = subPathObj.getJSONObject("passStopList")
-                                val stationArr = passStopListObj.getJSONArray("stations")
-                                for (j in 0 until stationArr.length()) {
-
-                                    val stationObj = stationArr.getJSONObject(j)
-
-//                                    각 정거장의 GPS 좌표 추출 -> 네이버지도의 위치객체로 변환.
-                                    val latlng = LatLng(
-                                        stationObj.getString("y").toDouble(),
-                                        stationObj.getString("x").toDouble()
-                                    )
-//                                points ArrayList 에 경유지로 추가
-                                    points.add(latlng)
-                                }
-                            }
-                        }
-                        points.add(
-                            LatLng(
-                                mAppointmentData.latitude,
-                                mAppointmentData.longitude
-                            )
-                        )
-                        //    화면에 그려질 출발~도착지 연결 선
-                        val mPath = PathOverlay()
-
-                        mPath.coords = points
-                        mPath.map = naverMap
-
-                        val infoObj = firstPathObj.getJSONObject("info")
-                        val totalTime = infoObj.getInt("totalTime")
-//                                Log.d("총 소요시간", totalTime.toString())
-
-//                                시간 / 분 으로 분리. 92 => 1시간 32분
-//                                시간 : 전체 분 / 60
-//                                분 : 전체 분 % 60
-                        val hour = totalTime / 60
-                        val minute = totalTime % 60
-                        Log.d("예상시간", hour.toString())
-                        Log.d("예상분", minute.toString())
-
-                        infoWindow.adapter = object : InfoWindow.DefaultViewAdapter(mContext) {
-                            override fun getContentView(p0: InfoWindow): View {
-                                val myView =
-                                    LayoutInflater.from(mContext)
-                                        .inflate(R.layout.my_custom_info_window, null)
-
-                                val placeName = myView.findViewById<TextView>(R.id.placeName_Txt)
-                                val arrivalTime =
-                                    myView.findViewById<TextView>(R.id.arrivalTime_Txt)
-
-                                placeName.text = mAppointmentData.place
-                                arrivalTime.text =
-                                    if (hour == 0) {
-                                        "${minute}분 소요 예상"
-                                    } else {
-                                        "${hour}시간 ${minute}분 소요 예상"
-                                    }
-
-                                return myView
-                            }
-                        }
-                    }
-
-                    override fun onError(p0: Int, p1: String?, p2: API?) {
-
-                    }
-                })
+        if (mLocationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if (!mLocationSource.isActivated) {
+                mNaverMap.locationTrackingMode = LocationTrackingMode.None
+            }
+            return
         }
 
     }
