@@ -23,10 +23,12 @@ import com.odsay.odsayandroidsdk.API
 import com.odsay.odsayandroidsdk.ODsayData
 import com.odsay.odsayandroidsdk.ODsayService
 import com.odsay.odsayandroidsdk.OnResultCallbackListener
+import com.r2872.finalproject_20210910.adapters.AddFriendsSpinnerAdapter
 import com.r2872.finalproject_20210910.adapters.StartPlaceSpinnerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.PlaceListData
+import com.r2872.finalproject_20210910.datas.UserData
 import com.r2872.finalproject_20210910.utils.Request
 import org.json.JSONObject
 import retrofit2.Call
@@ -51,6 +53,9 @@ class EditAppointmentActivity : BaseActivity() {
     //    출발지 목록을 담아둘 리스트.
     val mStartPlaceList = ArrayList<PlaceListData>()
     private lateinit var mSpinnerAdapter: StartPlaceSpinnerAdapter
+    private lateinit var mAddFriendsSpinnerAdapter: AddFriendsSpinnerAdapter
+
+    val mFriendList = ArrayList<UserData>()
 
     //    선택된 출발지를 담아줄 변수
     private lateinit var mSelectedStartPlace: PlaceListData
@@ -204,6 +209,9 @@ class EditAppointmentActivity : BaseActivity() {
         mSpinnerAdapter =
             StartPlaceSpinnerAdapter(mContext, R.layout.my_place_list_item, mStartPlaceList)
         binding.startPlaceSpinner.adapter = mSpinnerAdapter
+        mAddFriendsSpinnerAdapter =
+            AddFriendsSpinnerAdapter(mContext, R.layout.friend_list_item, mFriendList)
+        binding.myFriendsSpinner.adapter = mAddFriendsSpinnerAdapter
 
 //        내 출발장소 목록 담아주기
         apiService.getRequestMyAppointmentList().enqueue(object : Callback<BasicResponse> {

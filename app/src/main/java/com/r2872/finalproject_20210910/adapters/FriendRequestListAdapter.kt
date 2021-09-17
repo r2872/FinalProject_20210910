@@ -91,9 +91,7 @@ class FriendRequestListAdapter(
 //                            어댑터 -> 액비티티 기능 : context 변수 활용.
 
 //                            어댑터 -> 액티비티 -> ViewPager 어댑터 -> 1번쨰 Fragment -> 요청목록 Frag 로 변신 -> 기능활용
-                            (context.friendsViewPagerAdapter.getItem(
-                                1
-                            ) as FriendRequestFragment).getRequestedFriendFromUser()
+                            (context.friendsViewPagerAdapter.getItem(1) as FriendRequestFragment).getRequestedFriendFromUser()
                         }
                     }
 
