@@ -22,7 +22,9 @@ data class AppointmentData(
     var longitude: Double,
     @SerializedName("created_at")
     var createdAt: Date,
-    var user: UserData
+    var user: UserData,
+    @SerializedName("invited_friends")
+    var invitedFriends: List<UserData>
 ) : Serializable {
 
 

@@ -6,10 +6,12 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.marginEnd
+import androidx.core.view.setMargins
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
@@ -32,6 +34,7 @@ import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.PlaceListData
 import com.r2872.finalproject_20210910.datas.UserData
 import com.r2872.finalproject_20210910.utils.Request
+import com.r2872.finalproject_20210910.utils.SizeUtil.Companion.dbToPx
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,6 +42,7 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+
 
 @SuppressLint("ClickableViewAccessibility", "SimpleDateFormat")
 class EditAppointmentActivity : BaseActivity() {
@@ -108,7 +112,25 @@ class EditAppointmentActivity : BaseActivity() {
 //            텍스트뷰 하나를 코틀린에서 생성
             val textView = TextView(mContext)
             textView.text = selectedFriend.nickName
-            textView.marginEnd
+            textView.setBackgroundResource(R.drawable.selected_friend_box)
+            textView.setPadding(
+                dbToPx(mContext, 5f).toInt(),
+                dbToPx(mContext, 5f).toInt(),
+                dbToPx(mContext, 5f).toInt(),
+                dbToPx(mContext, 5f).toInt()
+            )
+            val params = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(dbToPx(mContext, 5f).toInt())
+            textView.layoutParams = params
+
+//            만들어낸 텍스트뷰에 이벤트 처리
+            textView.setOnClickListener {
+                binding.friendListLayout.removeView(textView)
+                mSelectedFriendList.remove(selectedFriend)
+            }
 
 //            레이아웃에 추가 + 친구목록으로도 추가.
             binding.friendListLayout.addView(textView)
@@ -182,6 +204,18 @@ class EditAppointmentActivity : BaseActivity() {
                 return@setOnClickListener
             }
 
+            val strBuilder = StringBuilder()
+            for (i in 0 until mSelectedFriendList.size) {
+                strBuilder.append(mSelectedFriendList[i].id.toString())
+                strBuilder.append(",")
+            }
+            var friendListStr = ""
+            if (strBuilder.isNotEmpty()) {
+                friendListStr = strBuilder.substring(0, strBuilder.length - 1)
+            }
+
+            Log.d("친구리스트", friendListStr)
+
             apiService.postRequestAppointment(
                 inputTitle,
                 finalDateTime,
@@ -189,7 +223,8 @@ class EditAppointmentActivity : BaseActivity() {
                 mSelectedStartPlace.latitude,
                 mSelectedStartPlace.longitude,
                 inputPlaceName,
-                mSelectedLat, mSelectedLng
+                mSelectedLat, mSelectedLng,
+                friendListStr
             ).enqueue(object : Callback<BasicResponse> {
                 override fun onResponse(
                     call: Call<BasicResponse>,

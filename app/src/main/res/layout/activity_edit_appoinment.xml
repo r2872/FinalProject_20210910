@@ -108,11 +108,10 @@
                 </LinearLayout>
 
                 <com.nex3z.flowlayout.FlowLayout
-                    android:layout_marginTop="5dp"
                     android:id="@+id/friendListLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="5dp">
 
                 </com.nex3z.flowlayout.FlowLayout>
 

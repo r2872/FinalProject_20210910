@@ -47,7 +47,8 @@ interface ServerAPIService {
         @Field("start_longitude") startLongitude: Double,
         @Field("place") place: String,
         @Field("latitude") latitude: Double,
-        @Field("longitude") longitude: Double
+        @Field("longitude") longitude: Double,
+        @Field("friend_list") friendList: String
     ): Call<BasicResponse>
 
     @GET("/appointment")
