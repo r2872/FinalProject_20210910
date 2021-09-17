@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.r2872.finalproject_20210910.AppointmentDetailActivity
 import com.r2872.finalproject_20210910.R
 import com.r2872.finalproject_20210910.ViewMapActivity
 import com.r2872.finalproject_20210910.datas.AppointmentData
@@ -29,7 +31,7 @@ class AppointmentAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        holder.bind(mList[position])
+        holder.bind(mContext, mList[position])
     }
 
     override fun getItemCount() = mList.size
@@ -40,9 +42,10 @@ class AppointmentAdapter(
         private val dateTxt = view.findViewById<TextView>(R.id.date_Txt)
         private val placeTxt = view.findViewById<TextView>(R.id.place_Txt)
         private val viewPlaceMapBtn = view.findViewById<ImageView>(R.id.viewPlaceMap_Btn)
+        private val backgroundLayout = view.findViewById<LinearLayout>(R.id.backgroundLayout)
 
 
-        fun bind(item: AppointmentData) {
+        fun bind(context: Context, item: AppointmentData) {
 
             titleTxt.text = item.title
 
@@ -52,10 +55,19 @@ class AppointmentAdapter(
 
             viewPlaceMapBtn.setOnClickListener {
 
-                val myIntent = Intent(mContext, ViewMapActivity::class.java)
+                val myIntent = Intent(context, ViewMapActivity::class.java)
                 myIntent.putExtra("appointment", item)
-                mContext.startActivity(myIntent)
+                context.startActivity(myIntent)
             }
+
+            backgroundLayout.setOnClickListener {
+
+                val myIntent = Intent(context, AppointmentDetailActivity::class.java)
+                myIntent.putExtra("appointment", item)
+                context.startActivity(myIntent)
+            }
+
+
         }
     }
 }
