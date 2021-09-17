@@ -31,7 +31,7 @@ class AddFriendsSpinnerAdapter(
         val friendNicknameTxt = row.findViewById<TextView>(R.id.friendNickname_Txt)
         val friendProfileImg = row.findViewById<ImageView>(R.id.friendProfile_Img)
         val socialLoginImg = row.findViewById<ImageView>(R.id.socialLogin_Img)
-        val addFriendBtn = row.findViewById<TextView>(R.id.addFriend_Btn)
+        val addFriendBtn = row.findViewById<ImageView>(R.id.addFriend_Btn)
         addFriendBtn.visibility = View.GONE
         socialLoginImg.visibility = View.GONE
 

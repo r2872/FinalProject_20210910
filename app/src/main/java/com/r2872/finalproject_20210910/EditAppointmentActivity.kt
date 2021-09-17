@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
@@ -53,9 +54,10 @@ class EditAppointmentActivity : BaseActivity() {
     //    출발지 목록을 담아둘 리스트.
     val mStartPlaceList = ArrayList<PlaceListData>()
     private lateinit var mSpinnerAdapter: StartPlaceSpinnerAdapter
-    private lateinit var mAddFriendsSpinnerAdapter: AddFriendsSpinnerAdapter
 
-    val mFriendList = ArrayList<UserData>()
+    //    내 친구 목록을 담아둘 리스트.
+    private val mFriendList = ArrayList<UserData>()
+    private lateinit var mAddFriendsSpinnerAdapter: AddFriendsSpinnerAdapter
 
     //    선택된 출발지를 담아줄 변수
     private lateinit var mSelectedStartPlace: PlaceListData
@@ -86,6 +88,20 @@ class EditAppointmentActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+//        친구추가 버튼 이벤트
+        binding.addFriendToListBtn.setOnClickListener {
+
+//            고른 친구가 누구인지? => 스피너에서 선택되어있는 친구를 찾아내자.
+            val selectedFriend = mFriendList[binding.myFriendsSpinner.selectedItemPosition]
+
+//            텍스트뷰 하나를 코틀린에서 생성
+            val textView = TextView(mContext)
+            textView.text = selectedFriend.nickName
+
+//            레이아웃에 추가 + 친구목록으로도 추가.
+            binding.friendListLayout.addView(textView)
+        }
 
 //        스피너의 선택 이벤트.
         binding.startPlaceSpinner.onItemSelectedListener =
@@ -206,12 +222,32 @@ class EditAppointmentActivity : BaseActivity() {
 
     override fun setValues() {
 
+        titleTxt.text = "일정 생성"
+
         mSpinnerAdapter =
             StartPlaceSpinnerAdapter(mContext, R.layout.my_place_list_item, mStartPlaceList)
         binding.startPlaceSpinner.adapter = mSpinnerAdapter
+
         mAddFriendsSpinnerAdapter =
             AddFriendsSpinnerAdapter(mContext, R.layout.friend_list_item, mFriendList)
         binding.myFriendsSpinner.adapter = mAddFriendsSpinnerAdapter
+
+//        내 친구 목록 담아주기
+        apiService.getRequestFriendList("my").enqueue(object : Callback<BasicResponse> {
+            override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
+                if (response.isSuccessful) {
+
+                    val basicResponse = response.body()!!
+                    mFriendList.clear()
+                    mFriendList.addAll(basicResponse.data.friends)
+                }
+                mAddFriendsSpinnerAdapter.notifyDataSetChanged()
+            }
+
+            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+            }
+        })
 
 //        내 출발장소 목록 담아주기
         apiService.getRequestMyAppointmentList().enqueue(object : Callback<BasicResponse> {
@@ -230,8 +266,6 @@ class EditAppointmentActivity : BaseActivity() {
 
             }
         })
-
-        titleTxt.text = "일정 생성"
 
         val fm = supportFragmentManager
         val mapFragment = fm.findFragmentById(R.id.naverMapView) as MapFragment?
