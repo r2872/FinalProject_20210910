@@ -9,19 +9,33 @@
         tools:context=".AppointmentDetailActivity">
 
         <ScrollView
+            android:id="@+id/mainScrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <fragment
-                    android:id="@+id/naverMapView"
-                    android:name="com.naver.maps.map.MapFragment"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="250dp" />
+                    android:layout_height="wrap_content">
+
+                    <fragment
+                        android:id="@+id/naverMapView"
+                        android:name="com.naver.maps.map.MapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp" />
+
+                    <TextView
+                        android:id="@+id/scrollStop"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </FrameLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
