@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.marginEnd
 import androidx.databinding.DataBindingUtil
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
@@ -98,6 +99,7 @@ class EditAppointmentActivity : BaseActivity() {
 //            텍스트뷰 하나를 코틀린에서 생성
             val textView = TextView(mContext)
             textView.text = selectedFriend.nickName
+            textView.marginEnd
 
 //            레이아웃에 추가 + 친구목록으로도 추가.
             binding.friendListLayout.addView(textView)
