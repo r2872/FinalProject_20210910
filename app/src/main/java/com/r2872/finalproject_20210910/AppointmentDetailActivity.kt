@@ -187,6 +187,12 @@ class AppointmentDetailActivity : BaseActivity() {
                 .check()
         }
 
+        binding.refreshBtn.setOnClickListener {
+            mInvitedFriendsList.clear()
+            getAppointmentFromServer()
+            Toast.makeText(mContext, "새로고침 완료", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
 
@@ -221,38 +227,64 @@ class AppointmentDetailActivity : BaseActivity() {
     private fun getAppointmentFromServer() {
 
 //        친구 목록등의 내용을 서버에서 새로 받자.
+        apiService.getRequestAppointmentDetail(mAppointmentData.id)
+            .enqueue(object : Callback<BasicResponse> {
+                override fun onResponse(
+                    call: Call<BasicResponse>,
+                    response: Response<BasicResponse>
+                ) {
+                    if (response.isSuccessful) {
 
-//        받고 나서 API 응답 성공시 친구 목록 새로고침.
+                        val basicResponse = response.body()!!
 
-        val inflater = LayoutInflater.from(mContext)
-        val sdf = SimpleDateFormat("H:mm 도착")
+                        mAppointmentData = basicResponse.data.appointment
 
-        for (i in 0 until mInvitedFriendsList.size) {
+                        //        받고 나서 API 응답 성공시 친구 목록 새로고침.
 
-            val friendsList = mInvitedFriendsList[i]
-            val invitedFriend = inflater.inflate(
-                R.layout.invited_friends_list_item,
-                binding.invitedFriendsLayout,
-                false
-            )
-            val nickname = invitedFriend.findViewById<TextView>(R.id.friendNickname_Txt)
-            val statusTxt = invitedFriend.findViewById<TextView>(R.id.status_Txt)
-            val friendProfileImg = invitedFriend.findViewById<ImageView>(R.id.friendProfile_Img)
+                        val inflater = LayoutInflater.from(mContext)
+                        val sdf = SimpleDateFormat("H:mm 도착")
 
-            nickname.text = friendsList.nickName
-            if (friendsList.arrivedAt != null) {
+                        for (i in 0 until mInvitedFriendsList.size) {
 
-                val arrivedTime = sdf.format(friendsList.arrivedAt.time).toString()
-                statusTxt.text = arrivedTime
-            } else {
-                statusTxt.text = "도착 전"
-            }
-            Glide.with(mContext)
-                .load(friendsList.profileImg)
-                .into(friendProfileImg)
+                            val friendsList = mInvitedFriendsList[i]
+                            val invitedFriend = inflater.inflate(
+                                R.layout.invited_friends_list_item,
+                                binding.invitedFriendsLayout,
+                                false
+                            )
+                            val nickname =
+                                invitedFriend.findViewById<TextView>(R.id.friendNickname_Txt)
+                            val statusTxt = invitedFriend.findViewById<TextView>(R.id.status_Txt)
+                            val friendProfileImg =
+                                invitedFriend.findViewById<ImageView>(R.id.friendProfile_Img)
 
-            binding.invitedFriendsLayout.addView(invitedFriend)
-        }
+                            nickname.text = friendsList.nickName
+                            if (friendsList.arrivedAt != null) {
+
+                                val arrivedTime =
+                                    sdf.format(friendsList.arrivedAt!!.time).toString()
+                                statusTxt.text = arrivedTime
+                            } else {
+                                statusTxt.text = "도착 전"
+                            }
+                            Glide.with(mContext)
+                                .load(friendsList.profileImg)
+                                .into(friendProfileImg)
+
+                            binding.invitedFriendsLayout.addView(invitedFriend)
+                        }
+                    } else {
+                        val jsonObj = JSONObject(response.errorBody()!!.string())
+                        Toast.makeText(mContext, jsonObj.getString("message"), Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+
+                override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+                }
+            })
+
     }
 
     private fun setNaverMap() {

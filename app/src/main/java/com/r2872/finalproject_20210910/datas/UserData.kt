@@ -15,5 +15,5 @@ data class UserData(
     @SerializedName("profile_img")
     var profileImg: String,
     @SerializedName("arrived_at")
-    var arrivedAt: Date
+    var arrivedAt: Date?
 ) : Serializable

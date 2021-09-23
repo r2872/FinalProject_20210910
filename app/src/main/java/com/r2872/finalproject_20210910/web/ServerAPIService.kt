@@ -109,4 +109,9 @@ interface ServerAPIService {
         @Field("latitude") latitude: Double,
         @Field("longitude") longitude: Double
     ): Call<BasicResponse>
+
+    @GET("/appointment/{appointment_id}")
+    fun getRequestAppointmentDetail(
+        @Path("appointment_id") id: Int
+    ): Call<BasicResponse>
 }
