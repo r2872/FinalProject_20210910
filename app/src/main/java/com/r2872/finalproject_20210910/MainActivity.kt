@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.r2872.finalproject_20210910.adapters.AppointmentAdapter
+import com.r2872.finalproject_20210910.adapters.InvitedAppointmentAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityMainBinding
 import com.r2872.finalproject_20210910.datas.AppointmentData
 import com.r2872.finalproject_20210910.datas.BasicResponse
@@ -21,7 +22,9 @@ class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mAdapter: AppointmentAdapter
+    private lateinit var mInvitedAdapter: InvitedAppointmentAdapter
     private val mAppointmentList = ArrayList<AppointmentData>()
+    private val mInvitedAppointmentList = ArrayList<AppointmentData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,18 +41,6 @@ class MainActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
-
-        binding.invitedAppointmentBtn.setOnClickListener {
-            startActivity(Intent(mContext, InvitedAppointmentActivity::class.java))
-        }
-
-        binding.refreshLayout.setOnRefreshListener {
-            getAppointmentListFromServer()
-
-            Toast.makeText(mContext, "새로고침 완료", Toast.LENGTH_SHORT).show()
-
-            binding.refreshLayout.isRefreshing = false
-        }
 
         binding.addAppoinmentBtn.setOnClickListener {
 
@@ -79,6 +70,15 @@ class MainActivity : BaseActivity() {
                 LinearLayoutManager.VERTICAL
             )
         )
+
+        mInvitedAdapter = InvitedAppointmentAdapter(mContext, mInvitedAppointmentList)
+        binding.invitedList.adapter = mInvitedAdapter
+        binding.invitedList.addItemDecoration(
+            DividerItemDecoration(
+                mContext,
+                LinearLayoutManager.VERTICAL
+            )
+        )
     }
 
     private fun getAppointmentListFromServer() {
@@ -89,11 +89,13 @@ class MainActivity : BaseActivity() {
                 if (response.isSuccessful) {
 
                     mAppointmentList.clear()
+                    mInvitedAppointmentList.clear()
                     val basicResponse = response.body()!!
                     Log.d("리스트", basicResponse.data.appointments.toString())
 
 //                    약속목록변수에 => 서버가 알려준 약속목록을 전부 추가.
                     mAppointmentList.addAll(basicResponse.data.appointments)
+                    mInvitedAppointmentList.addAll(basicResponse.data.invited_appointments)
 
 //                    for (apData in basicResponse.data.appoinments) {
 //                        Log.d("약속리스트", apData.title)
@@ -103,7 +105,19 @@ class MainActivity : BaseActivity() {
                         .show()
 
                 }
+                if (mAppointmentList.isEmpty()) {
+                    binding.createdListMenu.text = "아직 만든 일정이 없습니다."
+                } else {
+                    binding.createdListMenu.text = "내가 만든 일정목록"
+                }
+                if (mInvitedAppointmentList.isEmpty()) {
+                    binding.invitedListMenu.text = "초대 받은 일정이 없습니다."
+                } else {
+                    binding.invitedListMenu.text = "초대 받은 일정목록"
+
+                }
                 mAdapter.notifyDataSetChanged()
+                mInvitedAdapter.notifyDataSetChanged()
             }
 
             override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
