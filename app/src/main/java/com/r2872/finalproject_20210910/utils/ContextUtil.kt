@@ -11,6 +11,7 @@ class ContextUtil {
         private val USER_ID = "USER_ID"
         private val USER_PW = "USER_PW"
         private val TOKEN = "TOKEN"
+        private val MY_READY_MINUTE = "MY_READY_MINUTE"
 
         fun setAutoLogIn(context: Context, isAutoLogIn: Boolean) {
             val pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
@@ -33,6 +34,17 @@ class ContextUtil {
         fun getToken(context: Context): String {
             val pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
             return pref.getString(TOKEN, "")!!
+        }
+
+        fun setMyReadyMinute(context: Context, minute: Int) {
+            val pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+
+            pref.edit().putInt(MY_READY_MINUTE, minute).apply()
+        }
+
+        fun getMyReadyMinute(context: Context): Int {
+            val pref = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
+            return pref.getInt(MY_READY_MINUTE, 0)
         }
 
         fun setUserId(context: Context, inputId: String) {

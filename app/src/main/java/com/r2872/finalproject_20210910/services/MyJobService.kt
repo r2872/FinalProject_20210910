@@ -12,6 +12,7 @@ import com.odsay.odsayandroidsdk.ODsayService
 import com.odsay.odsayandroidsdk.OnResultCallbackListener
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.receivers.AlarmReceiver
+import com.r2872.finalproject_20210910.utils.ContextUtil
 import com.r2872.finalproject_20210910.utils.GlobalData
 import com.r2872.finalproject_20210910.web.ServerAPI
 import com.r2872.finalproject_20210910.web.ServerAPIService
@@ -75,7 +76,9 @@ class MyJobService : JobService() {
                                 val now = Calendar.getInstance()
                                 appointmentData.datetime.time += now.timeZone.rawOffset
                                 val alarmTime =
-                                    appointmentData.datetime.time - totalTime * 60 * 1000 - GlobalData.loginUser!!.readyMinute * 60 * 1000
+                                    appointmentData.datetime.time - totalTime * 60 * 1000 - ContextUtil.getMyReadyMinute(
+                                        applicationContext
+                                    ) * 60 * 1000
                                 setAlarmByMilliSecond(alarmTime)
 
                             }

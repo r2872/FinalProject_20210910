@@ -33,6 +33,8 @@ class SplashActivity : BaseActivity() {
 
     override fun setValues() {
 
+        GlobalData.context = mContext
+
         Glide.with(mContext)
             .load(R.raw.icon_16)
             .into(binding.splashImg)
