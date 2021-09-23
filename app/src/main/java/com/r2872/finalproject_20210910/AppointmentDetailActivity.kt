@@ -2,6 +2,7 @@ package com.r2872.finalproject_20210910
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -12,6 +13,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.gun0912.tedpermission.PermissionListener
@@ -30,8 +32,13 @@ import com.odsay.odsayandroidsdk.ODsayService
 import com.odsay.odsayandroidsdk.OnResultCallbackListener
 import com.r2872.finalproject_20210910.databinding.ActivityAppointmentDetailBinding
 import com.r2872.finalproject_20210910.datas.AppointmentData
+import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.UserData
 import okhttp3.*
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.text.SimpleDateFormat
 
 class AppointmentDetailActivity : BaseActivity() {
@@ -76,7 +83,20 @@ class AppointmentDetailActivity : BaseActivity() {
 
 //                   실제 위치 물어보기 (안드로이드 폰에게)
 
-//                    위치 관리자부터 가져오자.
+                    if (ActivityCompat.checkSelfPermission(
+                            mContext,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            mContext,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+
+//                        권한이 하나라도 없다면 밑의 코드 실행 X
+                        return
+                    }
+
+//                   위치 관리자부터 가져오자.
                     val locationManger = getSystemService(LOCATION_SERVICE) as LocationManager
 
                     locationManger.requestLocationUpdates(
@@ -89,6 +109,47 @@ class AppointmentDetailActivity : BaseActivity() {
 //                                    서버에 위경도 값 보내주기.
                                     Log.d("위도", p0.latitude.toString())
                                     Log.d("경도", p0.longitude.toString())
+
+                                    apiService.postRequestArrival(
+                                        mAppointmentData.id,
+                                        p0.latitude,
+                                        p0.longitude
+                                    ).enqueue(object : Callback<BasicResponse> {
+                                        override fun onResponse(
+                                            call: Call<BasicResponse>,
+                                            response: Response<BasicResponse>
+                                        ) {
+                                            if (response.isSuccessful) {
+                                                val basicResponse = response.body()!!
+
+                                                Toast.makeText(
+                                                    mContext,
+                                                    "도착인증하였습니다.",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                    .show()
+                                            } else {
+
+//                                                서버가 알려주는 인증 실패 사유 출력
+                                                val jsonObj =
+                                                    JSONObject(response.errorBody()!!.string())
+                                                val message = jsonObj.getString("message")
+                                                Toast.makeText(
+                                                    mContext,
+                                                    message,
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                    .show()
+                                            }
+                                        }
+
+                                        override fun onFailure(
+                                            call: Call<BasicResponse>,
+                                            t: Throwable
+                                        ) {
+
+                                        }
+                                    })
 
 //                                    응답이 성공적으로 돌아오면 => 서버에 안보내기.
                                     needLocationSendServer = false
@@ -141,7 +202,7 @@ class AppointmentDetailActivity : BaseActivity() {
         binding.placeTxt.text = mAppointmentData.place
 
 //        1) 참여인원 수 => "(참여인원 : ? 명)" => 본인 빼고 초대된 사람들 수만.
-        val invitedFriendsCount = mAppointmentData.invitedFriends.size - 1
+        val invitedFriendsCount = mAppointmentData.invitedFriends.size
         binding.invitedFriendsCount.text = "(참여인원 : ${invitedFriendsCount}명)"
 
 //        2) 약속시간 => 9/3 오후 6:30 양식으로 가공.
