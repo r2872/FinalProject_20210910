@@ -270,10 +270,15 @@ class EditAppointmentActivity : BaseActivity() {
 //                        필요한 시간이 지나면 예약작업 실행되도록.
                         val jobTime = mSelectedDateTime.timeInMillis - now.timeInMillis
 
-                        val jobInfo = JobInfo.Builder(MyJobService.JOB_TIME_SET, serviceComponent)
-                            .setMinimumLatency(jobTime) // 얼마 후에 실행할건지? 약속시간 (보다 2시간 전) 가준으로 => 시간이 지나면 실행되도록.
-                            .setOverrideDeadline(TimeUnit.MINUTES.toMillis(3)) // 1분 후 : 대략 1분 후. => 3분 정도 까지만 기다리자. => 안드로이드가 배터리 이슈로 정확한 시간 예약 X.
-                            .build()
+//                        jobInfo => ID 값을 넣을 수 있다. 약속의 id 값을 넣어보자.
+//                        약속 작성 화면 => 만든 약속의 id 값? 서버가 알려주는 약속 객체 활용.
+                        val basicResponse = response.body()!!
+
+                        val jobInfo =
+                            JobInfo.Builder(basicResponse.data.appointment.id, serviceComponent)
+                                .setMinimumLatency(jobTime) // 얼마 후에 실행할건지? 약속시간 (보다 2시간 전) 가준으로 => 시간이 지나면 실행되도록.
+                                .setOverrideDeadline(TimeUnit.MINUTES.toMillis(3)) // 1분 후 : 대략 1분 후. => 3분 정도 까지만 기다리자. => 안드로이드가 배터리 이슈로 정확한 시간 예약 X.
+                                .build()
 
 //                        예약 도구를 이용해 스케쥴 설정.
                         js.schedule(jobInfo)

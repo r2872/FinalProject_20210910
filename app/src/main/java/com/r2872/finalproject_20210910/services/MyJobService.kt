@@ -37,7 +37,7 @@ class MyJobService : JobService() {
         val triggerTime = SystemClock.elapsedRealtime() + 30 * 1000
 
 //        실제 알람 시간: 교통 소요시간 (API), 내 준비시간 고려
-
+//        출발지 좌표 / 약속장소 좌표 필요
 
 //        실제 알람 기능 설정
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
@@ -47,10 +47,5 @@ class MyJobService : JobService() {
 
     override fun onStopJob(p0: JobParameters?): Boolean {
         return false
-    }
-
-    companion object {
-        //        어떤 작업인지 구별하기 쉽게 숫자를 변수로 담자
-        val JOB_TIME_SET = 1000
     }
 }
