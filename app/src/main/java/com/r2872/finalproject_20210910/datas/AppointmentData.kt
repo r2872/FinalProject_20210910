@@ -42,15 +42,16 @@ data class AppointmentData(
 
 //        몇시간 차이인가?
         val diffHour = diff / 1000 / 60 / 60
+        val diffMinute = diff / 1000 / 60
 
         if (diffHour < 1) {
 
-            //        몇분 남음
-            val diffMinute = diff / 1000 / 60
             return "${diffMinute}분 남음"
         } else if (diffHour < 5) {
 
-            return "${diffHour}시간 남음"
+            val hour = diffMinute / 60
+            val minute = diffMinute % 60
+            return "${hour}시간 ${minute}분 남음"
         } else {
             val dateTimeSdf = SimpleDateFormat("M/d a h:mm")
             return dateTimeSdf.format(dateTimeToTimeZone)

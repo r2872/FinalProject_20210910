@@ -40,6 +40,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AppointmentDetailActivity : BaseActivity() {
 
@@ -212,6 +214,8 @@ class AppointmentDetailActivity : BaseActivity() {
 
 //        2) 약속시간 => 9/3 오후 6:30 양식으로 가공.
         val sdf = SimpleDateFormat(" M/d a h:mm")
+        val now = Calendar.getInstance()
+        mAppointmentData.datetime.time += now.timeZone.rawOffset
         val dateTime = sdf.format(mAppointmentData.datetime.time).toString()
         binding.timeTxt.text = dateTime
 
