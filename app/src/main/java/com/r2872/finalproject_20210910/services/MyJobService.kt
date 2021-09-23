@@ -36,6 +36,9 @@ class MyJobService : JobService() {
 //        알람이 울릴 시간 설정 (임시: 1분 후)
         val triggerTime = SystemClock.elapsedRealtime() + 30 * 1000
 
+//        실제 알람 시간: 교통 소요시간 (API), 내 준비시간 고려
+
+
 //        실제 알람 기능 설정
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerTime, pendingIntent)
 

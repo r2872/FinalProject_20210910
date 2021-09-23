@@ -257,8 +257,21 @@ class EditAppointmentActivity : BaseActivity() {
                         val serviceComponent = ComponentName(mContext, MyJobService::class.java)
 
 //                        언제? 어떤일을? 모아주는 클래스.
+
+//                        언제? (약속시간 - 2시간) - 현재시간 => 이 시차만큼 지나면 실행되도록.
+//                        약속시간 : 시차 보정 O => 2시간 빼주자
+                        mSelectedDateTime.add(Calendar.HOUR_OF_DAY, -2)
+
+//                        현재시간 : 시차 보정 X => 시차 보정
+                        val now = Calendar.getInstance()
+                        val timeOffset = now.timeZone.rawOffset / 1000 / 60 / 60
+                        now.add(Calendar.HOUR_OF_DAY, -timeOffset)
+
+//                        필요한 시간이 지나면 예약작업 실행되도록.
+                        val jobTime = mSelectedDateTime.timeInMillis - now.timeInMillis
+
                         val jobInfo = JobInfo.Builder(MyJobService.JOB_TIME_SET, serviceComponent)
-                            .setMinimumLatency(TimeUnit.MINUTES.toMillis(1)) // 얼마 후에 실행할건지? 약속시간 가준으로 => 그개 몇분 후 or 몇시간 후 인지 계산 필요
+                            .setMinimumLatency(jobTime) // 얼마 후에 실행할건지? 약속시간 (보다 2시간 전) 가준으로 => 시간이 지나면 실행되도록.
                             .setOverrideDeadline(TimeUnit.MINUTES.toMillis(3)) // 1분 후 : 대략 1분 후. => 3분 정도 까지만 기다리자. => 안드로이드가 배터리 이슈로 정확한 시간 예약 X.
                             .build()
 

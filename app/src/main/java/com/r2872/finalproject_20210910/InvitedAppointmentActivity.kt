@@ -1,47 +1,35 @@
 package com.r2872.finalproject_20210910
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.r2872.finalproject_20210910.adapters.AppointmentAdapter
-import com.r2872.finalproject_20210910.databinding.ActivityMainBinding
+import com.r2872.finalproject_20210910.databinding.ActivityInvitedAppointmentBinding
 import com.r2872.finalproject_20210910.datas.AppointmentData
 import com.r2872.finalproject_20210910.datas.BasicResponse
-import com.r2872.finalproject_20210910.utils.GlobalData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : BaseActivity() {
+class InvitedAppointmentActivity : BaseActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var mAdapter: AppointmentAdapter
+    private lateinit var binding: ActivityInvitedAppointmentBinding
     private val mAppointmentList = ArrayList<AppointmentData>()
+    private lateinit var mAdapter: AppointmentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_invited_appointment)
 
-        setValues()
         setupEvents()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        getAppointmentListFromServer()
+        setValues()
     }
 
     override fun setupEvents() {
-
-        binding.invitedAppointmentBtn.setOnClickListener {
-            startActivity(Intent(mContext, InvitedAppointmentActivity::class.java))
-        }
 
         binding.refreshLayout.setOnRefreshListener {
             getAppointmentListFromServer()
@@ -50,35 +38,25 @@ class MainActivity : BaseActivity() {
 
             binding.refreshLayout.isRefreshing = false
         }
-
-        binding.addAppoinmentBtn.setOnClickListener {
-
-            val myIntent = Intent(mContext, EditAppointmentActivity::class.java)
-            startActivity(myIntent)
-        }
-
-        profileImg.setOnClickListener {
-            val myIntent = Intent(mContext, UserInfoActivity::class.java)
-            startActivity(myIntent)
-        }
     }
 
     override fun setValues() {
 
-        profileImg.visibility = View.VISIBLE
-        titleTxt.text = "일정 목록"
-
-        Toast.makeText(mContext, "${GlobalData.loginUser!!.nickName} 님 환영합니다.", Toast.LENGTH_SHORT)
-            .show()
+        titleTxt.text = "초대받은 일정목록"
 
         mAdapter = AppointmentAdapter(mContext, mAppointmentList)
-        binding.scheduleList.adapter = mAdapter
-        binding.scheduleList.addItemDecoration(
+        binding.invitedList.adapter = mAdapter
+        binding.invitedList.addItemDecoration(
             DividerItemDecoration(
                 mContext,
                 LinearLayoutManager.VERTICAL
             )
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getAppointmentListFromServer()
     }
 
     private fun getAppointmentListFromServer() {
@@ -90,10 +68,10 @@ class MainActivity : BaseActivity() {
 
                     mAppointmentList.clear()
                     val basicResponse = response.body()!!
-                    Log.d("리스트", basicResponse.data.appointments.toString())
+                    Log.d("리스트", basicResponse.data.invited_appointments.toString())
 
 //                    약속목록변수에 => 서버가 알려준 약속목록을 전부 추가.
-                    mAppointmentList.addAll(basicResponse.data.appointments)
+                    mAppointmentList.addAll(basicResponse.data.invited_appointments)
 
 //                    for (apData in basicResponse.data.appoinments) {
 //                        Log.d("약속리스트", apData.title)

@@ -13,5 +13,7 @@ data class DataResponse(
 //    검색된 사용자 목록
     var users: List<UserData>,
 //    하나의 상세 약속 정보
-    var appointment: AppointmentData
+    var appointment: AppointmentData,
+//    초대받은 약속 상세정보
+    var invited_appointments: List<AppointmentData>
 )
