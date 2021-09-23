@@ -128,6 +128,8 @@ class AppointmentDetailActivity : BaseActivity() {
                                                     Toast.LENGTH_SHORT
                                                 )
                                                     .show()
+//                                              응답이 성공적으로 돌아오면 => 서버에 안보내기.
+                                                needLocationSendServer = false
                                             } else {
 
 //                                                서버가 알려주는 인증 실패 사유 출력
@@ -140,6 +142,7 @@ class AppointmentDetailActivity : BaseActivity() {
                                                     Toast.LENGTH_SHORT
                                                 )
                                                     .show()
+                                                needLocationSendServer = false
                                             }
                                         }
 
@@ -150,9 +153,6 @@ class AppointmentDetailActivity : BaseActivity() {
 
                                         }
                                     })
-
-//                                    응답이 성공적으로 돌아오면 => 서버에 안보내기.
-                                    needLocationSendServer = false
                                 }
                             }
 
@@ -214,6 +214,16 @@ class AppointmentDetailActivity : BaseActivity() {
         setNaverMap()
 
 //        4) 응용 1 - 친구목록 => 레이아웃에 xml inflate 해서 하나씩 addView
+        getAppointmentFromServer()
+
+    }ㅊ
+
+    private fun getAppointmentFromServer() {
+
+//        친구 목록등의 내용을 서버에서 새로 받자.
+
+//        받고 나서 API 응답 성공시 친구 목록 새로고침.
+
         val inflater = LayoutInflater.from(mContext)
 
         for (i in 0 until mInvitedFriendsList.size) {
@@ -235,7 +245,6 @@ class AppointmentDetailActivity : BaseActivity() {
 
             binding.invitedFriendsLayout.addView(invitedFriend)
         }
-
     }
 
     private fun setNaverMap() {
