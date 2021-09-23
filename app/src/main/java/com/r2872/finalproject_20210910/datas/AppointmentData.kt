@@ -34,8 +34,11 @@ data class AppointmentData(
 //        현재 시간
         val currentTime = Calendar.getInstance()
 
-//        약속시간 - 현재시간 : 몇시간?
-        val diff = this.datetime.time - currentTime.timeInMillis
+//        약속시간 (utc) => 폰 설정 타임존 변환 - 현재시간 (폰 설정 타임존) : 몇시간?
+
+        val dateTimeToTimeZone = this.datetime.time + currentTime.timeZone.rawOffset
+
+        val diff = dateTimeToTimeZone - currentTime.timeInMillis
 
 //        몇시간 차이인가?
         val diffHour = diff / 1000 / 60 / 60
@@ -50,7 +53,7 @@ data class AppointmentData(
             return "${diffHour}시간 남음"
         } else {
             val dateTimeSdf = SimpleDateFormat("M/d a h:mm")
-            return dateTimeSdf.format(datetime)
+            return dateTimeSdf.format(dateTimeToTimeZone)
         }
     }
 }
