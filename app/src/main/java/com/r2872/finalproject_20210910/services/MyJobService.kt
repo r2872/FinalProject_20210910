@@ -18,6 +18,7 @@ import com.r2872.finalproject_20210910.web.ServerAPIService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class MyJobService : JobService() {
 
@@ -63,9 +64,16 @@ class MyJobService : JobService() {
                                 val infoObj = firstPathObj.getJSONObject("info")
                                 val totalTime = infoObj.getInt("totalTime")
 
+                                val hour = totalTime / 60
+                                val minute = totalTime % 60
+                                Log.d("예상시간", hour.toString())
+                                Log.d("예상분", minute.toString())
+
 //                                예상 시간이 몇분이나 걸리는지 파악 완료. => 알람 띄우는데 활용
 
-//                                알람 시간 : 약속시간 - 교통소요시간 - 내 준비시간 (밀리초 단위)
+//                                알람 시간 : 약속시간(타임존에 맞게 변경) - 교통소요시간 - 내 준비시간 (밀리초 단위)
+                                val now = Calendar.getInstance()
+                                appointmentData.datetime.time += now.timeZone.rawOffset
                                 val alarmTime =
                                     appointmentData.datetime.time - totalTime * 60 * 1000 - GlobalData.loginUser!!.readyMinute * 60 * 1000
                                 setAlarmByMilliSecond(alarmTime)
