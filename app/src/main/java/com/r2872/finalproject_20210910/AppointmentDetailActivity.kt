@@ -216,7 +216,7 @@ class AppointmentDetailActivity : BaseActivity() {
 //        4) 응용 1 - 친구목록 => 레이아웃에 xml inflate 해서 하나씩 addView
         getAppointmentFromServer()
 
-    }ㅊ
+    }
 
     private fun getAppointmentFromServer() {
 
@@ -225,6 +225,7 @@ class AppointmentDetailActivity : BaseActivity() {
 //        받고 나서 API 응답 성공시 친구 목록 새로고침.
 
         val inflater = LayoutInflater.from(mContext)
+        val sdf = SimpleDateFormat("H:mm 도착")
 
         for (i in 0 until mInvitedFriendsList.size) {
 
@@ -239,6 +240,13 @@ class AppointmentDetailActivity : BaseActivity() {
             val friendProfileImg = invitedFriend.findViewById<ImageView>(R.id.friendProfile_Img)
 
             nickname.text = friendsList.nickName
+            if (friendsList.arrivedAt != null) {
+
+                val arrivedTime = sdf.format(friendsList.arrivedAt.time).toString()
+                statusTxt.text = arrivedTime
+            } else {
+                statusTxt.text = "도착 전"
+            }
             Glide.with(mContext)
                 .load(friendsList.profileImg)
                 .into(friendProfileImg)
