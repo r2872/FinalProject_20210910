@@ -25,6 +25,7 @@ class MainActivity : BaseActivity() {
     private lateinit var mInvitedAdapter: InvitedAppointmentAdapter
     private val mAppointmentList = ArrayList<AppointmentData>()
     private val mInvitedAppointmentList = ArrayList<AppointmentData>()
+    private var waitTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,16 @@ class MainActivity : BaseActivity() {
         super.onResume()
 
         getAppointmentListFromServer()
+    }
+
+    override fun onBackPressed() {
+        if (System.currentTimeMillis() - waitTime >= 1500) {
+            waitTime = System.currentTimeMillis()
+            Toast.makeText(this, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        } else {
+            finish() // 액티비티 종료
+        }
+
     }
 
     override fun setupEvents() {
