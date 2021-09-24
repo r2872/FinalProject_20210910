@@ -174,7 +174,8 @@ class EditAppointmentActivity : BaseActivity() {
 //            입력한 값들 받아오기
 //            1. 일정 제목
             val inputTitle = binding.titleEdt.text.toString()
-            if (inputTitle == "") {
+            val placeSearchEdt = binding.placeSearchEdt.text.toString()
+            if (inputTitle.isEmpty()) {
                 Toast.makeText(mContext, "약속 제목을 적어주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -187,6 +188,11 @@ class EditAppointmentActivity : BaseActivity() {
             }
             if (binding.timeTxt.text == "시간 설정") {
                 Toast.makeText(mContext, "시간을 설정하지 않았습니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (placeSearchEdt.isEmpty()) {
+                Toast.makeText(mContext, "약속장소 제목을 적어주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
