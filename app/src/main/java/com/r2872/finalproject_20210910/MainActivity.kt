@@ -63,6 +63,7 @@ class MainActivity : BaseActivity() {
             val myIntent = Intent(mContext, UserInfoActivity::class.java)
             startActivity(myIntent)
         }
+
     }
 
     override fun setValues() {

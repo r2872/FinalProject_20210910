@@ -20,12 +20,14 @@ import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.normal.TedPermission
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.overlay.PathOverlay
+import com.naver.maps.map.util.FusedLocationSource
 import com.odsay.odsayandroidsdk.API
 import com.odsay.odsayandroidsdk.ODsayData
 import com.odsay.odsayandroidsdk.ODsayService
@@ -34,6 +36,7 @@ import com.r2872.finalproject_20210910.databinding.ActivityAppointmentDetailBind
 import com.r2872.finalproject_20210910.datas.AppointmentData
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.UserData
+import com.r2872.finalproject_20210910.utils.Request
 import okhttp3.*
 import org.json.JSONObject
 import retrofit2.Call
@@ -51,6 +54,7 @@ class AppointmentDetailActivity : BaseActivity() {
     private lateinit var mNaverMap: NaverMap
     private val mMarker = Marker()
     private val startMarker = Marker()
+    private lateinit var mLocationSource: FusedLocationSource
 
     //    버튼이 눌리면 => API 전송해달라고 표시 flag
     var needLocationSendServer = false
@@ -306,6 +310,9 @@ class AppointmentDetailActivity : BaseActivity() {
 
         mapFragment.getMapAsync { naverMap ->
             mNaverMap = naverMap
+            mLocationSource = FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
+
+            mNaverMap.locationSource = mLocationSource
 
             val endLat = mAppointmentData.latitude
             val endLng = mAppointmentData.longitude
@@ -475,6 +482,26 @@ class AppointmentDetailActivity : BaseActivity() {
                 }
                 return@setOnClickListener true
             }
+        }
+
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode != Request.LOCATION_PERMISSION_REQUEST_CODE) {
+            return
+        }
+
+        if (mLocationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            if (!mLocationSource.isActivated) {
+                mNaverMap.locationTrackingMode = LocationTrackingMode.None
+            }
+            return
         }
 
     }

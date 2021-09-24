@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.InfoWindow
@@ -17,8 +19,10 @@ import com.odsay.odsayandroidsdk.API
 import com.odsay.odsayandroidsdk.ODsayData
 import com.odsay.odsayandroidsdk.ODsayService
 import com.odsay.odsayandroidsdk.OnResultCallbackListener
+import com.r2872.finalproject_20210910.adapters.TrafficAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityViewMapBinding
 import com.r2872.finalproject_20210910.datas.AppointmentData
+import com.r2872.finalproject_20210910.datas.SubPathData
 import com.r2872.finalproject_20210910.utils.Request
 
 class ViewMapActivity : BaseActivity() {
@@ -26,6 +30,8 @@ class ViewMapActivity : BaseActivity() {
     private lateinit var binding: ActivityViewMapBinding
     private lateinit var mAppointmentData: AppointmentData
     private lateinit var mLocationSource: FusedLocationSource
+    private lateinit var mAdapter: TrafficAdapter
+    private val mList = ArrayList<SubPathData>()
 
     //    선택된 출발지를 보여줄 마커
     private val mStartPlaceMarker = Marker()
@@ -51,6 +57,15 @@ class ViewMapActivity : BaseActivity() {
     override fun setValues() {
 
         titleTxt.text = "상세 장소"
+        mAdapter = TrafficAdapter(mContext, mList)
+        binding.pathInfoList.adapter = mAdapter
+        binding.pathInfoList.layoutManager = LinearLayoutManager(mContext)
+        binding.pathInfoList.addItemDecoration(
+            DividerItemDecoration(
+                mContext,
+                LinearLayoutManager.VERTICAL
+            )
+        )
 
         mAppointmentData = intent.getSerializableExtra("appointment") as AppointmentData
 
@@ -106,6 +121,7 @@ class ViewMapActivity : BaseActivity() {
                 object : OnResultCallbackListener {
                     override fun onSuccess(p0: ODsayData?, p1: API?) {
 
+                        Log.d("API 통신", "성공")
                         val jsonObj = p0!!.json
                         val resultObj = jsonObj.getJSONObject("result")
                         val pathArr = resultObj.getJSONArray("path")
@@ -124,8 +140,59 @@ class ViewMapActivity : BaseActivity() {
                         val subPathArr = firstPathObj.getJSONArray("subPath")
                         for (i in 0 until subPathArr.length()) {
                             val subPathObj = subPathArr.getJSONObject(i)
+                            val trafficType = subPathObj.getInt("trafficType")
+                            val sectionTime = subPathObj.getInt("sectionTime")
+                            Log.d("trafficType", trafficType.toString())
+                            if (trafficType == 3) {
+                                mList.add(SubPathData(trafficType, sectionTime))
+                            }
 
                             if (!subPathObj.isNull("passStopList")) {
+
+                                val pathName: String
+
+                                if (trafficType != 3) {
+                                    val stationCount = subPathObj.getInt("stationCount")
+                                    Log.d("stationCount", stationCount.toString())
+                                    val startName = subPathObj.getString("startName")
+                                    Log.d("startName", startName.toString())
+                                    val endName = subPathObj.getString("endName")
+                                    Log.d("endName", endName.toString())
+                                    val laneArr = subPathObj.getJSONArray("lane")
+                                    Log.d("laneArr", laneArr.toString())
+                                    val laneObj = laneArr.getJSONObject(0)
+
+                                    when (trafficType) {
+                                        1 -> {
+                                            pathName = laneObj.getString("subwayCode")
+                                            mList.add(
+                                                (SubPathData(
+                                                    trafficType,
+                                                    sectionTime,
+                                                    pathName,
+                                                    stationCount,
+                                                    startName,
+                                                    endName
+                                                ))
+                                            )
+                                        }
+                                        2 -> {
+                                            pathName = laneObj.getString("busNo")
+                                            mList.add(
+                                                (SubPathData(
+                                                    trafficType,
+                                                    sectionTime,
+                                                    pathName,
+                                                    stationCount,
+                                                    startName,
+                                                    endName
+                                                ))
+                                            )
+                                        }
+                                    }
+                                }
+                                Log.d("리스트", mList.toString())
+                                mAdapter.notifyDataSetChanged()
 
 //                            정거장 목록을 불러내보자.
                                 val passStopListObj = subPathObj.getJSONObject("passStopList")

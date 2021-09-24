@@ -114,4 +114,9 @@ interface ServerAPIService {
     fun getRequestAppointmentDetail(
         @Path("appointment_id") id: Int
     ): Call<BasicResponse>
+
+    @DELETE("/appointment")
+    fun deleteRequestAppointment(
+        @Query("appointment_id") appointmentId: Int
+    ): Call<BasicResponse>
 }
