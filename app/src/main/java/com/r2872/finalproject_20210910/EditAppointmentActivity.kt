@@ -19,6 +19,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.setMargins
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.naver.maps.geometry.LatLng
@@ -102,7 +103,6 @@ class EditAppointmentActivity : BaseActivity() {
 
     private lateinit var mLocationSource: FusedLocationSource
 
-    private lateinit var mDialogListAdapter: DialogRecyclerAdapter
     private val mSearchPlaceList = ArrayList<SearchPlaceData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -157,7 +157,7 @@ class EditAppointmentActivity : BaseActivity() {
                         val placeName = docu.getString("place_name")
                         val lat = docu.getString("y")
                         val lng = docu.getString("x")
-                        mSearchPlaceList.add(SearchPlaceData(placeName, lat, lng))
+                        mSearchPlaceList.add(SearchPlaceData(placeName, addressName, lat, lng))
                     }
                     runOnUiThread {
                         if (mSearchPlaceList.isEmpty()) {
@@ -668,6 +668,12 @@ class EditAppointmentActivity : BaseActivity() {
         val dialogRecyclerView = dialogView.findViewById<RecyclerView>(R.id.place_list)
         dialogRecyclerView.layoutManager = LinearLayoutManager(mContext)
         dialogRecyclerView.adapter = DialogRecyclerAdapter(mContext, mSearchPlaceList)
+        dialogRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                mContext,
+                LinearLayoutManager.VERTICAL
+            )
+        )
         dialog.show()
     }
 

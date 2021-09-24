@@ -46,10 +46,17 @@ class DialogRecyclerAdapter(
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val placeName = view.findViewById<TextView>(R.id.placeName_Txt)
+        private val addressName = view.findViewById<TextView>(R.id.addressName_Txt)
+        private val backgroundLayout = view.findViewById<LinearLayout>(R.id.backgroundLayout)
 
         fun bind(context: Context, item: SearchPlaceData) {
 
             placeName.text = item.placeName
+            addressName.text = item.addressName
+
+            backgroundLayout.setOnClickListener {
+
+            }
         }
     }
 }
