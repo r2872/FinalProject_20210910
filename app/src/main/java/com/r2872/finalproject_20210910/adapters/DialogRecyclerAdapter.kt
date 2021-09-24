@@ -55,6 +55,11 @@ class DialogRecyclerAdapter(
             addressName.text = item.addressName
 
             backgroundLayout.setOnClickListener {
+                (context as EditAppointmentActivity).apply {
+                    mSelectedLat = item.lat.toDouble()
+                    mSelectedLng = item.lng.toDouble()
+                    dialog.dismiss()
+                }
 
             }
         }

@@ -69,8 +69,8 @@ class EditAppointmentActivity : BaseActivity() {
     private val mSelectedDateTime = Calendar.getInstance()
 
     //    선택한 약속장소를 저장할 변수.
-    private var mSelectedLat = 0.0 // Double 을 넣을것임.
-    private var mSelectedLng = 0.0
+    var mSelectedLat = 0.0 // Double 을 넣을것임.
+    var mSelectedLng = 0.0
 
     //    출발지 목록을 담아둘 리스트.
     val mStartPlaceList = ArrayList<PlaceListData>()
@@ -104,6 +104,7 @@ class EditAppointmentActivity : BaseActivity() {
     private lateinit var mLocationSource: FusedLocationSource
 
     private val mSearchPlaceList = ArrayList<SearchPlaceData>()
+    lateinit var dialog: Dialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -645,7 +646,7 @@ class EditAppointmentActivity : BaseActivity() {
     private fun showAlertDialogSearchPlaceList() {
         val display = windowManager.defaultDisplay
         val size = Point()
-        val dialog = Dialog(mContext)
+        dialog = Dialog(mContext)
 
         display.getRealSize(size)
         val lp = WindowManager.LayoutParams()
