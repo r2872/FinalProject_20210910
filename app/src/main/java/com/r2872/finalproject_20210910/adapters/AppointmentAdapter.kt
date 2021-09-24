@@ -88,6 +88,7 @@ class AppointmentAdapter(
                                         val basicResponse = response.body()!!
                                         Toast.makeText(context, "삭제 되었습니다.", Toast.LENGTH_SHORT)
                                             .show()
+                                        context.getAppointmentListFromServer()
                                     }
                                 }
 

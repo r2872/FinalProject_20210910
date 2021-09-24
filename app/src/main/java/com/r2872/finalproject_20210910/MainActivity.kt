@@ -93,7 +93,7 @@ class MainActivity : BaseActivity() {
         )
     }
 
-    private fun getAppointmentListFromServer() {
+    fun getAppointmentListFromServer() {
 
         apiService.getRequestAppointmentList().enqueue(object : Callback<BasicResponse> {
             override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
