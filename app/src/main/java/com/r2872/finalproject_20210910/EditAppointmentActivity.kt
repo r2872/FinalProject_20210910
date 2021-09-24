@@ -2,20 +2,25 @@ package com.r2872.finalproject_20210910
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.app.TimePickerDialog
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
+import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.setMargins
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
@@ -31,18 +36,23 @@ import com.odsay.odsayandroidsdk.ODsayData
 import com.odsay.odsayandroidsdk.ODsayService
 import com.odsay.odsayandroidsdk.OnResultCallbackListener
 import com.r2872.finalproject_20210910.adapters.AddFriendsSpinnerAdapter
+import com.r2872.finalproject_20210910.adapters.DialogRecyclerAdapter
 import com.r2872.finalproject_20210910.adapters.StartPlaceSpinnerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.PlaceListData
+import com.r2872.finalproject_20210910.datas.SearchPlaceData
 import com.r2872.finalproject_20210910.datas.UserData
 import com.r2872.finalproject_20210910.services.MyJobService
 import com.r2872.finalproject_20210910.utils.Request
 import com.r2872.finalproject_20210910.utils.SizeUtil.Companion.dbToPx
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -92,6 +102,9 @@ class EditAppointmentActivity : BaseActivity() {
 
     private lateinit var mLocationSource: FusedLocationSource
 
+    private lateinit var mDialogListAdapter: DialogRecyclerAdapter
+    private val mSearchPlaceList = ArrayList<SearchPlaceData>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_appoinment)
@@ -101,6 +114,61 @@ class EditAppointmentActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+        binding.placeSearchBtn.setOnClickListener {
+
+            val inputPlaceName = binding.placeSearchEdt.text.toString()
+
+            if (inputPlaceName.length < 2) {
+                Toast.makeText(mContext, "최소 2자리 이상 입력해주세요", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val url =
+                HttpUrl.parse("https://dapi.kakao.com/v2/local/search/keyword.json")!!.newBuilder()
+            url.addQueryParameter("query", inputPlaceName)
+
+            val urlString = url.toString()
+
+            val request = okhttp3.Request.Builder()
+                .url(urlString)
+                .get()
+                .header("Authorization", "KakaoAK bd3146605605fae442c5a9ab55cc5259")
+                .build()
+
+            val client = OkHttpClient()
+            client.newCall(request).enqueue(object : okhttp3.Callback {
+                override fun onFailure(call: okhttp3.Call, e: IOException) {
+
+                }
+
+                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+
+                    val jsonObj = JSONObject(response.body()!!.string())
+                    val documentsArr = jsonObj.getJSONArray("documents")
+                    mSearchPlaceList.clear()
+
+                    for (i in 0 until documentsArr.length()) {
+                        val docu = documentsArr.getJSONObject(i)
+
+                        Log.d("문서아이템", docu.toString())
+
+                        val addressName = docu.getString("address_name")
+                        val placeName = docu.getString("place_name")
+                        val lat = docu.getString("y")
+                        val lng = docu.getString("x")
+                        mSearchPlaceList.add(SearchPlaceData(placeName, lat, lng))
+                    }
+                    runOnUiThread {
+                        if (mSearchPlaceList.isEmpty()) {
+                            Toast.makeText(mContext, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                            return@runOnUiThread
+                        }
+                        showAlertDialogSearchPlaceList()
+                    }
+                }
+            })
+        }
 
 //        친구추가 버튼 이벤트
         binding.addFriendToListBtn.setOnClickListener {
@@ -574,5 +642,33 @@ class EditAppointmentActivity : BaseActivity() {
 
     }
 
+    private fun showAlertDialogSearchPlaceList() {
+        val display = windowManager.defaultDisplay
+        val size = Point()
+        val dialog = Dialog(mContext)
+
+        display.getRealSize(size)
+        val lp = WindowManager.LayoutParams()
+
+        val inf = layoutInflater
+        val dialogView: View = inf.inflate(R.layout.dialog_layout, null)
+
+        lp.copyFrom(dialog.window!!.attributes)
+        val width = size.x
+        lp.width = width * 80 / 100 // 사용자 화면의 80%
+
+        val height = size.y
+        lp.height = height * 50 / 100
+
+        dialog.setContentView(dialogView) // Dialog 에 선언했던 layout 적용
+
+        dialog.setCanceledOnTouchOutside(true) // 외부 touch 시 Dialog 종료
+
+        dialog.window!!.attributes = lp // 지정한 너비, 높이 값 Dialog 에 적용
+        val dialogRecyclerView = dialogView.findViewById<RecyclerView>(R.id.place_list)
+        dialogRecyclerView.layoutManager = LinearLayoutManager(mContext)
+        dialogRecyclerView.adapter = DialogRecyclerAdapter(mContext, mSearchPlaceList)
+        dialog.show()
+    }
 
 }

@@ -164,7 +164,7 @@ class ViewMapActivity : BaseActivity() {
 
                                     when (trafficType) {
                                         1 -> {
-                                            pathName = laneObj.getString("subwayCode")
+                                            pathName = laneObj.getString("name")
                                             mList.add(
                                                 (SubPathData(
                                                     trafficType,

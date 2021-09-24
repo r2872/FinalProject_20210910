@@ -35,6 +35,7 @@
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/activity_view_my_place_list.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/activity_view_my_place_map.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/appointment_list_item.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/dialog_layout.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/fragment_friend_request.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/fragment_my_friend_list.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/friend_list_item.xml" value="0.264" />
@@ -47,7 +48,9 @@
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/my_place_list_item.xml" value="0.264" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/path_list_item.xml" value="0.264" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/schedule_list_item.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/layout/searchplace_list_item.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/82106/AndroidStudioProjects/FinalProject_20210910/app/src/main/res/mipmap-anydpi-v26/app_theme_round.xml" value="0.2564814814814815" />
+        <entry key="..\:/Users/82106/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/select_dialog_item.xml" value="0.25364583333333335" />
       </map>
     </option>
   </component>

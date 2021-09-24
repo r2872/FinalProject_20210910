@@ -49,12 +49,12 @@ class TrafficAdapter(
                 1 -> {
                     trafficType.text = "지하철"
                     lane.visibility = View.VISIBLE
-                    lane.text = "${item.pathName}호선 ${item.startName} -> ${item.endName}"
+                    lane.text = "${item.pathName}  ${item.startName} -> ${item.endName}"
                 }
                 2 -> {
                     trafficType.text = "버스"
                     lane.visibility = View.VISIBLE
-                    lane.text = "${item.pathName}번 ${item.startName} -> ${item.endName}"
+                    lane.text = "${item.pathName}번  ${item.startName} -> ${item.endName}"
                 }
 
                 3 -> {
