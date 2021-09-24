@@ -3,6 +3,7 @@ package com.r2872.finalproject_20210910
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import com.r2872.finalproject_20210910.databinding.ActivitySignUpBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
@@ -14,6 +15,8 @@ import retrofit2.Response
 class SignUpActivity : BaseActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
+    private var emailCheck = false
+    private var nicknameCheck = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +27,26 @@ class SignUpActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+        binding.idCheckBtn.setOnClickListener {
+            if (binding.emailEdt.text.isEmpty()) {
+                toastMessage("이메일을 입력해주세요.")
+                return@setOnClickListener
+            }
+            userCheckFromServer("EMAIL", binding.emailEdt.text.toString())
+        }
+
+        binding.nickCheckBtn.setOnClickListener {
+            if (binding.nicknameEdt.text.isEmpty()) {
+                toastMessage("닉네임을 입력해주세요")
+                return@setOnClickListener
+            }
+            userCheckFromServer("NICK_NAME", binding.nicknameEdt.text.toString())
+        }
+
+        binding.passwordEdt.addTextChangedListener {
+            buttonEnabled()
+        }
 
         binding.signUpBtn.setOnClickListener {
 
@@ -72,6 +95,43 @@ class SignUpActivity : BaseActivity() {
 
     override fun setValues() {
 
+    }
 
+    private fun userCheckFromServer(type: String, inputString: String) {
+        apiService.getRequestUserCheck(type, inputString).enqueue(object : Callback<BasicResponse> {
+            override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
+                if (response.isSuccessful) {
+                    when (type) {
+                        "EMAIL" -> {
+                            toastMessage("사용가능한 이메일입니다.")
+                            emailCheck = true
+                        }
+                        "NICK_NAME" -> {
+                            toastMessage("사용가능한 닉네임입니다.")
+                            nicknameCheck = true
+                        }
+                    }
+                } else {
+                    toastMessage(JSONObject(response.errorBody()!!.string()).getString("message"))
+                    when (type) {
+                        "EMAIL" -> emailCheck = false
+                        "NICK_NAME" -> nicknameCheck = false
+                    }
+                }
+                buttonEnabled()
+            }
+
+            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+            }
+        })
+    }
+
+    private fun toastMessage(inputString: String) {
+        Toast.makeText(mContext, inputString, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun buttonEnabled() {
+        binding.signUpBtn.isEnabled = emailCheck && nicknameCheck && binding.passwordEdt.text.isNotEmpty()
     }
 }

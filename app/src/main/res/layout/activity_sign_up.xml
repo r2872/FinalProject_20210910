@@ -58,33 +58,35 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:text="비밀번호 재입력" />
-
-        <EditText
-            android:id="@+id/rePassword_Edt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="비밀번호를 재입력"
-            android:inputType="textPassword" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
             android:text="사용 할 닉네임" />
 
-        <EditText
-            android:id="@+id/nickname_Edt"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="사용 할 닉네임 입력" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/nickname_Edt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="사용 할 닉네임 입력" />
+
+            <Button
+                android:id="@+id/nickCheck_Btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="중복 확인" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/signUp_Btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:enabled="false"
             android:text="가입하기" />
 
     </LinearLayout>

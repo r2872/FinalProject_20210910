@@ -119,4 +119,10 @@ interface ServerAPIService {
     fun deleteRequestAppointment(
         @Query("appointment_id") appointmentId: Int
     ): Call<BasicResponse>
+
+    @GET("/user/check")
+    fun getRequestUserCheck(
+        @Query("type") type: String,
+        @Query("value") value: String
+    ): Call<BasicResponse>
 }
