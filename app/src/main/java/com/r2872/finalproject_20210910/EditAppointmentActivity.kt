@@ -623,6 +623,10 @@ class EditAppointmentActivity : BaseActivity() {
         ).show()
     }
 
+    fun getPlaceName() {
+        binding.placeSearchEdt.setText(intent.getStringExtra("placeName"))
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
