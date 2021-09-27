@@ -9,4 +9,5 @@
     <color name="white">#FF000000</color>
     <color name="red">#FF0000</color>
     <color name="gray">#857B7B</color>
+    <color name="mapinfo">#FF000000</color>
 </resources>
