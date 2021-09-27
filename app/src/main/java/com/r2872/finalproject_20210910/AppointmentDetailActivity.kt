@@ -55,6 +55,7 @@ class AppointmentDetailActivity : BaseActivity() {
     private val mMarker = Marker()
     private val startMarker = Marker()
     private lateinit var mLocationSource: FusedLocationSource
+    private lateinit var mPath: PathOverlay
 
     //    버튼이 눌리면 => API 전송해달라고 표시 flag
     var needLocationSendServer = false
@@ -183,8 +184,6 @@ class AppointmentDetailActivity : BaseActivity() {
                 }
 
                 override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-
-                    Toast.makeText(mContext, "현재 위치 정볼르 파악해야 약속 도착 시간을", Toast.LENGTH_SHORT).show()
                 }
             }
             TedPermission.create()
@@ -321,7 +320,7 @@ class AppointmentDetailActivity : BaseActivity() {
 //            val cameraUpdate = CameraUpdate.scrollTo(currentAppointment)
 //            naverMap.moveCamera(cameraUpdate)
 
-            val uiSettings = naverMap.uiSettings
+            val uiSettings = mNaverMap.uiSettings
             uiSettings.isCompassEnabled = true
             uiSettings.isScaleBarEnabled = false
             uiSettings.isLocationButtonEnabled = true
@@ -329,7 +328,7 @@ class AppointmentDetailActivity : BaseActivity() {
             mMarker.icon = OverlayImage.fromResource(R.drawable.arrival_marker)
 
             mMarker.position = currentAppointment
-            mMarker.map = naverMap
+            mMarker.map = mNaverMap
 
             val startLat = mAppointmentData.startLatitude
             val startLng = mAppointmentData.startLongitude
@@ -338,7 +337,7 @@ class AppointmentDetailActivity : BaseActivity() {
                 LatLng(startLat, startLng)
             startMarker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
             startMarker.position = startLatLng
-            startMarker.map = naverMap
+            startMarker.map = mNaverMap
 
 //            시작점, 도착점 중간으로 카메라 이동?
             val centerOfStartAndDest = LatLng(
@@ -347,7 +346,7 @@ class AppointmentDetailActivity : BaseActivity() {
             )
 
             val cameraUpdate = CameraUpdate.scrollTo(centerOfStartAndDest)
-            naverMap.moveCamera(cameraUpdate)
+            mNaverMap.moveCamera(cameraUpdate)
 
 //            거리에 따른 줌 레벨 변경 (도전과제)
             val zoomLevel = 11.0  // 두 좌표의 직선거리에 따라 어느 줌 레벨이 적당한지 계산해줘야함.
@@ -418,7 +417,7 @@ class AppointmentDetailActivity : BaseActivity() {
                         val mPath = PathOverlay()
 
                         mPath.coords = points
-                        mPath.map = naverMap
+                        mPath.map = mNaverMap
 
                         val infoObj = firstPathObj.getJSONObject("info")
                         val totalTime = infoObj.getInt("totalTime")
@@ -453,15 +452,17 @@ class AppointmentDetailActivity : BaseActivity() {
                                 return myView
                             }
                         }
+                        infoWindow.open(mMarker)
                     }
 
                     override fun onError(p0: Int, p1: String?, p2: API?) {
-
-                        Log.d("예상시간실패", p1!!)
+                        Log.d("error", p0.toString())
+                        if (p0 == -101) {
+                            Toast.makeText(mContext, "경로검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                            infoWindow.close()
+                        }
                     }
                 })
-
-            infoWindow.open(mMarker)
 
 //            지도의 아무데나 찍으면 열려있는 마커 닫아주기.
             naverMap.setOnMapClickListener { _, _ ->

@@ -587,7 +587,7 @@ class EditAppointmentActivity : BaseActivity() {
                     override fun onError(p0: Int, p1: String?, p2: API?) {
                         Log.d("error", p0.toString())
                         if (p0 == -101) {
-                            Toast.makeText(mContext, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(mContext, "경로검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
                             mPath.map = null
                             mInfoWindow.close()
                         }

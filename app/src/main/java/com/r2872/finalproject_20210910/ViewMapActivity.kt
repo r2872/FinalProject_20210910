@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -256,15 +257,17 @@ class ViewMapActivity : BaseActivity() {
                                 return myView
                             }
                         }
+                        infoWindow.open(selectedPointMaker)
                     }
 
                     override fun onError(p0: Int, p1: String?, p2: API?) {
-
-                        Log.d("예상시간실패", p1!!)
+                        Log.d("error", p0.toString())
+                        if (p0 == -101) {
+                            Toast.makeText(mContext, "경로검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                            infoWindow.close()
+                        }
                     }
                 })
-
-            infoWindow.open(selectedPointMaker)
 
 //            지도의 아무데나 찍으면 열려있는 마커 닫아주기.
             naverMap.setOnMapClickListener { _, _ ->
