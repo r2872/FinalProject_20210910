@@ -91,7 +91,7 @@ class EditAppointmentActivity : BaseActivity() {
     private val mStartPlaceMarker = Marker()
 
     //    화면에 그려질 출발~도착지 연결 선
-    private val mPath = PathOverlay()
+    private var mPath = PathOverlay()
 
     //        선택된 도착지를 보여줄 마커 하나만 생성.
     private val selectedPointMaker = Marker()
@@ -229,8 +229,9 @@ class EditAppointmentActivity : BaseActivity() {
 //                    스피너의 위치에 맞는 장소를 선택된 출발지점으로 선정.
                     mSelectedStartPlace = mStartPlaceList[position]
 
-                    drawStartPlaceToDestination(mNaverMap)
-
+                    if (mSelectedLat != 0.0 && mSelectedLng != 0.0) {
+                        drawStartPlaceToDestination(mNaverMap)
+                    }
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -494,17 +495,14 @@ class EditAppointmentActivity : BaseActivity() {
 
     private fun drawStartPlaceToDestination(naverMap: NaverMap) {
 
-//        시작지점의 위경도
+        //        시작지점의 위경도
 //        mSelectedStartPlace 위경도 활용.
 
 //        시작지점에 좌표 마커 찍어주기.
         mStartPlaceMarker.position =
             LatLng(mSelectedStartPlace.latitude, mSelectedStartPlace.longitude)
-        mStartPlaceMarker.map = naverMap
+        mStartPlaceMarker.map = mNaverMap
         mStartPlaceMarker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
-
-//        도착지점의 위경도
-//        mSelectedLat,Lng 변수 활용
 
 //        예제. 시작지점 -> 도착지점으로 연결 선 그어주기.
 
@@ -582,10 +580,16 @@ class EditAppointmentActivity : BaseActivity() {
 //        멤버 변수로 선을 하나 지정해두고, 위치값만 변경하면서 사용.
 //        val polyline = PolylineOverlay()
                     mPath.coords = points
-                    mPath.map = naverMap
+                    mPath.map = mNaverMap
                 }
 
-                override fun onError(p0: Int, p1: String?, p2: API?) {}
+                override fun onError(p0: Int, p1: String?, p2: API?) {
+                    Log.d("error", p0.toString())
+                    if (p0 == -101) {
+                        Toast.makeText(mContext, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                        mPath.map = null
+                    }
+                }
             })
     }
 
@@ -648,7 +652,7 @@ class EditAppointmentActivity : BaseActivity() {
 
         if (mLocationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
             if (!mLocationSource.isActivated) {
-                mNaverMap!!.locationTrackingMode = LocationTrackingMode.None
+                mNaverMap.locationTrackingMode = LocationTrackingMode.None
             }
             return
         }
