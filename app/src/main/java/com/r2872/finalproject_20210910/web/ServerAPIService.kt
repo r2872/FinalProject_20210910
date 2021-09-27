@@ -132,4 +132,7 @@ interface ServerAPIService {
         @Field("current_password") currentPW: String,
         @Field("new_password") newPW: String
     ): Call<BasicResponse>
+
+    @DELETE("user/image")
+    fun deleteRequestUserImage(): Call<BasicResponse>
 }

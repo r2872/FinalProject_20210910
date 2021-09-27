@@ -10,6 +10,7 @@ import android.content.ComponentName
 import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -662,8 +663,7 @@ class EditAppointmentActivity : BaseActivity() {
         display.getRealSize(size)
         val lp = WindowManager.LayoutParams()
 
-        val inf = layoutInflater
-        val dialogView: View = inf.inflate(R.layout.dialog_layout, null)
+        val dialogView: View = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout, null)
 
         lp.copyFrom(dialog.window!!.attributes)
         val width = size.x
