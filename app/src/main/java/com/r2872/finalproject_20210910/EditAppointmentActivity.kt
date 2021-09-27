@@ -99,7 +99,7 @@ class EditAppointmentActivity : BaseActivity() {
     private val mInfoWindow = InfoWindow()
 
     //    네이버 지도를 멤버변수로 담자.
-    private var mNaverMap: NaverMap? = null
+    private lateinit var mNaverMap: NaverMap
 
     private lateinit var mLocationSource: FusedLocationSource
 
@@ -228,9 +228,7 @@ class EditAppointmentActivity : BaseActivity() {
 //                    스피너의 위치에 맞는 장소를 선택된 출발지점으로 선정.
                     mSelectedStartPlace = mStartPlaceList[position]
 
-                    mNaverMap?.let {
-                        drawStartPlaceToDestination(it)
-                    }
+                    drawStartPlaceToDestination(mNaverMap)
 
                 }
 
@@ -441,7 +439,10 @@ class EditAppointmentActivity : BaseActivity() {
 
             }
         })
+        setNaverMap()
+    }
 
+    private fun setNaverMap() {
         val fm = supportFragmentManager
         val mapFragment = fm.findFragmentById(R.id.naverMapView) as MapFragment?
             ?: MapFragment.newInstance().also {
@@ -451,26 +452,27 @@ class EditAppointmentActivity : BaseActivity() {
 
             mNaverMap = naverMap
 
-            mLocationSource = FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
+            mLocationSource =
+                FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
 
-            mNaverMap!!.locationSource = mLocationSource
-            Log.d("지도바로할일", naverMap.toString())
+            mNaverMap.locationSource = mLocationSource
+            Log.d("지도바로할일", mNaverMap.toString())
 //            집 좌표를 지도 시작점으로. (예제)
 //            it.mapType = NaverMap.MapType.Hybrid
 
 //            좌표를 다루는 변수 - LatLng 클래스 활용
             val myHome = LatLng(37.5674, 126.9075)
             val cameraUpdate = CameraUpdate.scrollTo(myHome)
-            naverMap.moveCamera(cameraUpdate)
+            mNaverMap.moveCamera(cameraUpdate)
 
-            val uiSettings = naverMap.uiSettings
+            val uiSettings = mNaverMap.uiSettings
             uiSettings.isCompassEnabled = true
             uiSettings.isScaleBarEnabled = false
             uiSettings.isLocationButtonEnabled = true
 
             selectedPointMaker.icon = OverlayImage.fromResource(R.drawable.arrival_marker)
 
-            naverMap.setOnMapClickListener { _, latLng ->
+            mNaverMap.setOnMapClickListener { _, latLng ->
 
 //                Toast.makeText(
 //                    mContext,
@@ -482,9 +484,9 @@ class EditAppointmentActivity : BaseActivity() {
 
 //                좌표를 받아서 -> 미리 만들어둔 마커의 좌표로 연결. 맵에 띄우자.
                 selectedPointMaker.position = LatLng(mSelectedLat, mSelectedLng)
-                selectedPointMaker.map = naverMap
+                selectedPointMaker.map = mNaverMap
 
-                drawStartPlaceToDestination(naverMap)
+                drawStartPlaceToDestination(mNaverMap)
             }
         }
     }
@@ -623,8 +625,13 @@ class EditAppointmentActivity : BaseActivity() {
         ).show()
     }
 
-    fun getPlaceName() {
+    fun placeSearchEvents() {
         binding.placeSearchEdt.setText(intent.getStringExtra("placeName"))
+        val cameraUpdate = CameraUpdate.scrollTo(LatLng(mSelectedLat, mSelectedLng))
+        mNaverMap.moveCamera(cameraUpdate)
+        selectedPointMaker.position = LatLng(mSelectedLat, mSelectedLng)
+        selectedPointMaker.map = mNaverMap
+        drawStartPlaceToDestination(mNaverMap)
     }
 
     override fun onRequestPermissionsResult(
