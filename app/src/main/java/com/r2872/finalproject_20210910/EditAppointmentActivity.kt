@@ -588,6 +588,7 @@ class EditAppointmentActivity : BaseActivity() {
                     if (p0 == -101) {
                         Toast.makeText(mContext, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
                         mPath.map = null
+                        mInfoWindow.close()
                     }
                 }
             })
