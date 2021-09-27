@@ -48,7 +48,7 @@ class UserInfoActivity : BaseActivity() {
                 LayoutInflater.from(mContext).inflate(R.layout.my_custom_alert_edt_password, null)
 
             val myAlert = AlertDialog.Builder(mContext)
-                .setTitle("닉네임 변경")
+                .setTitle("비밀번호 변경")
                 .setView(customView)
                 .setPositiveButton("입력", object : DialogInterface.OnClickListener {
                     override fun onClick(p0: DialogInterface?, p1: Int) {
@@ -69,8 +69,10 @@ class UserInfoActivity : BaseActivity() {
                                 response: Response<BasicResponse>
                             ) {
                                 if (response.isSuccessful) {
+                                    val basicResponse = response.body()!!
                                     Toast.makeText(mContext, "변경에 성공하였습니다.", Toast.LENGTH_SHORT)
                                         .show()
+                                    ContextUtil.setToken(mContext, basicResponse.data.token)
                                 } else {
                                     Toast.makeText(
                                         mContext,
