@@ -1,16 +1,18 @@
 package com.r2872.finalproject_20210910
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.r2872.finalproject_20210910.adapters.AppointmentViewPagerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityMainBinding
-import com.r2872.finalproject_20210910.fragments.FriendRequestFragment
 import com.r2872.finalproject_20210910.fragments.InvitedAppointmentFragment
 import com.r2872.finalproject_20210910.fragments.MyAppointmentFragment
-import com.r2872.finalproject_20210910.fragments.MyFriendListFragment
 import com.r2872.finalproject_20210910.utils.GlobalData
+
 
 class MainActivity : BaseActivity() {
 
@@ -80,5 +82,20 @@ class MainActivity : BaseActivity() {
         appointmentViewPagerAdapter = AppointmentViewPagerAdapter(supportFragmentManager)
         binding.appointmentsViewPager.adapter = appointmentViewPagerAdapter
         binding.appointmentsTabLayout.setupWithViewPager(binding.appointmentsViewPager)
+        binding.appointmentsTabLayout.apply {
+            getTabAt(0)?.setIcon(R.drawable.calendar)
+            getTabAt(1)?.setIcon(R.drawable.invitation)
+            getTabAt(2)?.setIcon(R.drawable.ic_baseline_person_24)
+        }
+
+        val root: View = binding.appointmentsTabLayout.getChildAt(0)
+        if (root is LinearLayout) {
+            (root).showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
+            val drawable = GradientDrawable()
+            drawable.setColor(resources.getColor(R.color.gray))
+            drawable.setSize(2, 1)
+            (root).dividerPadding = 10
+            (root).dividerDrawable = drawable
+        }
     }
 }
