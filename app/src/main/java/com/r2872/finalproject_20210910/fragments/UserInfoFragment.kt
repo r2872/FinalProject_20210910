@@ -1,15 +1,17 @@
-package com.r2872.finalproject_20210910
+package com.r2872.finalproject_20210910.fragments
 
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
+import com.r2872.finalproject_20210910.*
 import com.r2872.finalproject_20210910.databinding.ActivityUserInfoBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
@@ -19,17 +21,38 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserInfoActivity : BaseActivity() {
+class UserInfoFragment : BaseFragment() {
+
+    companion object {
+
+        private var frag: UserInfoFragment? = null
+        fun getFrag(): UserInfoFragment {
+            if (frag == null) {
+                frag = UserInfoFragment()
+            }
+            return frag!!
+        }
+    }
 
     private lateinit var binding: ActivityUserInfoBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_user_info)
-
-        setValues()
-        setupEvents()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.activity_user_info, container, false)
+        return binding.root
     }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        setupEvents()
+        setValues()
+    }
+
 
     override fun setupEvents() {
 
@@ -232,8 +255,6 @@ class UserInfoActivity : BaseActivity() {
                 binding.pwEditBtn.visibility = View.GONE
             }
         }
-
-        titleTxt.text = "내 정보"
         setUserInfo()
     }
 
@@ -261,4 +282,5 @@ class UserInfoActivity : BaseActivity() {
         super.onResume()
         setUserInfo()
     }
+
 }

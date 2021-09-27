@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.r2872.finalproject_20210910.*
 import com.r2872.finalproject_20210910.datas.AppointmentData
 import com.r2872.finalproject_20210910.datas.BasicResponse
+import com.r2872.finalproject_20210910.fragments.FriendRequestFragment
+import com.r2872.finalproject_20210910.fragments.MyAppointmentFragment
 import com.r2872.finalproject_20210910.web.ServerAPIService
 import retrofit2.Call
 import retrofit2.Callback
@@ -88,7 +90,7 @@ class AppointmentAdapter(
                                         val basicResponse = response.body()!!
                                         Toast.makeText(context, "삭제 되었습니다.", Toast.LENGTH_SHORT)
                                             .show()
-                                        context.getAppointmentListFromServer()
+                                        (context.appointmentViewPagerAdapter.getItem(0) as MyAppointmentFragment).getAppointmentListFromServer()
                                     }
                                 }
 

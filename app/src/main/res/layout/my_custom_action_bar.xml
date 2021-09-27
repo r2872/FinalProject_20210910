@@ -15,11 +15,12 @@
 
     <ImageView
         android:id="@+id/logo_Img"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
-        android:src="@drawable/persona_logo"
-        android:visibility="gone" />
+        android:src="@drawable/nepplus_logo"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/profile_Img"

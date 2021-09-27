@@ -64,8 +64,4 @@ class VIewMyFriendsListActivity : BaseActivity() {
         binding.friendsViewPager.adapter = friendsViewPagerAdapter
         binding.friendsTabLayout.setupWithViewPager(binding.friendsViewPager)
     }
-
-    fun das() {
-
-    }
 }

@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.r2872.finalproject_20210910.databinding.ActivitySplashBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
-import com.r2872.finalproject_20210910.utils.ContextUtil
 import com.r2872.finalproject_20210910.utils.GlobalData
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,7 +35,7 @@ class SplashActivity : BaseActivity() {
         GlobalData.context = mContext
 
         Glide.with(mContext)
-            .load(R.raw.icon_16)
+            .load(R.raw.splash_img)
             .into(binding.splashImg)
 
         apiService.getRequestMyInfo().enqueue(object : Callback<BasicResponse> {

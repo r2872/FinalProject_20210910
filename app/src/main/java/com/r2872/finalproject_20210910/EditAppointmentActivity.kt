@@ -228,10 +228,8 @@ class EditAppointmentActivity : BaseActivity() {
 
 //                    스피너의 위치에 맞는 장소를 선택된 출발지점으로 선정.
                     mSelectedStartPlace = mStartPlaceList[position]
+                    drawStartPlaceToDestination(mNaverMap)
 
-                    if (mSelectedLat != 0.0 && mSelectedLng != 0.0) {
-                        drawStartPlaceToDestination(mNaverMap)
-                    }
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -453,6 +451,7 @@ class EditAppointmentActivity : BaseActivity() {
         mapFragment.getMapAsync { naverMap ->
 
             mNaverMap = naverMap
+            binding.startPlaceSpinner.visibility = View.VISIBLE
 
             mLocationSource =
                 FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
@@ -504,94 +503,97 @@ class EditAppointmentActivity : BaseActivity() {
         mStartPlaceMarker.map = mNaverMap
         mStartPlaceMarker.icon = OverlayImage.fromResource(R.drawable.map_marker_red)
 
+        if (mSelectedLat != 0.0 && mSelectedLng != 0.0) {
+
 //        예제. 시작지점 -> 도착지점으로 연결 선 그어주기.
 
 //        좌표 목록을 ArrayList 로 담자.
-        val points = ArrayList<LatLng>()
+            val points = ArrayList<LatLng>()
 
-        points.add(LatLng(mSelectedStartPlace.latitude, mSelectedStartPlace.longitude)) // 시작점
+            points.add(LatLng(mSelectedStartPlace.latitude, mSelectedStartPlace.longitude)) // 시작점
 
 //        대중교통 길찾기 API => 들리는 좌표들을 제공 => 목록을 담아주자.
-        val odsay = ODsayService.init(mContext, "JdJCDd5mWQLx6RMfBFXCYV0S/Kw3CU0YMt4WrfwXhTg")
-        odsay.requestSearchPubTransPath(
-            mSelectedStartPlace.longitude.toString(),
-            mSelectedStartPlace.latitude.toString(),
-            mSelectedLng.toString(),
-            mSelectedLat.toString(),
-            null, null, null, object : OnResultCallbackListener {
-                override fun onSuccess(p0: ODsayData?, p1: API?) {
+            val odsay = ODsayService.init(mContext, "JdJCDd5mWQLx6RMfBFXCYV0S/Kw3CU0YMt4WrfwXhTg")
+            odsay.requestSearchPubTransPath(
+                mSelectedStartPlace.longitude.toString(),
+                mSelectedStartPlace.latitude.toString(),
+                mSelectedLng.toString(),
+                mSelectedLat.toString(),
+                null, null, null, object : OnResultCallbackListener {
+                    override fun onSuccess(p0: ODsayData?, p1: API?) {
 
-                    val jsonObject = p0!!.json
-                    val resultObj = jsonObject.getJSONObject("result")
-                    val pathArr = resultObj.getJSONArray("path")
-                    val firstPathObj = pathArr.getJSONObject(0)
+                        val jsonObject = p0!!.json
+                        val resultObj = jsonObject.getJSONObject("result")
+                        val pathArr = resultObj.getJSONArray("path")
+                        val firstPathObj = pathArr.getJSONObject(0)
 
 //                    총 소요시간이 얼마나 걸리나?'
-                    val infoObj = firstPathObj.getJSONObject("info")
-                    val totalTime = infoObj.getInt("totalTime")
-                    val hour = totalTime / 60
-                    val minute = totalTime % 60
+                        val infoObj = firstPathObj.getJSONObject("info")
+                        val totalTime = infoObj.getInt("totalTime")
+                        val hour = totalTime / 60
+                        val minute = totalTime % 60
 
-                    Log.d("총 소요시간", totalTime.toString())
+                        Log.d("총 소요시간", totalTime.toString())
 
 //                    멤버변수로 만들어둔 정보창의 내용 설정, 열어주기
-                    mInfoWindow.adapter = object : InfoWindow.DefaultTextAdapter(mContext) {
-                        override fun getText(p0: InfoWindow): CharSequence {
+                        mInfoWindow.adapter = object : InfoWindow.DefaultTextAdapter(mContext) {
+                            override fun getText(p0: InfoWindow): CharSequence {
 
-                            return if (hour == 0) {
-                                "${minute}분 소요 예상"
-                            } else {
-                                "${hour}시간 ${minute}분 소요 예상"
+                                return if (hour == 0) {
+                                    "${minute}분 소요 예상"
+                                } else {
+                                    "${hour}시간 ${minute}분 소요 예상"
+                                }
                             }
                         }
-                    }
-                    mInfoWindow.open(selectedPointMaker)
+                        mInfoWindow.open(selectedPointMaker)
 
 //                  경유지들 좌표를 목록에 추가 (결과가 어떻게 되어있는지 분석, Parsing)
 
-                    val subPathArr = firstPathObj.getJSONArray("subPath")
-                    for (i in 0 until subPathArr.length()) {
-                        val subPathObj = subPathArr.getJSONObject(i)
+                        val subPathArr = firstPathObj.getJSONArray("subPath")
+                        for (i in 0 until subPathArr.length()) {
+                            val subPathObj = subPathArr.getJSONObject(i)
 
-                        if (!subPathObj.isNull("passStopList")) {
+                            if (!subPathObj.isNull("passStopList")) {
 
 //                            정거장 목록을 불러내보자.
-                            val passStopListObj = subPathObj.getJSONObject("passStopList")
-                            val stationArr = passStopListObj.getJSONArray("stations")
-                            for (j in 0 until stationArr.length()) {
+                                val passStopListObj = subPathObj.getJSONObject("passStopList")
+                                val stationArr = passStopListObj.getJSONArray("stations")
+                                for (j in 0 until stationArr.length()) {
 
-                                val stationObj = stationArr.getJSONObject(j)
-                                Log.d("길찾기 응답", stationObj.toString())
+                                    val stationObj = stationArr.getJSONObject(j)
+                                    Log.d("길찾기 응답", stationObj.toString())
 
-                                val latlng = LatLng(
-                                    stationObj.getString("y").toDouble(),
-                                    stationObj.getString("x").toDouble()
-                                )
+                                    val latlng = LatLng(
+                                        stationObj.getString("y").toDouble(),
+                                        stationObj.getString("x").toDouble()
+                                    )
 //                                points ArrayList 에 경유지로 추가
-                                points.add(latlng)
+                                    points.add(latlng)
+                                }
                             }
                         }
-                    }
 
 //                    최종 목적지 좌표도 추가
-                    points.add(LatLng(mSelectedLat, mSelectedLng)) // 도착점
+                        points.add(LatLng(mSelectedLat, mSelectedLng)) // 도착점
 
 //        매번 새로 PolyLine 을 그리면, 선이 하나씩 계속 추가됨.
 //        멤버 변수로 선을 하나 지정해두고, 위치값만 변경하면서 사용.
 //        val polyline = PolylineOverlay()
-                    mPath.coords = points
-                    mPath.map = mNaverMap
-                }
-
-                override fun onError(p0: Int, p1: String?, p2: API?) {
-                    Log.d("error", p0.toString())
-                    if (p0 == -101) {
-                        Toast.makeText(mContext, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
-                        mPath.map = null
-                        mInfoWindow.close()
+                        mPath.coords = points
+                        mPath.map = mNaverMap
                     }
-                }
-            })
+
+                    override fun onError(p0: Int, p1: String?, p2: API?) {
+                        Log.d("error", p0.toString())
+                        if (p0 == -101) {
+                            Toast.makeText(mContext, "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                            mPath.map = null
+                            mInfoWindow.close()
+                        }
+                    }
+                })
+        }
     }
 
     private fun showDatePicker() {

@@ -1,30 +1,21 @@
 package com.r2872.finalproject_20210910
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.r2872.finalproject_20210910.adapters.AppointmentAdapter
-import com.r2872.finalproject_20210910.adapters.InvitedAppointmentAdapter
+import androidx.viewpager.widget.ViewPager
+import com.r2872.finalproject_20210910.adapters.AppointmentViewPagerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityMainBinding
-import com.r2872.finalproject_20210910.datas.AppointmentData
-import com.r2872.finalproject_20210910.datas.BasicResponse
+import com.r2872.finalproject_20210910.fragments.FriendRequestFragment
+import com.r2872.finalproject_20210910.fragments.InvitedAppointmentFragment
+import com.r2872.finalproject_20210910.fragments.MyAppointmentFragment
+import com.r2872.finalproject_20210910.fragments.MyFriendListFragment
 import com.r2872.finalproject_20210910.utils.GlobalData
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var mAdapter: AppointmentAdapter
-    private lateinit var mInvitedAdapter: InvitedAppointmentAdapter
-    private val mAppointmentList = ArrayList<AppointmentData>()
-    private val mInvitedAppointmentList = ArrayList<AppointmentData>()
+    lateinit var appointmentViewPagerAdapter: AppointmentViewPagerAdapter
     private var waitTime = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,12 +24,6 @@ class MainActivity : BaseActivity() {
 
         setValues()
         setupEvents()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        getAppointmentListFromServer()
     }
 
     override fun onBackPressed() {
@@ -53,88 +38,47 @@ class MainActivity : BaseActivity() {
 
     override fun setupEvents() {
 
-        binding.addAppoinmentBtn.setOnClickListener {
+        binding.appointmentsViewPager.addOnPageChangeListener(object :
+            ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
 
-            val myIntent = Intent(mContext, EditAppointmentActivity::class.java)
-            startActivity(myIntent)
-        }
+            }
 
-        profileImg.setOnClickListener {
-            val myIntent = Intent(mContext, UserInfoActivity::class.java)
-            startActivity(myIntent)
-        }
+            override fun onPageSelected(position: Int) {
 
+//                각 페이지에 맞는 프래그먼트의 새로고침 실행.
+                when (position) {
+                    0 -> {
+                        (appointmentViewPagerAdapter.getItem(position) as MyAppointmentFragment).getAppointmentListFromServer()
+                        titleTxt.text = "내가만든 일정"
+                    }
+                    1 -> {
+                        (appointmentViewPagerAdapter.getItem(position) as InvitedAppointmentFragment).getAppointmentListFromServer()
+                        titleTxt.text = "초대받은 일정"
+                    }
+                    else -> titleTxt.text = "내 정보"
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+        })
     }
 
     override fun setValues() {
 
-        profileImg.visibility = View.VISIBLE
         titleTxt.text = "일정 목록"
 
         Toast.makeText(mContext, "${GlobalData.loginUser!!.nickName} 님 환영합니다.", Toast.LENGTH_SHORT)
             .show()
 
-        mAdapter = AppointmentAdapter(mContext, mAppointmentList)
-        binding.scheduleList.adapter = mAdapter
-        binding.scheduleList.addItemDecoration(
-            DividerItemDecoration(
-                mContext,
-                LinearLayoutManager.VERTICAL
-            )
-        )
-
-        mInvitedAdapter = InvitedAppointmentAdapter(mContext, mInvitedAppointmentList)
-        binding.invitedList.adapter = mInvitedAdapter
-        binding.invitedList.addItemDecoration(
-            DividerItemDecoration(
-                mContext,
-                LinearLayoutManager.VERTICAL
-            )
-        )
-    }
-
-    fun getAppointmentListFromServer() {
-
-        apiService.getRequestAppointmentList().enqueue(object : Callback<BasicResponse> {
-            override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
-
-                if (response.isSuccessful) {
-
-                    mAppointmentList.clear()
-                    mInvitedAppointmentList.clear()
-                    val basicResponse = response.body()!!
-                    Log.d("리스트", basicResponse.data.appointments.toString())
-
-//                    약속목록변수에 => 서버가 알려준 약속목록을 전부 추가.
-                    mAppointmentList.addAll(basicResponse.data.appointments)
-                    mInvitedAppointmentList.addAll(basicResponse.data.invited_appointments)
-
-//                    for (apData in basicResponse.data.appoinments) {
-//                        Log.d("약속리스트", apData.title)
-//                    }
-                } else {
-                    Toast.makeText(mContext, response.errorBody()!!.string(), Toast.LENGTH_SHORT)
-                        .show()
-
-                }
-                if (mAppointmentList.isEmpty()) {
-                    binding.createdListMenu.text = "아직 만든 일정이 없습니다."
-                } else {
-                    binding.createdListMenu.text = "내가 만든 일정목록"
-                }
-                if (mInvitedAppointmentList.isEmpty()) {
-                    binding.invitedListMenu.text = "초대 받은 일정이 없습니다."
-                } else {
-                    binding.invitedListMenu.text = "초대 받은 일정목록"
-
-                }
-                mAdapter.notifyDataSetChanged()
-                mInvitedAdapter.notifyDataSetChanged()
-            }
-
-            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
-
-            }
-        })
+        appointmentViewPagerAdapter = AppointmentViewPagerAdapter(supportFragmentManager)
+        binding.appointmentsViewPager.adapter = appointmentViewPagerAdapter
+        binding.appointmentsTabLayout.setupWithViewPager(binding.appointmentsViewPager)
     }
 }
