@@ -125,4 +125,11 @@ interface ServerAPIService {
         @Query("type") type: String,
         @Query("value") value: String
     ): Call<BasicResponse>
+
+    @FormUrlEncoded
+    @PATCH("user/password")
+    fun patchRequestUserPassword(
+        @Field("current_password") currentPW: String,
+        @Field("new_password") newPW: String
+    ): Call<BasicResponse>
 }

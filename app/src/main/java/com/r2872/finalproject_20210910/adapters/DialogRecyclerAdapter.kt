@@ -60,7 +60,7 @@ class DialogRecyclerAdapter(
                     mSelectedLat = item.lat.toDouble()
                     mSelectedLng = item.lng.toDouble()
                     dialog.dismiss()
-                    getPlaceName()
+                    placeSearchEvents()
                 }
 
             }

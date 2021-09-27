@@ -23,6 +23,7 @@ import com.r2872.finalproject_20210910.utils.URIPathHelper
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,6 +42,56 @@ class UserInfoActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+        binding.pwChangeLayout.setOnClickListener {
+            val customView =
+                LayoutInflater.from(mContext).inflate(R.layout.my_custom_alert_edt_password, null)
+
+            val myAlert = AlertDialog.Builder(mContext)
+                .setTitle("닉네임 변경")
+                .setView(customView)
+                .setPositiveButton("입력", object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+
+                        val currentPwEdt = customView.findViewById<EditText>(R.id.currentPw_Edt)
+                        val newPwEdt = customView.findViewById<EditText>(R.id.newPw_Edt)
+
+                        if (newPwEdt.text.isEmpty() || currentPwEdt.text.isEmpty()) {
+                            Toast.makeText(mContext, "내용을 입력하세요", Toast.LENGTH_SHORT).show()
+                            return
+                        }
+                        apiService.patchRequestUserPassword(
+                            currentPwEdt.text.toString(),
+                            newPwEdt.text.toString()
+                        ).enqueue(object : Callback<BasicResponse> {
+                            override fun onResponse(
+                                call: Call<BasicResponse>,
+                                response: Response<BasicResponse>
+                            ) {
+                                if (response.isSuccessful) {
+                                    Toast.makeText(mContext, "변경에 성공하였습니다.", Toast.LENGTH_SHORT)
+                                        .show()
+                                } else {
+                                    Toast.makeText(
+                                        mContext,
+                                        JSONObject(
+                                            response.errorBody()!!.string()
+                                        ).getString("message"),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+
+                            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+                            }
+                        })
+
+                    }
+                })
+                .setNegativeButton("취소", null)
+            myAlert.show()
+        }
 
         binding.myFriendsLayout.setOnClickListener {
             val myIntent = Intent(mContext, VIewMyFriendsListActivity::class.java)
