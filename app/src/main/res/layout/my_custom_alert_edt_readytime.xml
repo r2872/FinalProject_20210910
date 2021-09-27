@@ -6,6 +6,7 @@
     android:padding="20dp">
 
     <EditText
+        android:textColor="@color/black"
         android:id="@+id/readyTime_Edt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

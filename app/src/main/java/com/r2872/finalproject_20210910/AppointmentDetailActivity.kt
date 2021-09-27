@@ -414,7 +414,7 @@ class AppointmentDetailActivity : BaseActivity() {
                             )
                         )
                         //    화면에 그려질 출발~도착지 연결 선
-                        val mPath = PathOverlay()
+                        mPath = PathOverlay()
 
                         mPath.coords = points
                         mPath.map = mNaverMap
@@ -458,8 +458,22 @@ class AppointmentDetailActivity : BaseActivity() {
                     override fun onError(p0: Int, p1: String?, p2: API?) {
                         Log.d("error", p0.toString())
                         if (p0 == -101) {
-                            Toast.makeText(mContext, "경로검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
-                            infoWindow.close()
+                            infoWindow.adapter = object : InfoWindow.DefaultViewAdapter(mContext) {
+                                override fun getContentView(p0: InfoWindow): View {
+                                    val myView =
+                                        LayoutInflater.from(mContext)
+                                            .inflate(R.layout.my_custom_info_window, null)
+
+                                    val placeName =
+                                        myView.findViewById<TextView>(R.id.placeName_Txt)
+                                    val arrivalTimeTxt =
+                                        myView.findViewById<TextView>(R.id.arrivalTime_Txt)
+                                    placeName.text = "경로 없음"
+                                    arrivalTimeTxt.visibility = View.GONE
+                                    return myView
+                                }
+                            }
+                            infoWindow.open(mMarker)
                         }
                     }
                 })

@@ -13,6 +13,7 @@
         android:padding="10dp">
 
         <TextView
+            android:textColor="@color/black"
             android:id="@+id/title_Txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,12 +32,14 @@
             android:orientation="vertical">
 
             <TextView
+                android:textColor="@color/black"
                 android:id="@+id/date_Txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="일정 일시" />
 
             <TextView
+                android:textColor="@color/black"
                 android:id="@+id/place_Txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -24,21 +24,24 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="제목" />
+                    android:text="제목"
+                    android:textColor="@color/black" />
 
                 <EditText
                     android:id="@+id/title_Edt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="약속 제목을 입력하세요."
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/selectedDate_Txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="약속 일시" />
+                    android:text="약속 일시"
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -52,6 +55,7 @@
                         android:layout_height="wrap_content"
                         android:padding="15dp"
                         android:text="일자 설정"
+                        android:textColor="@color/black"
                         android:textSize="16sp" />
 
                     <TextView
@@ -60,6 +64,7 @@
                         android:layout_height="wrap_content"
                         android:padding="15dp"
                         android:text="시간 설정"
+                        android:textColor="@color/black"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -67,13 +72,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="일자/시간 설정을 눌러서 약속 일시를 설정하세요" />
+                    android:text="일자/시간 설정을 눌러서 약속 일시를 설정하세요"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="출발지" />
+                    android:text="출발지"
+                    android:textColor="@color/black" />
 
                 <Spinner
                     android:id="@+id/startPlaceSpinner"
@@ -88,7 +95,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="참석할 친구들" />
+                    android:text="참석할 친구들"
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -121,7 +129,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="약속 장소" />
+                    android:text="약속 장소"
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -134,7 +143,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:hint="약속 장소를 검색해보세요"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:textColor="@color/black" />
 
                     <Button
                         android:id="@+id/placeSearch_Btn"

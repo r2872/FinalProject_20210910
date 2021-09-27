@@ -27,6 +27,7 @@
         android:layout_weight="1" />
 
     <TextView
+        android:textColor="@color/black"
         android:id="@+id/status_Txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
