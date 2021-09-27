@@ -15,6 +15,7 @@ import com.r2872.finalproject_20210910.AddFriendActivity
 import com.r2872.finalproject_20210910.R
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.UserData
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -80,6 +81,15 @@ class SearchFriendRecyclerViewAdapter(
                                         Toast.makeText(
                                             context,
                                             "${data.nickName}님에게 친구 추가 요청을 보냈습니다.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        val errorResponse =
+                                            JSONObject(response.errorBody()!!.string())
+                                        val errorMsg = errorResponse.getString("message")
+                                        Toast.makeText(
+                                            mContext,
+                                            errorMsg,
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }
