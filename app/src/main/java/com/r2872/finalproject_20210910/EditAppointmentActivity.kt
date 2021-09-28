@@ -420,10 +420,6 @@ class EditAppointmentActivity : BaseActivity() {
                     val placeNameEdt = customView.findViewById<EditText>(R.id.placeName_Edt)
                     binding.currentLatLng.text = placeNameEdt.text.toString()
                     mSelectedStartPlace.name = placeNameEdt.text.toString()
-                    val myHandler = Handler(Looper.getMainLooper())
-                    myHandler.postDelayed({
-                        drawStartPlaceToDestination(mNaverMap)
-                    }, 1000)
                 })
                 .setNegativeButton("취소", null)
                 .show()
@@ -758,6 +754,13 @@ class EditAppointmentActivity : BaseActivity() {
                             if (needLocationFromServer) {
                                 mSelectedStartPlace.latitude = p0.latitude
                                 mSelectedStartPlace.longitude = p0.longitude
+                                val LatLng = LatLng(
+                                    mSelectedStartPlace.latitude,
+                                    mSelectedStartPlace.longitude
+                                )
+                                val cameraUpdate = CameraUpdate.scrollTo(LatLng)
+                                mNaverMap.moveCamera(cameraUpdate)
+                                drawStartPlaceToDestination(mNaverMap)
                                 needLocationFromServer = false
                             }
                         }
