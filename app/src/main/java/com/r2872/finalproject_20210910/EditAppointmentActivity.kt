@@ -436,6 +436,7 @@ class EditAppointmentActivity : BaseActivity() {
     override fun setValues() {
 
         titleTxt.text = "일정 생성"
+        notiImg.visibility = View.GONE
 
         mSpinnerAdapter =
             StartPlaceSpinnerAdapter(mContext, R.layout.my_place_list_item, mStartPlaceList)
