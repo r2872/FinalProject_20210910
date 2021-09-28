@@ -4,13 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.facebook.*
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
+import com.nhn.android.naverlogin.OAuthLogin
 import com.r2872.finalproject_20210910.databinding.ActivityLoginBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
@@ -24,6 +25,7 @@ class LoginActivity : BaseActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var callbackManager: CallbackManager
+    private lateinit var mNaverLoginModule: OAuthLogin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -267,11 +269,20 @@ class LoginActivity : BaseActivity() {
 
     override fun setValues() {
 
+//        네이버 로그인 모듈 세팅
+        mNaverLoginModule = OAuthLogin.getInstance()
+        mNaverLoginModule.init(
+            mContext,
+            getString(R.string.naver_client_id),
+            getString(R.string.naver_secret_key),
+            getString(R.string.naver_client_name)
+        )
+
         titleTxt.visibility = View.GONE
         logoImg.visibility = View.VISIBLE
 
-//        var keyHash = Utility.getKeyHash(this)
-//        Log.d("해시코드", keyHash)
+        val keyHash = Utility.getKeyHash(this)
+        Log.d("해시코드", keyHash)
         if (ContextUtil.getUserId(mContext) != "") {
             binding.emailEdt.setText(ContextUtil.getUserId(mContext))
             binding.pwEdt.setText(ContextUtil.getUserPw(mContext))

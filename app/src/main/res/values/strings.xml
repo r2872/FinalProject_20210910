@@ -3,4 +3,7 @@
     <string name="facebook_app_id">1803830979810673</string>
     <string name="fb_login_protocol_scheme">fb1803830979810673</string>
     <string name="placeName">약속장소명</string>
+    <string name="naver_client_id">jjMedVPyecXaM5BZz63s</string>
+    <string name="naver_secret_key">qtFHUWnAxV</string>
+    <string name="naver_client_name">지각멈춰</string>
 </resources>
