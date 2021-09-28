@@ -120,13 +120,17 @@ class MainActivity : BaseActivity() {
                     val basicResponse = response.body()!!
                     mNotiList.clear()
 
-                    mNotiList.addAll(basicResponse.data.notifications)
+                    for (i in basicResponse.data.notifications.indices) {
+                        if (!basicResponse.data.notifications[i].isRead) {
+                            mNotiList.add(basicResponse.data.notifications[i])
+                        }
+                    }
 
                     if (mNotiList.isNotEmpty()) {
                         notiCount.visibility = View.VISIBLE
                         notiCount.text = mNotiList.size.toString()
                     } else {
-                        notiCount.visibility = View.GONE
+                        notiImg.visibility = View.GONE
                     }
                 }
             }

@@ -10,6 +10,19 @@
         android:padding="10dp"
         tools:context=".NotificationActivity">
 
+        <TextView
+            android:id="@+id/alarmEmpty_Txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="알람이 없습니다."
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/notiList"
             android:layout_width="match_parent"

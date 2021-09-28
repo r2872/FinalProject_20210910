@@ -34,10 +34,6 @@ class NotificationActivity : BaseActivity() {
 
         readAllNoti.setOnClickListener {
 
-            if (mNotiList.isEmpty()) {
-                Toast.makeText(mContext, "알람이 없습니다.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
             getReadNotificationFromServer()
         }
     }
@@ -47,6 +43,10 @@ class NotificationActivity : BaseActivity() {
         titleTxt.text = "알람목록"
         notiImg.visibility = View.GONE
         readAllNoti.visibility = View.VISIBLE
+        if (mNotiList.isEmpty()) {
+            readAllNoti.visibility = View.GONE
+            binding.alarmEmptyTxt.visibility = View.VISIBLE
+        }
         mAdapter = NotificationAdapter(mContext, mNotiList)
         binding.notiList.apply {
             adapter = mAdapter
@@ -70,10 +70,8 @@ class NotificationActivity : BaseActivity() {
                     }
 
                     if (mNotiList.isNotEmpty()) {
-                        notiCount.visibility = View.VISIBLE
-                        notiCount.text = mNotiList.size.toString()
-                    } else {
-                        notiCount.visibility = View.GONE
+                        readAllNoti.visibility = View.VISIBLE
+                        binding.alarmEmptyTxt.visibility = View.GONE
                     }
                     mAdapter.notifyDataSetChanged()
                 }

@@ -39,10 +39,6 @@ class NotificationAdapter(
             type.text = item.type
             message.text = item.message
 
-            if (mList.isEmpty()) {
-                type.text = "알람이 없습니다"
-                message.visibility = View.GONE
-            }
         }
     }
 }
