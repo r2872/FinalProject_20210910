@@ -17,6 +17,7 @@
         android:textStyle="bold" />
 
     <TextView
+        android:layout_marginEnd="10dp"
         android:id="@+id/message_Txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

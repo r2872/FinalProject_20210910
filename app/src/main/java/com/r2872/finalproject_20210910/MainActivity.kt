@@ -92,6 +92,7 @@ class MainActivity : BaseActivity() {
     override fun setValues() {
 
         titleTxt.text = "일정 목록"
+        notiImg.visibility = View.VISIBLE
 
         appointmentViewPagerAdapter = AppointmentViewPagerAdapter(supportFragmentManager)
         binding.appointmentsViewPager.adapter = appointmentViewPagerAdapter
@@ -130,7 +131,7 @@ class MainActivity : BaseActivity() {
                         notiCount.visibility = View.VISIBLE
                         notiCount.text = mNotiList.size.toString()
                     } else {
-                        notiImg.visibility = View.GONE
+                        notiCount.visibility = View.GONE
                     }
                 }
             }

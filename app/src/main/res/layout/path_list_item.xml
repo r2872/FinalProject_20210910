@@ -11,32 +11,32 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical">
 
-        <TextView
+        <ImageView
             android:id="@+id/trafficType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginStart="10dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            tools:text="이동수단" />
+            android:src="@drawable/bus" />
 
         <TextView
             android:id="@+id/sectionTime"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:gravity="center"
             android:textColor="@color/black"
             android:textStyle="bold"
-            tools:text="소요시간" />
+            tools:text="20분소요" />
 
         <TextView
             android:id="@+id/lane"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginStart="15dp"
+            android:layout_weight="1"
+            android:gravity="center"
             android:textColor="@color/black"
-            android:textStyle="bold"
             tools:text="대중교통정보" />
 
     </LinearLayout>
