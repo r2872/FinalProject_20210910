@@ -52,6 +52,15 @@ class LoginActivity : BaseActivity() {
                     if (success) {
 //                        네이버 로그인에 성공하면 그 계정의 토큰값 추출.
                         val accessToken = mNaverLoginModule.getAccessToken(mContext)
+                        Log.d("네이버토큰", accessToken)
+
+//                        별개의 통신용 Thread 생성 -> 내 정보 요청
+                        Thread {
+//                            이 내부의 코드를 백그라운드 실행
+                            val url = "https://openapi.naver.com/v1/nid/me"
+                            val jsonObj = JSONObject(mNaverLoginModule.requestApi(mContext, accessToken, url))
+                            Log.d("네이버내정보응답", jsonObj.toString())
+                        }.start()
                     } else {
 
                         Toast.makeText(mContext, "네이버 로그인에 실패하였습니다.", Toast.LENGTH_SHORT).show()
