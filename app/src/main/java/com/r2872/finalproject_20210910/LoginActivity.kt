@@ -58,8 +58,47 @@ class LoginActivity : BaseActivity() {
                         Thread {
 //                            이 내부의 코드를 백그라운드 실행
                             val url = "https://openapi.naver.com/v1/nid/me"
-                            val jsonObj = JSONObject(mNaverLoginModule.requestApi(mContext, accessToken, url))
+                            val jsonObj = JSONObject(
+                                mNaverLoginModule.requestApi(
+                                    mContext,
+                                    accessToken,
+                                    url
+                                )
+                            )
                             Log.d("네이버내정보응답", jsonObj.toString())
+                            val response = jsonObj.getJSONObject("response")
+
+//                            정보 추출
+                            val uid = response.getString("id")
+                            val name = response.getString("name")
+
+//                            우리 서버로 전달.
+                            apiService.postRequestSocialSignIn("naver", uid, name)
+                                .enqueue(object : retrofit2.Callback<BasicResponse> {
+                                    override fun onResponse(
+                                        call: Call<BasicResponse>,
+                                        response: Response<BasicResponse>
+                                    ) {
+                                        if (response.isSuccessful) {
+                                            val basicResponse = response.body()!!
+                                            ContextUtil.setToken(
+                                                mContext,
+                                                basicResponse.data.token
+                                            )
+                                            GlobalData.loginUser = basicResponse.data.user
+                                            clearContextUtilIdPw()
+
+                                            moveToMain()
+                                        }
+                                    }
+
+                                    override fun onFailure(
+                                        call: Call<BasicResponse>,
+                                        t: Throwable
+                                    ) {
+
+                                    }
+                                })
                         }.start()
                     } else {
 
