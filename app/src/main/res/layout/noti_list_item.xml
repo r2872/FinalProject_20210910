@@ -7,10 +7,10 @@
 
     <TextView
         android:id="@+id/type_Txt"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:gravity="start"
+        android:gravity="center"
         android:text="타입"
         android:textColor="@color/black"
         android:textSize="16sp"
@@ -18,9 +18,10 @@
 
     <TextView
         android:id="@+id/message_Txt"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:gravity="center"
         android:text="내용"
         android:textColor="@color/black"
         android:textSize="16sp" />

@@ -155,4 +155,10 @@ interface ServerAPIService {
     fun getRequestNotifications(
         @Query("need_all_notis") needAll: Boolean
     ): Call<BasicResponse>
+
+    @FormUrlEncoded
+    @POST("notifications")
+    fun postRequestNotifications(
+        @Field("noti_id") notiId: Int
+    ): Call<BasicResponse>
 }

@@ -27,6 +27,7 @@ abstract class BaseActivity : AppCompatActivity() {
     lateinit var logoImg: ImageView
     lateinit var profileImg: ImageView
     lateinit var notiCount: TextView
+    lateinit var readAllNoti: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,5 +59,6 @@ abstract class BaseActivity : AppCompatActivity() {
         notiImg = defActionBar.customView.findViewById(R.id.noti_Img)
         profileImg = defActionBar.customView.findViewById(R.id.profile_Img)
         notiCount = defActionBar.customView.findViewById(R.id.noticount_Txt)
+        readAllNoti = defActionBar.customView.findViewById(R.id.readAllNoti_Txt)
     }
 }
