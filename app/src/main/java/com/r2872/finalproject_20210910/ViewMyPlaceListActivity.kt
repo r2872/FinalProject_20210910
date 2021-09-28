@@ -49,6 +49,7 @@ class ViewMyPlaceListActivity : BaseActivity() {
         titleTxt.text = "내가 자주 쓰는 출발장소들"
         profileImg.setImageResource(R.drawable.ic_baseline_post_add_24)
         profileImg.visibility = View.VISIBLE
+        notiImg.visibility = View.GONE
 
         mAdapter = MyPlaceListAdapter(mContext, mList)
         binding.placeListRecyclerView.adapter = mAdapter

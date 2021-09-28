@@ -1,5 +1,6 @@
 package com.r2872.finalproject_20210910
 
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
@@ -9,9 +10,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.r2872.finalproject_20210910.adapters.AppointmentViewPagerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityMainBinding
+import com.r2872.finalproject_20210910.datas.BasicResponse
+import com.r2872.finalproject_20210910.datas.NotificationData
 import com.r2872.finalproject_20210910.fragments.InvitedAppointmentFragment
 import com.r2872.finalproject_20210910.fragments.MyAppointmentFragment
 import com.r2872.finalproject_20210910.utils.GlobalData
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MainActivity : BaseActivity() {
@@ -19,6 +25,7 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var appointmentViewPagerAdapter: AppointmentViewPagerAdapter
     private var waitTime = 0L
+    private val mNotiList = ArrayList<NotificationData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +33,11 @@ class MainActivity : BaseActivity() {
 
         setValues()
         setupEvents()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getNotisFromServer()
     }
 
     override fun onBackPressed() {
@@ -39,6 +51,11 @@ class MainActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+        notiImg.setOnClickListener {
+            val myIntent = Intent(mContext, NotificationActivity::class.java)
+            startActivity(myIntent)
+        }
 
         binding.appointmentsViewPager.addOnPageChangeListener(object :
             ViewPager.OnPageChangeListener {
@@ -94,5 +111,29 @@ class MainActivity : BaseActivity() {
             (root).dividerPadding = 10
             (root).dividerDrawable = drawable
         }
+    }
+
+    private fun getNotisFromServer() {
+        apiService.getRequestNotifications(true).enqueue(object : Callback<BasicResponse> {
+            override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
+                if (response.isSuccessful) {
+                    val basicResponse = response.body()!!
+                    mNotiList.clear()
+
+                    mNotiList.addAll(basicResponse.data.notifications)
+
+                    if (mNotiList.isNotEmpty()) {
+                        notiCount.visibility = View.VISIBLE
+                        notiCount.text = mNotiList.size.toString()
+                    } else {
+                        notiCount.visibility = View.GONE
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+            }
+        })
     }
 }

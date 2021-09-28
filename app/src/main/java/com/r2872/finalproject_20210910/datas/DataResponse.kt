@@ -15,5 +15,7 @@ data class DataResponse(
 //    하나의 상세 약속 정보
     var appointment: AppointmentData,
 //    초대받은 약속 상세정보
-    var invited_appointments: List<AppointmentData>
+    var invited_appointments: List<AppointmentData>,
+
+    var notifications: List<NotificationData>
 )

@@ -60,6 +60,7 @@ class VIewMyFriendsListActivity : BaseActivity() {
         titleTxt.text = "친구 관리"
         profileImg.setImageResource(R.drawable.ic_baseline_person_add_alt_1_24)
         profileImg.visibility = View.VISIBLE
+        notiImg.visibility = View.GONE
         friendsViewPagerAdapter = FriendsViewPagerAdapter(supportFragmentManager)
         binding.friendsViewPager.adapter = friendsViewPagerAdapter
         binding.friendsTabLayout.setupWithViewPager(binding.friendsViewPager)

@@ -150,4 +150,9 @@ interface ServerAPIService {
 
     @DELETE("user/image")
     fun deleteRequestUserImage(): Call<BasicResponse>
+
+    @GET("notifications")
+    fun getRequestNotifications(
+        @Query("need_all_notis") needAll: Boolean
+    ): Call<BasicResponse>
 }

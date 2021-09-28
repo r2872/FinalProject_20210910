@@ -24,12 +24,40 @@
 
     <ImageView
         android:id="@+id/profile_Img"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"
         android:layout_marginEnd="10dp"
-        android:src="@drawable/ic_baseline_person_24"
+        android:src="@drawable/ic_baseline_person_add_alt_1_24"
         android:visibility="gone"
         tools:visibility="visible" />
 
+    <FrameLayout
+        android:id="@+id/noti_Img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="10dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_baseline_notifications_24" />
+
+        <TextView
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:padding="2dp"
+            android:id="@+id/noticount_Txt"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="end"
+            android:background="@drawable/ic_noticount"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            tools:text="1"
+            tools:visibility="visible" />
+
+    </FrameLayout>
 </FrameLayout>

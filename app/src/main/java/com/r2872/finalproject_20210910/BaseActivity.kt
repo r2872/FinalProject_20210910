@@ -2,6 +2,7 @@ package com.r2872.finalproject_20210910
 
 import android.content.Context
 import android.os.Bundle
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
@@ -21,9 +22,11 @@ abstract class BaseActivity : AppCompatActivity() {
     lateinit var apiService: ServerAPIService
 
     //    액션바에 있는 UI 요소들을 상속시켜주자.
-    lateinit var profileImg: ImageView
+    lateinit var notiImg: FrameLayout
     lateinit var titleTxt: TextView
     lateinit var logoImg: ImageView
+    lateinit var profileImg: ImageView
+    lateinit var notiCount: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +53,10 @@ abstract class BaseActivity : AppCompatActivity() {
         val toolBar = defActionBar.customView.parent as Toolbar
         toolBar.setContentInsetsAbsolute(0, 0)
 
-        profileImg = defActionBar.customView.findViewById(R.id.profile_Img)
         titleTxt = defActionBar.customView.findViewById(R.id.title_Txt)
         logoImg = defActionBar.customView.findViewById(R.id.logo_Img)
+        notiImg = defActionBar.customView.findViewById(R.id.noti_Img)
+        profileImg = defActionBar.customView.findViewById(R.id.profile_Img)
+        notiCount = defActionBar.customView.findViewById(R.id.noticount_Txt)
     }
 }
