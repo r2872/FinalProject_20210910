@@ -1,5 +1,6 @@
 package com.r2872.finalproject_20210910
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -7,22 +8,31 @@ import android.app.TimePickerDialog
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Point
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.AdapterView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.core.view.setMargins
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.gun0912.tedpermission.PermissionListener
+import com.gun0912.tedpermission.normal.TedPermission
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
@@ -46,6 +56,7 @@ import com.r2872.finalproject_20210910.datas.PlaceListData
 import com.r2872.finalproject_20210910.datas.SearchPlaceData
 import com.r2872.finalproject_20210910.datas.UserData
 import com.r2872.finalproject_20210910.services.MyJobService
+import com.r2872.finalproject_20210910.utils.GlobalData
 import com.r2872.finalproject_20210910.utils.Request
 import com.r2872.finalproject_20210910.utils.SizeUtil.Companion.dbToPx
 import okhttp3.HttpUrl
@@ -103,6 +114,8 @@ class EditAppointmentActivity : BaseActivity() {
     private lateinit var mNaverMap: NaverMap
 
     private lateinit var mLocationSource: FusedLocationSource
+
+    private var needLocationFromServer = true
 
     private val mSearchPlaceList = ArrayList<SearchPlaceData>()
     lateinit var dialog: Dialog
@@ -390,6 +403,30 @@ class EditAppointmentActivity : BaseActivity() {
             binding.mainScrollView.requestDisallowInterceptTouchEvent(true)
 
             return@setOnTouchListener false
+        }
+
+        binding.currentLatLng.setOnClickListener {
+            val customView =
+                LayoutInflater.from(mContext).inflate(R.layout.my_custom_alert_edt_place, null)
+
+            val alertDialog = AlertDialog.Builder(mContext)
+                .setTitle("현재위치로 등록")
+                .setView(customView)
+                .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, i ->
+                    needLocationFromServer = true
+                    getLocation()
+                    binding.startPlaceSpinner.isEnabled = false
+                    binding.startPlaceSpinner.visibility = View.GONE
+                    val placeNameEdt = customView.findViewById<EditText>(R.id.placeName_Edt)
+                    binding.currentLatLng.text = placeNameEdt.text.toString()
+                    mSelectedStartPlace.name = placeNameEdt.text.toString()
+                    val myHandler = Handler(Looper.getMainLooper())
+                    myHandler.postDelayed({
+                        drawStartPlaceToDestination(mNaverMap)
+                    }, 1000)
+                })
+                .setNegativeButton("취소", null)
+                .show()
         }
     }
 
@@ -694,6 +731,55 @@ class EditAppointmentActivity : BaseActivity() {
             )
         )
         dialog.show()
+    }
+
+    private fun getLocation() {
+
+        val pl = object : PermissionListener {
+            override fun onPermissionGranted() {
+
+                if (ActivityCompat.checkSelfPermission(
+                        mContext,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        mContext,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return
+                }
+
+                val locationManger = getSystemService(LOCATION_SERVICE) as LocationManager
+
+                locationManger.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    0L, 0f, object : LocationListener {
+                        override fun onLocationChanged(p0: Location) {
+                            if (needLocationFromServer) {
+                                mSelectedStartPlace.latitude = p0.latitude
+                                mSelectedStartPlace.longitude = p0.longitude
+                                needLocationFromServer = false
+                            }
+                        }
+
+                        override fun onStatusChanged(
+                            provider: String?,
+                            status: Int,
+                            extras: Bundle?
+                        ) {
+                        }
+
+                        override fun onProviderEnabled(provider: String) {}
+                        override fun onProviderDisabled(provider: String) {}
+                    })
+            }
+
+            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {}
+        }
+        TedPermission.create()
+            .setPermissionListener(pl)
+            .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
+            .check()
     }
 
 }
