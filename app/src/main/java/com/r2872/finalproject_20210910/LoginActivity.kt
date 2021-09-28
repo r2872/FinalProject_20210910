@@ -1,5 +1,6 @@
 package com.r2872.finalproject_20210910
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +13,7 @@ import com.facebook.login.LoginResult
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.nhn.android.naverlogin.OAuthLogin
+import com.nhn.android.naverlogin.OAuthLoginHandler
 import com.r2872.finalproject_20210910.databinding.ActivityLoginBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
@@ -40,6 +42,23 @@ class LoginActivity : BaseActivity() {
         callbackManager = CallbackManager.Factory.create()
 
         binding.loginButton.setReadPermissions("email")
+
+        binding.naverLoginBtn.setOnClickListener {
+
+            mNaverLoginModule.startOauthLoginActivity(this, @SuppressLint("HandlerLeak")
+            object : OAuthLoginHandler() {
+                override fun run(success: Boolean) {
+
+                    if (success) {
+//                        네이버 로그인에 성공하면 그 계정의 토큰값 추출.
+                        val accessToken = mNaverLoginModule.getAccessToken(mContext)
+                    } else {
+
+                        Toast.makeText(mContext, "네이버 로그인에 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            })
+        }
 
         binding.facebookLoginBtn.setOnClickListener {
 

@@ -126,6 +126,13 @@
                 android:layout_marginLeft="20dp"
                 android:src="@drawable/facebook" />
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/naverLogin_Btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/naver_icon" />
+
         </LinearLayout>
 
     </LinearLayout>

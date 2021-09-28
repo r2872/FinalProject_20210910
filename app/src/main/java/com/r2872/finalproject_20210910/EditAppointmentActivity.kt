@@ -459,6 +459,7 @@ class EditAppointmentActivity : BaseActivity() {
 
             mNaverMap = naverMap
 
+
             mLocationSource =
                 FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
 
