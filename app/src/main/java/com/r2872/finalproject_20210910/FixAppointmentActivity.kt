@@ -721,6 +721,7 @@ class FixAppointmentActivity : BaseActivity() {
             .setPermissionListener(pl)
             .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
             .check()
+
     }
 
     private fun getAppointmentData() {
@@ -728,16 +729,19 @@ class FixAppointmentActivity : BaseActivity() {
         mSelectedLat = mAppointmentData.latitude
         mSelectedLng = mAppointmentData.longitude
         binding.titleEdt.setText(mAppointmentData.title)
-        val sdfDate = SimpleDateFormat("yyyy-MM-dd (E)")
-        val sdfTime = SimpleDateFormat("a h:mm")
-        binding.dateTxt.text = sdfDate.format(mAppointmentData.datetime)
-        binding.timeTxt.text = sdfTime.format(mAppointmentData.datetime)
         binding.placeSearchEdt.setText(mAppointmentData.place)
         mSelectedFriendList.addAll(mAppointmentData.invitedFriends)
-
         for (i in 0 until mAppointmentData.invitedFriends.size) {
             addFriendsTxt(mAppointmentData.invitedFriends[i])
         }
+        mSelectedDateTime.timeInMillis = mAppointmentData.datetime.time
+        val myTimeZone = mSelectedDateTime.timeZone
+        val myTimeOffset = myTimeZone.rawOffset / 1000 / 60 / 60
+        mSelectedDateTime.add(Calendar.HOUR_OF_DAY, myTimeOffset)
+        val sdfDate = SimpleDateFormat("yyyy-MM-dd (E)")
+        val sdfTime = SimpleDateFormat("a h:mm")
+        binding.dateTxt.text = sdfDate.format(mSelectedDateTime.time)
+        binding.timeTxt.text = sdfTime.format(mSelectedDateTime.time)
     }
 
     private fun addFriendsTxt(selectedFriend: UserData) {
