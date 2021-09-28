@@ -59,6 +59,9 @@ class SearchFriendRecyclerViewAdapter(
                 "kakao" -> {
                     socialLoginImg.setImageResource(R.drawable.kakao_icon)
                 }
+                "naver" -> {
+                    socialLoginImg.setImageResource(R.drawable.naver_icon)
+                }
                 else -> socialLoginImg.setImageResource(R.drawable.ic_baseline_person_24)
             }
 //            친구추가 버튼 눌림 이벤트 처리

@@ -254,6 +254,14 @@ class UserInfoFragment : BaseFragment() {
                 binding.providerTxt.setImageResource(R.drawable.kakao_icon)
                 binding.pwEditBtn.visibility = View.GONE
             }
+            "naver" -> {
+                binding.providerTxt.setImageResource(R.drawable.naver_icon)
+                binding.pwEditBtn.visibility = View.GONE
+            }
+            else -> {
+                binding.providerTxt.setImageResource(R.drawable.ic_baseline_person_24)
+                binding.pwEditBtn.visibility = View.VISIBLE
+            }
         }
         setUserInfo()
     }

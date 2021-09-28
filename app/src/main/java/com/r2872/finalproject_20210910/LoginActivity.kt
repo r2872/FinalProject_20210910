@@ -39,10 +39,6 @@ class LoginActivity : BaseActivity() {
 
     override fun setupEvents() {
 
-        callbackManager = CallbackManager.Factory.create()
-
-        binding.loginButton.setReadPermissions("email")
-
         binding.naverLoginBtn.setOnClickListener {
 
             mNaverLoginModule.startOauthLoginActivity(this, @SuppressLint("HandlerLeak")
@@ -335,6 +331,9 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun setValues() {
+
+//        페북로그인 - 콜백 관련 변수
+        callbackManager = CallbackManager.Factory.create()
 
 //        네이버 로그인 모듈 세팅
         mNaverLoginModule = OAuthLogin.getInstance()
