@@ -76,9 +76,6 @@ class MainActivity : BaseActivity() {
 
         titleTxt.text = "일정 목록"
 
-        Toast.makeText(mContext, "${GlobalData.loginUser!!.nickName} 님 환영합니다.", Toast.LENGTH_SHORT)
-            .show()
-
         appointmentViewPagerAdapter = AppointmentViewPagerAdapter(supportFragmentManager)
         binding.appointmentsViewPager.adapter = appointmentViewPagerAdapter
         binding.appointmentsTabLayout.setupWithViewPager(binding.appointmentsViewPager)

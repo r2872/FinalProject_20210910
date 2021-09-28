@@ -5,9 +5,6 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
-import android.app.job.JobInfo
-import android.app.job.JobScheduler
-import android.content.ComponentName
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.Point
@@ -49,7 +46,6 @@ import com.r2872.finalproject_20210910.adapters.DialogEditRecyclerAdapter
 import com.r2872.finalproject_20210910.adapters.StartPlaceSpinnerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.*
-import com.r2872.finalproject_20210910.services.MyJobService
 import com.r2872.finalproject_20210910.utils.Request
 import com.r2872.finalproject_20210910.utils.SizeUtil.Companion.dbToPx
 import okhttp3.HttpUrl
@@ -61,7 +57,6 @@ import retrofit2.Response
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 @SuppressLint("ClickableViewAccessibility", "SimpleDateFormat")
@@ -211,6 +206,13 @@ class FixAppointmentActivity : BaseActivity() {
 //                    스피너의 위치에 맞는 장소를 선택된 출발지점으로 선정.
                     mSelectedStartPlace = mStartPlaceList[position]
                     drawStartPlaceToDestination(mNaverMap)
+                    val cameraUpdate = CameraUpdate.scrollTo(
+                        LatLng(
+                            mSelectedStartPlace.latitude,
+                            mSelectedStartPlace.longitude
+                        )
+                    )
+                    mNaverMap.moveCamera(cameraUpdate)
 
                 }
 
@@ -343,14 +345,19 @@ class FixAppointmentActivity : BaseActivity() {
                 .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, i ->
                     needLocationFromServer = true
                     getLocation()
-                    binding.startPlaceSpinner.isEnabled = false
                     binding.startPlaceSpinner.visibility = View.GONE
                     val placeNameEdt = customView.findViewById<EditText>(R.id.placeName_Edt)
                     binding.currentLatLng.text = placeNameEdt.text.toString()
                     mSelectedStartPlace.name = placeNameEdt.text.toString()
+                    mSelectedStartPlace.name = placeNameEdt.text.toString()
                 })
                 .setNegativeButton("취소", null)
                 .show()
+        }
+
+        binding.startPlaceSelectBtn.setOnClickListener {
+            binding.startPlaceSpinner.visibility = View.VISIBLE
+            binding.currentLatLng.text = "현재위치를 출발지로"
         }
     }
 
@@ -414,7 +421,6 @@ class FixAppointmentActivity : BaseActivity() {
         mapFragment.getMapAsync { naverMap ->
 
             mNaverMap = naverMap
-            binding.startPlaceSpinner.visibility = View.VISIBLE
 
             mLocationSource =
                 FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
@@ -719,11 +725,6 @@ class FixAppointmentActivity : BaseActivity() {
 
     private fun getAppointmentData() {
         mAppointmentData = intent.getSerializableExtra("appointment") as AppointmentData
-//        mSelectedStartPlace.apply {
-//            name = mAppointmentData.startPlace
-//            latitude = mAppointmentData.startLatitude
-//            longitude = mAppointmentData.startLongitude
-//        }
         mSelectedLat = mAppointmentData.latitude
         mSelectedLng = mAppointmentData.longitude
         binding.titleEdt.setText(mAppointmentData.title)

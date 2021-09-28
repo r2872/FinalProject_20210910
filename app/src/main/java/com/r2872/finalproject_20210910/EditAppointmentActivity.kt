@@ -222,6 +222,12 @@ class EditAppointmentActivity : BaseActivity() {
 
         }
 
+        binding.startPlaceSelectBtn.setOnClickListener {
+            getRequestFromServer()
+            binding.startPlaceSpinner.visibility = View.VISIBLE
+            binding.currentLatLng.text = "현재위치를 출발지로"
+        }
+
 //        스피너의 선택 이벤트.
         binding.startPlaceSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -238,7 +244,13 @@ class EditAppointmentActivity : BaseActivity() {
 //                    스피너의 위치에 맞는 장소를 선택된 출발지점으로 선정.
                     mSelectedStartPlace = mStartPlaceList[position]
                     drawStartPlaceToDestination(mNaverMap)
-
+                    val cameraUpdate = CameraUpdate.scrollTo(
+                        LatLng(
+                            mSelectedStartPlace.latitude,
+                            mSelectedStartPlace.longitude
+                        )
+                    )
+                    mNaverMap.moveCamera(cameraUpdate)
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {}
@@ -411,7 +423,6 @@ class EditAppointmentActivity : BaseActivity() {
                 .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, i ->
                     needLocationFromServer = true
                     getLocation()
-                    binding.startPlaceSpinner.isEnabled = false
                     binding.startPlaceSpinner.visibility = View.GONE
                     val placeNameEdt = customView.findViewById<EditText>(R.id.placeName_Edt)
                     binding.currentLatLng.text = placeNameEdt.text.toString()
@@ -434,40 +445,7 @@ class EditAppointmentActivity : BaseActivity() {
             AddFriendsSpinnerAdapter(mContext, R.layout.friend_list_item, mFriendList)
         binding.myFriendsSpinner.adapter = mAddFriendsSpinnerAdapter
 
-//        내 친구 목록 담아주기
-        apiService.getRequestFriendList("my").enqueue(object : Callback<BasicResponse> {
-            override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
-                if (response.isSuccessful) {
-
-                    val basicResponse = response.body()!!
-                    mFriendList.clear()
-                    mFriendList.addAll(basicResponse.data.friends)
-                }
-                mAddFriendsSpinnerAdapter.notifyDataSetChanged()
-            }
-
-            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
-
-            }
-        })
-
-//        내 출발장소 목록 담아주기
-        apiService.getRequestMyAppointmentList().enqueue(object : Callback<BasicResponse> {
-            override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
-
-                if (response.isSuccessful) {
-                    mStartPlaceList.clear()
-
-                    val basicResponse = response.body()!!
-                    mStartPlaceList.addAll(basicResponse.data.places)
-                }
-                mSpinnerAdapter.notifyDataSetChanged()
-            }
-
-            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
-
-            }
-        })
+        getRequestFromServer()
         setNaverMap()
     }
 
@@ -480,7 +458,6 @@ class EditAppointmentActivity : BaseActivity() {
         mapFragment.getMapAsync { naverMap ->
 
             mNaverMap = naverMap
-            binding.startPlaceSpinner.visibility = View.VISIBLE
 
             mLocationSource =
                 FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
@@ -779,6 +756,43 @@ class EditAppointmentActivity : BaseActivity() {
             .setPermissionListener(pl)
             .setPermissions(Manifest.permission.ACCESS_FINE_LOCATION)
             .check()
+    }
+
+    private fun getRequestFromServer() {
+        //        내 친구 목록 담아주기
+        apiService.getRequestFriendList("my").enqueue(object : Callback<BasicResponse> {
+            override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
+                if (response.isSuccessful) {
+
+                    val basicResponse = response.body()!!
+                    mFriendList.clear()
+                    mFriendList.addAll(basicResponse.data.friends)
+                }
+                mAddFriendsSpinnerAdapter.notifyDataSetChanged()
+            }
+
+            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+            }
+        })
+
+//        내 출발장소 목록 담아주기
+        apiService.getRequestMyAppointmentList().enqueue(object : Callback<BasicResponse> {
+            override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
+
+                if (response.isSuccessful) {
+                    mStartPlaceList.clear()
+
+                    val basicResponse = response.body()!!
+                    mStartPlaceList.addAll(basicResponse.data.places)
+                }
+                mSpinnerAdapter.notifyDataSetChanged()
+            }
+
+            override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+            }
+        })
     }
 
 }

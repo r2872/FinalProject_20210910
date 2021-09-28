@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.r2872.finalproject_20210910.databinding.ActivitySplashBinding
@@ -70,6 +71,12 @@ class SplashActivity : BaseActivity() {
                 Log.d("유저정보", GlobalData.loginUser.toString())
 
                 myIntent = Intent(mContext, MainActivity::class.java)
+                Toast.makeText(
+                    mContext,
+                    "${GlobalData.loginUser!!.nickName} 님 환영합니다.",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
 
             } else {
 
