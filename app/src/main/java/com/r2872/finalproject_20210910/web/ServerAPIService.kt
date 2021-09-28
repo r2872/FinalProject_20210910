@@ -51,6 +51,21 @@ interface ServerAPIService {
         @Field("friend_list") friendList: String
     ): Call<BasicResponse>
 
+    @FormUrlEncoded
+    @PUT("/appointment")
+    fun putRequestAppointment(
+        @Field("appointment_id") appointmentId: Int,
+        @Field("title") title: String,
+        @Field("datetime") datetime: String,
+        @Field("start_place") start_place: String,
+        @Field("start_latitude") start_latitude: Double,
+        @Field("start_longitude") start_longitude: Double,
+        @Field("place") place: String,
+        @Field("latitude") latitude: Double,
+        @Field("longitude") longitude: Double,
+        @Field("friend_list") friend_list: String
+    ): Call<BasicResponse>
+
     @GET("/appointment")
     fun getRequestAppointmentList(): Call<BasicResponse>
 

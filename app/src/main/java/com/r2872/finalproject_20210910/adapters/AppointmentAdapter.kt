@@ -76,31 +76,48 @@ class AppointmentAdapter(
             }
 
             backgroundLayout.setOnLongClickListener {
+                val alert = AlertDialog.Builder(mContext)
+                    .setTitle("일정 편집")
+                    .setPositiveButton("삭제", DialogInterface.OnClickListener { _, _ ->
+                        val deleteAlert = AlertDialog.Builder(context)
+                            .setTitle("해당 일정을 삭제하시겠습니까?")
+                            .setPositiveButton("확인", DialogInterface.OnClickListener { _, _ ->
+                                (context as MainActivity).apiService.deleteRequestAppointment(item.id)
+                                    .enqueue(object : Callback<BasicResponse> {
+                                        override fun onResponse(
+                                            call: Call<BasicResponse>,
+                                            response: Response<BasicResponse>
+                                        ) {
+                                            if (response.isSuccessful) {
+                                                val basicResponse = response.body()!!
+                                                Toast.makeText(
+                                                    context,
+                                                    "삭제 되었습니다.",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                    .show()
+                                                (context.appointmentViewPagerAdapter.getItem(0) as MyAppointmentFragment).getAppointmentListFromServer()
+                                            }
+                                        }
 
-                val alert = AlertDialog.Builder(context)
-                    .setTitle("해당 일정을 삭제하시겠습니까?")
-                    .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, i ->
-                        (context as MainActivity).apiService.deleteRequestAppointment(item.id)
-                            .enqueue(object : Callback<BasicResponse> {
-                                override fun onResponse(
-                                    call: Call<BasicResponse>,
-                                    response: Response<BasicResponse>
-                                ) {
-                                    if (response.isSuccessful) {
-                                        val basicResponse = response.body()!!
-                                        Toast.makeText(context, "삭제 되었습니다.", Toast.LENGTH_SHORT)
-                                            .show()
-                                        (context.appointmentViewPagerAdapter.getItem(0) as MyAppointmentFragment).getAppointmentListFromServer()
-                                    }
-                                }
+                                        override fun onFailure(
+                                            call: Call<BasicResponse>,
+                                            t: Throwable
+                                        ) {
 
-                                override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
-
-                                }
+                                        }
+                                    })
                             })
+                            .setNegativeButton("취소", null)
+                        deleteAlert.show()
                     })
-                    .setNegativeButton("취소", null)
-                alert.show()
+                    .setNegativeButton("수정", DialogInterface.OnClickListener { _, _ ->
+                        val intent = Intent(context, FixAppointmentActivity::class.java)
+                        intent.putExtra("appointment", item)
+                        context.startActivity(intent)
+                    })
+                    .show()
+
 
                 return@setOnLongClickListener true
             }

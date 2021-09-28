@@ -23,10 +23,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import java.util.*
 
-class DialogRecyclerAdapter(
+class DialogEditRecyclerAdapter(
     private val mContext: Context,
     private val mList: List<SearchPlaceData>
-) : RecyclerView.Adapter<DialogRecyclerAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<DialogEditRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
@@ -56,7 +56,7 @@ class DialogRecyclerAdapter(
 
             backgroundLayout.setOnClickListener {
 
-                (context as EditAppointmentActivity).apply {
+                (context as FixAppointmentActivity).apply {
                     intent.putExtra("placeName", item.placeName)
                     mSelectedLat = item.lat.toDouble()
                     mSelectedLng = item.lng.toDouble()

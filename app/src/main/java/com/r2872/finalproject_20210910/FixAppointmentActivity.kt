@@ -45,13 +45,10 @@ import com.odsay.odsayandroidsdk.ODsayData
 import com.odsay.odsayandroidsdk.ODsayService
 import com.odsay.odsayandroidsdk.OnResultCallbackListener
 import com.r2872.finalproject_20210910.adapters.AddFriendsSpinnerAdapter
-import com.r2872.finalproject_20210910.adapters.DialogRecyclerAdapter
+import com.r2872.finalproject_20210910.adapters.DialogEditRecyclerAdapter
 import com.r2872.finalproject_20210910.adapters.StartPlaceSpinnerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
-import com.r2872.finalproject_20210910.datas.BasicResponse
-import com.r2872.finalproject_20210910.datas.PlaceListData
-import com.r2872.finalproject_20210910.datas.SearchPlaceData
-import com.r2872.finalproject_20210910.datas.UserData
+import com.r2872.finalproject_20210910.datas.*
 import com.r2872.finalproject_20210910.services.MyJobService
 import com.r2872.finalproject_20210910.utils.Request
 import com.r2872.finalproject_20210910.utils.SizeUtil.Companion.dbToPx
@@ -67,9 +64,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
-
 @SuppressLint("ClickableViewAccessibility", "SimpleDateFormat")
-class EditAppointmentActivity : BaseActivity() {
+class FixAppointmentActivity : BaseActivity() {
 
     private lateinit var binding: ActivityEditAppoinmentBinding
 
@@ -115,6 +111,8 @@ class EditAppointmentActivity : BaseActivity() {
 
     private val mSearchPlaceList = ArrayList<SearchPlaceData>()
     lateinit var dialog: Dialog
+
+    private lateinit var mAppointmentData: AppointmentData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -192,32 +190,7 @@ class EditAppointmentActivity : BaseActivity() {
                 Toast.makeText(mContext, "이미 추가한 친구입니다.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-//            텍스트뷰 하나를 코틀린에서 생성
-            val textView = TextView(mContext)
-            textView.text = selectedFriend.nickName
-            textView.setBackgroundResource(R.drawable.selected_friend_box)
-            textView.setPadding(
-                dbToPx(mContext, 5f).toInt(),
-                dbToPx(mContext, 5f).toInt(),
-                dbToPx(mContext, 5f).toInt(),
-                dbToPx(mContext, 5f).toInt()
-            )
-            val params = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            params.setMargins(dbToPx(mContext, 5f).toInt())
-            textView.layoutParams = params
-
-//            만들어낸 텍스트뷰에 이벤트 처리
-            textView.setOnClickListener {
-                binding.friendListLayout.removeView(textView)
-                mSelectedFriendList.remove(selectedFriend)
-            }
-
-//            레이아웃에 추가 + 친구목록으로도 추가.
-            binding.friendListLayout.addView(textView)
+            addFriendsTxt(selectedFriend)
             mSelectedFriendList.add(selectedFriend)
 
         }
@@ -314,14 +287,16 @@ class EditAppointmentActivity : BaseActivity() {
 
             Log.d("친구리스트", friendListStr)
 
-            apiService.postRequestAppointment(
+            apiService.putRequestAppointment(
+                mAppointmentData.id,
                 inputTitle,
                 finalDateTime,
                 mSelectedStartPlace.name,
                 mSelectedStartPlace.latitude,
                 mSelectedStartPlace.longitude,
                 inputPlaceName,
-                mSelectedLat, mSelectedLng,
+                mSelectedLat,
+                mSelectedLng,
                 friendListStr
             ).enqueue(object : Callback<BasicResponse> {
                 override fun onResponse(
@@ -329,51 +304,8 @@ class EditAppointmentActivity : BaseActivity() {
                     response: Response<BasicResponse>
                 ) {
                     if (response.isSuccessful) {
-
-//                        임시 : 1분 후에 교통 상황 파악하는 작업 예약. => JobScheduler 클래스.
-//                        실제 : 약속시간 2~3시간 전에 교통 상황 파악 작업 예약.
-
-                        val js = getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
-//                        실제로 예약시간이 되면 어떤 일을 할지 적어둔 클래스 필요.
-//                        백그라운드 작업 가정 => 서비스 클래스 작업 필요.
-                        val serviceComponent = ComponentName(mContext, MyJobService::class.java)
-
-//                        언제? 어떤일을? 모아주는 클래스.
-
-//                        언제? (약속시간 - 2시간) - 현재시간 => 이 시차만큼 지나면 실행되도록.
-//                        약속시간 : 시차 보정 O => 2시간 빼주자
-                        mSelectedDateTime.add(Calendar.HOUR_OF_DAY, -2)
-
-//                        현재시간 : 시차 보정 X => 시차 보정
-                        val now = Calendar.getInstance()
-                        val timeOffset = now.timeZone.rawOffset / 1000 / 60 / 60
-                        now.add(Calendar.HOUR_OF_DAY, -timeOffset)
-
-//                        필요한 시간이 지나면 예약작업 실행되도록.
-                        val jobTime = mSelectedDateTime.timeInMillis - now.timeInMillis
-
-//                        jobInfo => ID 값을 넣을 수 있다. 약속의 id 값을 넣어보자.
-//                        약속 작성 화면 => 만든 약속의 id 값? 서버가 알려주는 약속 객체 활용.
-                        val basicResponse = response.body()!!
-
-                        val jobInfo =
-                            JobInfo.Builder(basicResponse.data.appointment.id, serviceComponent)
-                                .setMinimumLatency(jobTime) // 얼마 후에 실행할건지? 약속시간 (보다 2시간 전) 가준으로 => 시간이 지나면 실행되도록.
-//                                .setMinimumLatency(TimeUnit.SECONDS.toMillis(20))
-                                .setOverrideDeadline(TimeUnit.MINUTES.toMillis(3)) // 1분 후 : 대략 1분 후. => 3분 정도 까지만 기다리자. => 안드로이드가 배터리 이슈로 정확한 시간 예약 X.
-                                .build()
-
-//                        예약 도구를 이용해 스케쥴 설정.
-                        js.schedule(jobInfo)
-
-                        Toast.makeText(mContext, "등록 완료", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(mContext, "수정완료", Toast.LENGTH_SHORT).show()
                         finish()
-                    } else {
-                        Toast.makeText(
-                            mContext,
-                            JSONObject(response.errorBody()!!.string()).getString("message"),
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
                 }
 
@@ -424,7 +356,9 @@ class EditAppointmentActivity : BaseActivity() {
 
     override fun setValues() {
 
-        titleTxt.text = "일정 생성"
+        titleTxt.text = "일정 편집"
+        binding.addBtn.text = "수정완료"
+        getAppointmentData()
 
         mSpinnerAdapter =
             StartPlaceSpinnerAdapter(mContext, R.layout.my_place_list_item, mStartPlaceList)
@@ -501,6 +435,9 @@ class EditAppointmentActivity : BaseActivity() {
             uiSettings.isLocationButtonEnabled = true
 
             selectedPointMaker.icon = OverlayImage.fromResource(R.drawable.arrival_marker)
+            selectedPointMaker.position =
+                LatLng(mAppointmentData.latitude, mAppointmentData.longitude)
+            selectedPointMaker.map = mNaverMap
 
             mNaverMap.setOnMapClickListener { _, latLng ->
 
@@ -514,7 +451,6 @@ class EditAppointmentActivity : BaseActivity() {
 
 //                좌표를 받아서 -> 미리 만들어둔 마커의 좌표로 연결. 맵에 띄우자.
                 selectedPointMaker.position = LatLng(mSelectedLat, mSelectedLng)
-                selectedPointMaker.map = mNaverMap
 
                 drawStartPlaceToDestination(mNaverMap)
             }
@@ -715,7 +651,7 @@ class EditAppointmentActivity : BaseActivity() {
         dialog.window!!.attributes = lp // 지정한 너비, 높이 값 Dialog 에 적용
         val dialogRecyclerView = dialogView.findViewById<RecyclerView>(R.id.place_list)
         dialogRecyclerView.layoutManager = LinearLayoutManager(mContext)
-        dialogRecyclerView.adapter = DialogRecyclerAdapter(mContext, mSearchPlaceList)
+        dialogRecyclerView.adapter = DialogEditRecyclerAdapter(mContext, mSearchPlaceList)
         dialogRecyclerView.addItemDecoration(
             DividerItemDecoration(
                 mContext,
@@ -781,4 +717,53 @@ class EditAppointmentActivity : BaseActivity() {
             .check()
     }
 
+    private fun getAppointmentData() {
+        mAppointmentData = intent.getSerializableExtra("appointment") as AppointmentData
+//        mSelectedStartPlace.apply {
+//            name = mAppointmentData.startPlace
+//            latitude = mAppointmentData.startLatitude
+//            longitude = mAppointmentData.startLongitude
+//        }
+        mSelectedLat = mAppointmentData.latitude
+        mSelectedLng = mAppointmentData.longitude
+        binding.titleEdt.setText(mAppointmentData.title)
+        val sdfDate = SimpleDateFormat("yyyy-MM-dd (E)")
+        val sdfTime = SimpleDateFormat("a h:mm")
+        binding.dateTxt.text = sdfDate.format(mAppointmentData.datetime)
+        binding.timeTxt.text = sdfTime.format(mAppointmentData.datetime)
+        binding.placeSearchEdt.setText(mAppointmentData.place)
+        mSelectedFriendList.addAll(mAppointmentData.invitedFriends)
+
+        for (i in 0 until mAppointmentData.invitedFriends.size) {
+            addFriendsTxt(mAppointmentData.invitedFriends[i])
+        }
+    }
+
+    private fun addFriendsTxt(selectedFriend: UserData) {
+        //            텍스트뷰 하나를 코틀린에서 생성
+        val textView = TextView(mContext)
+        textView.text = selectedFriend.nickName
+        textView.setBackgroundResource(R.drawable.selected_friend_box)
+        textView.setPadding(
+            dbToPx(mContext, 5f).toInt(),
+            dbToPx(mContext, 5f).toInt(),
+            dbToPx(mContext, 5f).toInt(),
+            dbToPx(mContext, 5f).toInt()
+        )
+        val params = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(dbToPx(mContext, 5f).toInt())
+        textView.layoutParams = params
+
+//            만들어낸 텍스트뷰에 이벤트 처리
+        textView.setOnClickListener {
+            binding.friendListLayout.removeView(textView)
+            mSelectedFriendList.remove(selectedFriend)
+        }
+
+//            레이아웃에 추가 + 친구목록으로도 추가.
+        binding.friendListLayout.addView(textView)
+    }
 }

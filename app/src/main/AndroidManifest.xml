@@ -24,6 +24,9 @@
             android:name=".AppointmentDetailActivity"
             android:exported="true" />
         <activity
+            android:name=".FixAppointmentActivity"
+            android:exported="true" />
+        <activity
             android:name=".AddFriendActivity"
             android:exported="true" />
         <activity
