@@ -166,4 +166,9 @@ interface ServerAPIService {
     fun deleteRequestUserPlace(
         @Query("place_id") placeId: Int
     ): Call<BasicResponse>
+
+    @DELETE("user/friend")
+    fun deleteRequestFriend(
+        @Query("user_id") userId: Int
+    ): Call<BasicResponse>
 }

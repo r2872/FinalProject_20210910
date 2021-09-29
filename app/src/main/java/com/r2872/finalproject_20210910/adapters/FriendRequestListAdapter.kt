@@ -36,7 +36,6 @@ class FriendRequestListAdapter(
         fun bind(context: Context, data: UserData) {
             friendNicknameTxt.text = data.nickName
             addFriendBtn.setImageResource(R.drawable.ic_baseline_check_24)
-            addFriendBtn.visibility = View.VISIBLE
             addFriendBtn.setOnClickListener {
 
                 val alert = AlertDialog.Builder(context)
