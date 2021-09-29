@@ -171,4 +171,9 @@ interface ServerAPIService {
     fun deleteRequestFriend(
         @Query("user_id") userId: Int
     ): Call<BasicResponse>
+
+    @DELETE("user")
+    fun deleteRequestUser(
+        @Query("text") text: String
+    ): Call<BasicResponse>
 }

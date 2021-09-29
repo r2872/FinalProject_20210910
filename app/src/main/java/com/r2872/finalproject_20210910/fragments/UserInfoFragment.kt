@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -55,6 +56,68 @@ class UserInfoFragment : BaseFragment() {
 
 
     override fun setupEvents() {
+
+        binding.removeUserTxt.setOnClickListener {
+
+            val customView =
+                LayoutInflater.from(mContext).inflate(R.layout.remove_user_alert, null)
+
+            val alert = AlertDialog.Builder(mContext)
+                .setTitle("정말로 탈퇴하시겠습니까?")
+                .setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+                    val alert = AlertDialog.Builder(mContext)
+                        .setTitle("회원탈퇴")
+                        .setView(customView)
+                        .setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+                            val agree = customView.findViewById<EditText>(R.id.agree_Edt)
+                            val inputText = agree.text.toString()
+
+                            apiService.deleteRequestUser(inputText)
+                                .enqueue(object : Callback<BasicResponse> {
+                                    override fun onResponse(
+                                        call: Call<BasicResponse>,
+                                        response: Response<BasicResponse>
+                                    ) {
+                                        if (response.isSuccessful) {
+                                            Toast.makeText(
+                                                mContext,
+                                                "탈퇴처리되었습니다.",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                            ContextUtil.setToken(mContext, "")
+                                            GlobalData.loginUser = null
+
+                                            val myIntent =
+                                                Intent(mContext, LoginActivity::class.java)
+                                            myIntent.flags =
+                                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                            startActivity(myIntent)
+                                        } else {
+                                            val errorBody =
+                                                JSONObject(response.errorBody()!!.string())
+                                            Toast.makeText(
+                                                mContext,
+                                                errorBody.getString("message"),
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                        }
+                                    }
+
+                                    override fun onFailure(
+                                        call: Call<BasicResponse>,
+                                        t: Throwable
+                                    ) {
+
+                                    }
+                                })
+                        })
+                        .show()
+                })
+                .setNegativeButton("취소", null)
+                .show()
+        }
 
         binding.pwChangeLayout.setOnClickListener {
             val customView =
