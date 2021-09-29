@@ -25,7 +25,7 @@ class FriendListAdapter(
     private val mList: List<UserData>
 ) : RecyclerView.Adapter<FriendListAdapter.ViewHolder>() {
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : BaseViewHolder(mContext, view) {
 
         private val friendProfileImg = view.findViewById<ImageView>(R.id.friendProfile_Img)
         private val friendNicknameTxt = view.findViewById<TextView>(R.id.friendNickname_Txt)

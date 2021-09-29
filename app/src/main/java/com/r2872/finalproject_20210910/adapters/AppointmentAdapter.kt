@@ -44,7 +44,7 @@ class AppointmentAdapter(
 
     override fun getItemCount() = mList.size
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : BaseViewHolder(mContext, view) {
 
         private val titleTxt = view.findViewById<TextView>(R.id.title_Txt)
         private val dateTxt = view.findViewById<TextView>(R.id.date_Txt)

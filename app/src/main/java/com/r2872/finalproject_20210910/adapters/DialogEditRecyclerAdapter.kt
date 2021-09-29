@@ -43,7 +43,7 @@ class DialogEditRecyclerAdapter(
 
     override fun getItemCount() = mList.size
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : BaseViewHolder(mContext, view) {
 
         private val placeName = view.findViewById<TextView>(R.id.placeName_Txt)
         private val addressName = view.findViewById<TextView>(R.id.addressName_Txt)

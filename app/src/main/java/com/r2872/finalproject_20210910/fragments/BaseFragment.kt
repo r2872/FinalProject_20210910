@@ -22,7 +22,7 @@ abstract class BaseFragment : Fragment() {
         apiService = retrofit.create(ServerAPIService::class.java)
 
 //        모든 텍스트뷰 폰트 변경
-//        FontChanger.setGlobalFont(mContext, requireView()) // requireView : 프래그먼트의 최상위 레이아웃
+        FontChanger.setGlobalFont(mContext, requireView()) // requireView : 프래그먼트의 최상위 레이아웃
     }
 
     abstract fun setupEvents()

@@ -31,7 +31,7 @@ class TrafficAdapter(
 
     override fun getItemCount() = mList.size
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : BaseViewHolder(mContext, view) {
 
         private val trafficType = view.findViewById<ImageView>(R.id.trafficType)
         private val sectionTime = view.findViewById<TextView>(R.id.sectionTime)

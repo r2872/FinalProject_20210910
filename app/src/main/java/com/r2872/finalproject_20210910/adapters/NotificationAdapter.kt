@@ -41,7 +41,7 @@ class NotificationAdapter(
 
     override fun getItemCount() = mList.size
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : BaseViewHolder(mContext, view) {
 
         private val type = view.findViewById<TextView>(R.id.type_Txt)
         private val message = view.findViewById<TextView>(R.id.message_Txt)

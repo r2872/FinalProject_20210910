@@ -26,7 +26,7 @@ class FontChanger {
                     if (childView is TextView) {
 
 //                        asset 에 추가한 폰트파일 적용
-                        childView.typeface = Typeface.createFromAsset(context.assets, "")
+                        childView.typeface = Typeface.createFromAsset(context.assets, "font.ttf")
                     }
 
 //                    자녀뷰에도 또 하위 View 가 있는지 확인해서 -> 폰트 적용

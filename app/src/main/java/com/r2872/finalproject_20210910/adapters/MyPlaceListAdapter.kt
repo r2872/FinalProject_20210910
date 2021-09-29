@@ -41,7 +41,7 @@ class MyPlaceListAdapter(
         return mList.size
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : BaseViewHolder(mContext, view) {
 
         private val placeNameTxt = itemView.findViewById<TextView>(R.id.placeName_Txt)
         private val isPrimary = itemView.findViewById<TextView>(R.id.isPrimary)
