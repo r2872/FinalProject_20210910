@@ -20,6 +20,9 @@
             android:name=".NotificationActivity"
             android:exported="true" />
         <activity
+            android:name=".InvitedViewMapActivity"
+            android:exported="true" />
+        <activity
             android:name=".ViewProfilePopUpActivity"
             android:exported="true"
             android:theme="@style/popupTheme" />
