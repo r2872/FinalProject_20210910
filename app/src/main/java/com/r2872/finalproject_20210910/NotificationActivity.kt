@@ -102,7 +102,7 @@ class NotificationActivity : BaseActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    mAdapter.notifyDataSetChanged()
+                    getNotificationsFromServer()
                 }
 
                 override fun onFailure(call: Call<BasicResponse>, t: Throwable) {

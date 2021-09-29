@@ -35,6 +35,10 @@ class SignUpActivity : BaseActivity() {
             }
             userCheckFromServer("EMAIL", binding.emailEdt.text.toString())
         }
+        binding.emailEdt.addTextChangedListener {
+            emailCheck = false
+            buttonEnabled()
+        }
 
         binding.nickCheckBtn.setOnClickListener {
             if (binding.nicknameEdt.text.isEmpty()) {
@@ -43,6 +47,11 @@ class SignUpActivity : BaseActivity() {
             }
             userCheckFromServer("NICK_NAME", binding.nicknameEdt.text.toString())
         }
+        binding.nicknameEdt.addTextChangedListener {
+            nicknameCheck = false
+            buttonEnabled()
+        }
+
 
         binding.passwordEdt.addTextChangedListener {
             buttonEnabled()
@@ -132,6 +141,7 @@ class SignUpActivity : BaseActivity() {
     }
 
     private fun buttonEnabled() {
-        binding.signUpBtn.isEnabled = emailCheck && nicknameCheck && binding.passwordEdt.text.isNotEmpty()
+        binding.signUpBtn.isEnabled =
+            emailCheck && nicknameCheck && binding.passwordEdt.text.isNotEmpty()
     }
 }

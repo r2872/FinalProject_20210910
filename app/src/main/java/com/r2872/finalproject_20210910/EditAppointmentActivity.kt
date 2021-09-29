@@ -421,10 +421,14 @@ class EditAppointmentActivity : BaseActivity() {
                 .setTitle("현재위치로 등록")
                 .setView(customView)
                 .setPositiveButton("확인", DialogInterface.OnClickListener { dialogInterface, i ->
+                    val placeNameEdt = customView.findViewById<EditText>(R.id.placeName_Edt)
+                    if (placeNameEdt.text.isEmpty()) {
+                        Toast.makeText(mContext, "내용을 입력하세요", Toast.LENGTH_SHORT).show()
+                        return@OnClickListener
+                    }
                     needLocationFromServer = true
                     getLocation()
                     binding.startPlaceSpinner.visibility = View.GONE
-                    val placeNameEdt = customView.findViewById<EditText>(R.id.placeName_Edt)
                     binding.currentLatLng.text = placeNameEdt.text.toString()
                     mSelectedStartPlace.name = placeNameEdt.text.toString()
                 })
