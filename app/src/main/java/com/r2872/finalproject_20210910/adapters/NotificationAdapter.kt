@@ -54,7 +54,7 @@ class NotificationAdapter(
 
             background.setOnClickListener {
 
-                if (item.id == item.receiveUserId) {
+                if (item.actUserId == item.receiveUserId) {
                     getAppointmentFromServer(context, item.focusId, true)
                 } else {
                     getAppointmentFromServer(context, item.focusId, false)

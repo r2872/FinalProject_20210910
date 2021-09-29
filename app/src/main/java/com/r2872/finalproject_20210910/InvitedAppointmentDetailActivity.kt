@@ -213,7 +213,7 @@ class InvitedAppointmentDetailActivity : BaseActivity() {
 
     override fun setValues() {
 
-        titleTxt.text = "일정 상세정보"
+        titleTxt.text = "받은일정 상세정보"
         binding.searchTraffic.visibility = View.VISIBLE
 
         mAppointmentData = intent.getSerializableExtra("appointment") as AppointmentData

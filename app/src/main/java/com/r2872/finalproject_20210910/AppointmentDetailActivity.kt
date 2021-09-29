@@ -202,7 +202,7 @@ class AppointmentDetailActivity : BaseActivity() {
 
     override fun setValues() {
 
-        titleTxt.text = "일정 상세정보"
+        titleTxt.text = "만든일정 상세정보"
 
         mAppointmentData = intent.getSerializableExtra("appointment") as AppointmentData
 
