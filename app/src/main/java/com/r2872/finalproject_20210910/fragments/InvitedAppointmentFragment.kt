@@ -8,16 +8,11 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.r2872.finalproject_20210910.MainActivity
 import com.r2872.finalproject_20210910.R
-import com.r2872.finalproject_20210910.adapters.AppointmentAdapter
-import com.r2872.finalproject_20210910.adapters.AppointmentViewPagerAdapter
-import com.r2872.finalproject_20210910.adapters.FriendRequestListAdapter
+import com.r2872.finalproject_20210910.adapters.InvitedAppointmentAdapter
 import com.r2872.finalproject_20210910.databinding.FragmentAppointmentListBinding
-import com.r2872.finalproject_20210910.databinding.FragmentFriendRequestBinding
 import com.r2872.finalproject_20210910.datas.AppointmentData
 import com.r2872.finalproject_20210910.datas.BasicResponse
-import com.r2872.finalproject_20210910.datas.UserData
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,7 +32,7 @@ class InvitedAppointmentFragment : BaseFragment() {
     }
 
     private lateinit var binding: FragmentAppointmentListBinding
-    private lateinit var mAdapter: AppointmentAdapter
+    private lateinit var mAdapter: InvitedAppointmentAdapter
     private val mList = ArrayList<AppointmentData>()
 
     override fun onCreateView(
@@ -63,7 +58,7 @@ class InvitedAppointmentFragment : BaseFragment() {
 
     override fun setValues() {
 
-        mAdapter = AppointmentAdapter(mContext, mList)
+        mAdapter = InvitedAppointmentAdapter(mContext, mList)
         binding.appointmentList.apply {
             adapter = mAdapter
             LinearLayoutManager.VERTICAL

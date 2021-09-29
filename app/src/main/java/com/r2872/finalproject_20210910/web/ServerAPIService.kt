@@ -161,4 +161,9 @@ interface ServerAPIService {
     fun postRequestNotifications(
         @Field("noti_id") notiId: Int
     ): Call<BasicResponse>
+
+    @DELETE("user/place")
+    fun deleteRequestUserPlace(
+        @Query("place_id") placeId: Int
+    ): Call<BasicResponse>
 }

@@ -46,6 +46,7 @@ import com.r2872.finalproject_20210910.adapters.DialogEditRecyclerAdapter
 import com.r2872.finalproject_20210910.adapters.StartPlaceSpinnerAdapter
 import com.r2872.finalproject_20210910.databinding.ActivityEditAppoinmentBinding
 import com.r2872.finalproject_20210910.datas.*
+import com.r2872.finalproject_20210910.utils.GlobalData
 import com.r2872.finalproject_20210910.utils.Request
 import com.r2872.finalproject_20210910.utils.SizeUtil.Companion.dbToPx
 import okhttp3.HttpUrl
@@ -732,7 +733,9 @@ class FixAppointmentActivity : BaseActivity() {
         binding.placeSearchEdt.setText(mAppointmentData.place)
         mSelectedFriendList.addAll(mAppointmentData.invitedFriends)
         for (i in 0 until mAppointmentData.invitedFriends.size) {
-            addFriendsTxt(mAppointmentData.invitedFriends[i])
+            if (mAppointmentData.invitedFriends[i].id != GlobalData.loginUser!!.id) {
+                addFriendsTxt(mAppointmentData.invitedFriends[i])
+            }
         }
         mSelectedDateTime.timeInMillis = mAppointmentData.datetime.time
         val myTimeZone = mSelectedDateTime.timeZone

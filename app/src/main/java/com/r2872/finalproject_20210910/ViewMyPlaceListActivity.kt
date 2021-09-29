@@ -61,7 +61,7 @@ class ViewMyPlaceListActivity : BaseActivity() {
         )
     }
 
-    private fun getMyPlaceListFromServer() {
+    fun getMyPlaceListFromServer() {
 
         apiService.getRequestMyAppointmentList().enqueue(object : Callback<BasicResponse> {
             override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
