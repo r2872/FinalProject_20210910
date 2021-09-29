@@ -15,6 +15,7 @@ import com.r2872.finalproject_20210910.R
 import com.r2872.finalproject_20210910.VIewMyFriendsListActivity
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.datas.UserData
+import com.r2872.finalproject_20210910.fragments.MyFriendListFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -78,6 +79,7 @@ class FriendListAdapter(
                                                     )
                                                         .show()
                                                 }
+                                                (context.friendsViewPagerAdapter.getItem(0) as MyFriendListFragment).getFriendListFromServer()
                                             }
 
                                             override fun onFailure(
