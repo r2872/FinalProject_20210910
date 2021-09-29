@@ -13,5 +13,7 @@ data class NotificationData(
     var type: String,
     var message: String,
     @SerializedName("is_read")
-    var isRead: Boolean
+    var isRead: Boolean,
+    @SerializedName("focus_object_id")
+    var focusId: Int
 ) : Serializable
