@@ -17,5 +17,7 @@ data class DataResponse(
 //    초대받은 약속 상세정보
     var invited_appointments: List<AppointmentData>,
 
-    var notifications: List<NotificationData>
+    var notifications: List<NotificationData>,
+
+    var unread_noty_count: Int
 )

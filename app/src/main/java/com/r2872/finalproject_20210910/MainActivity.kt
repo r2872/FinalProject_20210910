@@ -25,7 +25,6 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var appointmentViewPagerAdapter: AppointmentViewPagerAdapter
     private var waitTime = 0L
-    private val mNotiList = ArrayList<NotificationData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,21 +114,15 @@ class MainActivity : BaseActivity() {
     }
 
     private fun getNotisFromServer() {
-        apiService.getRequestNotifications(true).enqueue(object : Callback<BasicResponse> {
+        apiService.getRequestNotifications(false).enqueue(object : Callback<BasicResponse> {
             override fun onResponse(call: Call<BasicResponse>, response: Response<BasicResponse>) {
                 if (response.isSuccessful) {
                     val basicResponse = response.body()!!
-                    mNotiList.clear()
+                    val notyCount = basicResponse.data.unread_noty_count
 
-                    for (i in basicResponse.data.notifications.indices) {
-                        if (!basicResponse.data.notifications[i].isRead) {
-                            mNotiList.add(basicResponse.data.notifications[i])
-                        }
-                    }
-
-                    if (mNotiList.isNotEmpty()) {
+                    if (notyCount != 0) {
                         notiCount.visibility = View.VISIBLE
-                        notiCount.text = mNotiList.size.toString()
+                        notiCount.text = notyCount.toString()
                     } else {
                         notiCount.visibility = View.GONE
                     }
