@@ -20,6 +20,9 @@
             android:name=".NotificationActivity"
             android:exported="true" />
         <activity
+            android:name=".InvitedAppointmentDetailActivity"
+            android:exported="true" />
+        <activity
             android:name=".InvitedViewMapActivity"
             android:exported="true" />
         <activity

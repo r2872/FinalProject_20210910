@@ -89,6 +89,19 @@
                             android:textColor="@color/black"
                             android:textSize="16sp" />
 
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/searchTraffic"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="경로 검색하기"
+                            android:textColor="@color/black"
+                            android:visibility="gone" />
+
                     </LinearLayout>
 
                     <LinearLayout

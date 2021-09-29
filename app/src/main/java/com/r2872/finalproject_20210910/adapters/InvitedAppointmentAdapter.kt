@@ -9,10 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.r2872.finalproject_20210910.AppointmentDetailActivity
-import com.r2872.finalproject_20210910.InvitedViewMapActivity
-import com.r2872.finalproject_20210910.R
-import com.r2872.finalproject_20210910.ViewMapActivity
+import com.r2872.finalproject_20210910.*
 import com.r2872.finalproject_20210910.datas.AppointmentData
 import java.text.SimpleDateFormat
 import java.util.*
@@ -63,7 +60,7 @@ class InvitedAppointmentAdapter(
 
             backgroundLayout.setOnClickListener {
 
-                val myIntent = Intent(context, AppointmentDetailActivity::class.java)
+                val myIntent = Intent(context, InvitedAppointmentDetailActivity::class.java)
                 myIntent.putExtra("appointment", item)
                 context.startActivity(myIntent)
             }
