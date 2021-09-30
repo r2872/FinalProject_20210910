@@ -60,7 +60,24 @@ class MyPlaceListAdapter(
                 mContext.startActivity(myIntent)
             }
             backgroundLayout.setOnClickListener {
-                Toast.makeText(mContext, item.name, Toast.LENGTH_SHORT).show()
+
+                (context as ViewMyPlaceListActivity).apiService.patchRequestUserPlace(item.id)
+                    .enqueue(object : Callback<BasicResponse> {
+                        override fun onResponse(
+                            call: Call<BasicResponse>,
+                            response: Response<BasicResponse>
+                        ) {
+                            if (response.isSuccessful) {
+                                val basicResponse = response.body()!!
+
+                                context.getMyPlaceListFromServer()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+                        }
+                    })
             }
 
             backgroundLayout.setOnLongClickListener {

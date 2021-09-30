@@ -176,4 +176,10 @@ interface ServerAPIService {
     fun deleteRequestUser(
         @Query("text") text: String
     ): Call<BasicResponse>
+
+    @FormUrlEncoded
+    @PATCH("user/place")
+    fun patchRequestUserPlace(
+        @Field("place_id") placeId: Int,
+    ): Call<BasicResponse>
 }
