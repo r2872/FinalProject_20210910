@@ -61,7 +61,7 @@ class TrafficAdapter(
                     sectionTime.text = "경로를 찾을 수 없습니다."
                 }
             }
-            sectionTime.text = "${item.sectionTime}분 소요"
+            sectionTime.text = "${item.sectionTime}분"
 
         }
     }
