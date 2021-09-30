@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.r2872.finalproject_20210910.R
 import com.r2872.finalproject_20210910.datas.PlaceListData
+import com.r2872.finalproject_20210910.utils.FontChanger
 
 class StartPlaceSpinnerAdapter(
     private val mContext: Context,
@@ -38,6 +39,8 @@ class StartPlaceSpinnerAdapter(
             isPrimaryTxt.visibility = View.GONE
         }
 
+        FontChanger.setGlobalFont(mContext, row)
+
         return row
     }
 
@@ -61,6 +64,8 @@ class StartPlaceSpinnerAdapter(
         } else {
             isPrimaryTxt.visibility = View.GONE
         }
+
+        FontChanger.setGlobalFont(mContext, row)
 
         return row
     }

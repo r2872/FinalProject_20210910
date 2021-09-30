@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.r2872.finalproject_20210910.R
 import com.r2872.finalproject_20210910.datas.UserData
+import com.r2872.finalproject_20210910.utils.FontChanger
 
 class AddFriendsSpinnerAdapter(
     private val mContext: Context,
@@ -40,6 +41,8 @@ class AddFriendsSpinnerAdapter(
         Glide.with(mContext)
             .load(data.profileImg)
             .into(friendProfileImg)
+
+        FontChanger.setGlobalFont(mContext, row)
 
         return row
     }
