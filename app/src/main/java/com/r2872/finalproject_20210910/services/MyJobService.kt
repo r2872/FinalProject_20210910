@@ -72,9 +72,7 @@ class MyJobService : JobService() {
 
 //                                예상 시간이 몇분이나 걸리는지 파악 완료. => 알람 띄우는데 활용
 
-//                                알람 시간 : 약속시간(타임존에 맞게 변경) - 교통소요시간 - 내 준비시간 (밀리초 단위)
-                                val now = Calendar.getInstance()
-                                appointmentData.datetime.time += now.timeZone.rawOffset
+//                                알람 시간 : 약속시간(파싱시에 GMT+9 등 핸드폰 시간대로 보정되어있음) - 교통소요시간 - 내 준비시간 (밀리초 단위)
                                 val alarmTime =
                                     appointmentData.datetime.time - totalTime * 60 * 1000 - ContextUtil.getMyReadyMinute(
                                         applicationContext

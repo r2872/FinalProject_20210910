@@ -252,13 +252,13 @@ class FixAppointmentActivity : BaseActivity() {
 
 //            약속일시를 => UTC 시간대로 변경해주자. 서버가 사용하는 시간대는 UTC 라서,
 //            앱에서 폰의 시간대를 찾아서, 보정해주자.
-            val myTimeZone = mSelectedDateTime.timeZone
-
-//            내 시간대가 시차가 UTC 로 부터 얼마나 나는지? 밀리초 ~ 시간 으로 변환.
-            val myTimeOffset = myTimeZone.rawOffset / 1000 / 60 / 60
-
-//            선택된 시간을 보정. (더해져 있는 시차를 빼 주자)
-            mSelectedDateTime.add(Calendar.HOUR_OF_DAY, -myTimeOffset)
+//            val myTimeZone = mSelectedDateTime.timeZone
+//
+////            내 시간대가 시차가 UTC 로 부터 얼마나 나는지? 밀리초 ~ 시간 으로 변환.
+//            val myTimeOffset = myTimeZone.rawOffset / 1000 / 60 / 60
+//
+////            선택된 시간을 보정. (더해져 있는 시차를 빼 주자)
+//            mSelectedDateTime.add(Calendar.HOUR_OF_DAY, -myTimeOffset)
 
 //            선택된 약속일시를 -> "yyyy-MM-dd HH:mm" 양식으로 가공. => 최종 서버에 파라미터로 첨부
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm")
@@ -740,9 +740,9 @@ class FixAppointmentActivity : BaseActivity() {
             }
         }
         mSelectedDateTime.timeInMillis = mAppointmentData.datetime.time
-        val myTimeZone = mSelectedDateTime.timeZone
-        val myTimeOffset = myTimeZone.rawOffset / 1000 / 60 / 60
-        mSelectedDateTime.add(Calendar.HOUR_OF_DAY, myTimeOffset)
+//        val myTimeZone = mSelectedDateTime.timeZone
+//        val myTimeOffset = myTimeZone.rawOffset / 1000 / 60 / 60
+//        mSelectedDateTime.add(Calendar.HOUR_OF_DAY, myTimeOffset)
         val sdfDate = SimpleDateFormat("yyyy-MM-dd (E)")
         val sdfTime = SimpleDateFormat("a h:mm")
         binding.dateTxt.text = sdfDate.format(mSelectedDateTime.time)
