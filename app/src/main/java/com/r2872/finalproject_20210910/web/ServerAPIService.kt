@@ -12,7 +12,8 @@ interface ServerAPIService {
     fun putRequestSignUp(
         @Field("email") email: String,
         @Field("password") pw: String,
-        @Field("nick_name") nickname: String
+        @Field("nick_name") nickname: String,
+        @Field("app_maker") maker: String
     ): Call<BasicResponse>
 
     @FormUrlEncoded
@@ -27,7 +28,8 @@ interface ServerAPIService {
     fun postRequestSocialSignIn(
         @Field("provider") provider: String,
         @Field("uid") uid: String,
-        @Field("nick_name") nick_name: String
+        @Field("nick_name") nick_name: String,
+        @Field("app_maker") maker: String
     ): Call<BasicResponse>
 
     @FormUrlEncoded

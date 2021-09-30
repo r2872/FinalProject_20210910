@@ -69,7 +69,7 @@ class LoginActivity : BaseActivity() {
                             val name = response.getString("name")
 
 //                            우리 서버로 전달.
-                            apiService.postRequestSocialSignIn("naver", uid, name)
+                            apiService.postRequestSocialSignIn("naver", uid, name, "김현우")
                                 .enqueue(object : retrofit2.Callback<BasicResponse> {
                                     override fun onResponse(
                                         call: Call<BasicResponse>,
@@ -133,7 +133,7 @@ class LoginActivity : BaseActivity() {
 //                                    페이스북에서 사용자를 구별하는 고유번호. => 우리 서버에 같이 저장. 회원가입 or 로그인 근거자료로 활용
                                     Log.d("id값", id)
 
-                                    apiService.postRequestSocialSignIn("facebook", id, name)
+                                    apiService.postRequestSocialSignIn("facebook", id, name, "김현우")
                                         .enqueue(object : Callback<BasicResponse> {
                                             override fun onResponse(
                                                 call: Call<BasicResponse>,
@@ -225,7 +225,7 @@ class LoginActivity : BaseActivity() {
                             val userId = user.id.toString()
                             val userNickname = user.kakaoAccount?.profile?.nickname.toString()
 
-                            apiService.postRequestSocialSignIn("kakao", userId, userNickname)
+                            apiService.postRequestSocialSignIn("kakao", userId, userNickname, "김현우")
                                 .enqueue(object : Callback<BasicResponse> {
                                     override fun onResponse(
                                         call: Call<BasicResponse>,

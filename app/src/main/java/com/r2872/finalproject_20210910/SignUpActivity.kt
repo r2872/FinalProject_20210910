@@ -63,7 +63,7 @@ class SignUpActivity : BaseActivity() {
             val inputPassword = binding.passwordEdt.text.toString()
             val inputNickname = binding.nicknameEdt.text.toString()
 
-            apiService.putRequestSignUp(inputId, inputPassword, inputNickname)
+            apiService.putRequestSignUp(inputId, inputPassword, inputNickname, "김현우")
                 .enqueue(object : Callback<BasicResponse> {
                     override fun onResponse(
                         call: Call<BasicResponse>,
