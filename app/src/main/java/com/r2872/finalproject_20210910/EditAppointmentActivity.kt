@@ -463,6 +463,7 @@ class EditAppointmentActivity : BaseActivity() {
 
             mNaverMap = naverMap
 
+            binding.startPlaceSpinner.isClickable = true
 
             mLocationSource =
                 FusedLocationSource(this, Request.LOCATION_PERMISSION_REQUEST_CODE)
