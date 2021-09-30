@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.r2872.finalproject_20210910.R
@@ -62,7 +63,6 @@ class TrafficAdapter(
                 }
             }
             sectionTime.text = "${item.sectionTime}분"
-
         }
     }
 }

@@ -145,7 +145,7 @@ class ViewMapActivity : BaseActivity() {
                             val trafficType = subPathObj.getInt("trafficType")
                             val sectionTime = subPathObj.getInt("sectionTime")
                             Log.d("trafficType", trafficType.toString())
-                            if (trafficType == 3) {
+                            if (trafficType == 3 && sectionTime != 0) {
                                 mList.add(SubPathData(trafficType, sectionTime))
                             }
 
@@ -153,7 +153,7 @@ class ViewMapActivity : BaseActivity() {
 
                                 val pathName: String
 
-                                if (trafficType != 3) {
+                                if (trafficType != 3 && sectionTime != 0) {
                                     val stationCount = subPathObj.getInt("stationCount")
                                     Log.d("stationCount", stationCount.toString())
                                     val startName = subPathObj.getString("startName")

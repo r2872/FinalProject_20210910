@@ -18,6 +18,9 @@ import com.r2872.finalproject_20210910.databinding.ActivityLoginBinding
 import com.r2872.finalproject_20210910.datas.BasicResponse
 import com.r2872.finalproject_20210910.utils.ContextUtil
 import com.r2872.finalproject_20210910.utils.GlobalData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -50,8 +53,10 @@ class LoginActivity : BaseActivity() {
                         val accessToken = mNaverLoginModule.getAccessToken(mContext)
                         Log.d("네이버토큰", accessToken)
 
-//                        별개의 통신용 Thread 생성 -> 내 정보 요청
-                        Thread {
+//                        쓰레드 대신 코루틴 활용 예시.
+                        val scope = CoroutineScope(Dispatchers.Default)
+
+                        scope.launch {
 //                            이 내부의 코드를 백그라운드 실행
                             val url = "https://openapi.naver.com/v1/nid/me"
                             val jsonObj = JSONObject(
@@ -95,7 +100,8 @@ class LoginActivity : BaseActivity() {
 
                                     }
                                 })
-                        }.start()
+                        }
+
                     } else {
 
                         Toast.makeText(mContext, "네이버 로그인에 실패하였습니다.", Toast.LENGTH_SHORT).show()
