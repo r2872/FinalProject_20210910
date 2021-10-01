@@ -24,6 +24,13 @@ interface ServerAPIService {
     ): Call<BasicResponse>
 
     @FormUrlEncoded
+    @POST("/user/password")
+    fun postRequestUserPw(
+        @Field("email") email: String,
+        @Field("nick_name") nickname: String
+    ): Call<BasicResponse>
+
+    @FormUrlEncoded
     @POST("/user/social")
     fun postRequestSocialSignIn(
         @Field("provider") provider: String,

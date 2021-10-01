@@ -1,11 +1,15 @@
 package com.r2872.finalproject_20210910
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.facebook.*
 import com.facebook.login.LoginManager
@@ -41,6 +45,50 @@ class LoginActivity : BaseActivity() {
     }
 
     override fun setupEvents() {
+
+        binding.searchPw.setOnClickListener {
+
+            val customView = LayoutInflater.from(mContext).inflate(R.layout.search_pw_alert, null)
+
+            val alert = AlertDialog.Builder(mContext)
+                .setTitle("비밀번호 찾기")
+                .setView(customView)
+                .setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+                    val inputEmail = customView.findViewById<EditText>(R.id.email_Edt)
+                    val inputNickname = customView.findViewById<EditText>(R.id.nickname_Edt)
+
+                    apiService.postRequestUserPw(
+                        inputEmail.text.toString(),
+                        inputNickname.text.toString()
+                    ).enqueue(object : Callback<BasicResponse> {
+                        override fun onResponse(
+                            call: Call<BasicResponse>,
+                            response: Response<BasicResponse>
+                        ) {
+                            if (response.isSuccessful) {
+
+                                val basicResponse = response.body()!!
+                                Toast.makeText(mContext, basicResponse.message, Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+
+                                Toast.makeText(
+                                    mContext,
+                                    JSONObject(
+                                        response.errorBody()!!.string()
+                                    ).getString("message"),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<BasicResponse>, t: Throwable) {
+
+                        }
+                    })
+                })
+                .show()
+        }
 
         binding.naverLoginBtn.setOnClickListener {
 
