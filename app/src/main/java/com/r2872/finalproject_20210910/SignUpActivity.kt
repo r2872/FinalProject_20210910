@@ -38,6 +38,7 @@ class SignUpActivity : BaseActivity() {
         binding.emailEdt.addTextChangedListener {
             emailCheck = false
             buttonEnabled()
+            binding.idCheckBtn.text = "중복 확인"
         }
 
         binding.nickCheckBtn.setOnClickListener {
@@ -50,6 +51,7 @@ class SignUpActivity : BaseActivity() {
         binding.nicknameEdt.addTextChangedListener {
             nicknameCheck = false
             buttonEnabled()
+            binding.nickCheckBtn.text = "중복 확인"
         }
 
 
@@ -114,10 +116,12 @@ class SignUpActivity : BaseActivity() {
                         "EMAIL" -> {
                             toastMessage("사용가능한 이메일입니다.")
                             emailCheck = true
+                            binding.idCheckBtn.text = "사용가능"
                         }
                         "NICK_NAME" -> {
                             toastMessage("사용가능한 닉네임입니다.")
                             nicknameCheck = true
+                            binding.nickCheckBtn.text = "사용가능"
                         }
                     }
                 } else {
